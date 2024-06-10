@@ -19,8 +19,9 @@ use App\Http\Controllers\CustomAuthController;
 //     return view('welcome');
 // });
 Route::get('/', 'App\Http\Controllers\UserController@index');
-Route::resource('categories','App\Http\Controllers\CategoryController');
-
+Route::resource('users','App\Http\Controllers\UserController');
+Route::resource('roles','App\Http\Controllers\RoleController');
+Route::resource('permissions','App\Http\Controllers\PermissionController');
 
 Route::get('dashboard', [CustomAuthController::class, 'dashboard']); 
 Route::get('login', [CustomAuthController::class, 'index'])->name('login');

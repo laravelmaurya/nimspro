@@ -12,13 +12,13 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'">
   <!-- DataTables -->
-  <link rel="stylesheet" href="{{asset($addPublic.'../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
-  <link rel="stylesheet" href="{{asset($addPublic.'../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{asset($addPublic.'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{asset($addPublic.'plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
   <!-- Tempusdominus Bbootstrap 4 -->
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
   <!-- Select2 -->
-  <link rel="stylesheet" href="{{asset($addPublic.'../../plugins/select2/css/select2.min.css')}}">
-  <link rel="stylesheet" href="{{asset($addPublic.'../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{asset($addPublic.'plugins/select2/css/select2.min.css')}}">
+  <link rel="stylesheet" href="{{asset($addPublic.'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
   <!-- iCheck -->
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- JQVMap -->
@@ -34,7 +34,7 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/summernote/summernote-bs4.css')}}">
   <!-- Toastr -->
-  <link rel="stylesheet" href="{{asset($addPublic.'../../plugins/toastr/toastr.min.css')}}">
+  <link rel="stylesheet" href="{{asset($addPublic.'plugins/toastr/toastr.min.css')}}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
@@ -68,12 +68,12 @@
 <!-- Bootstrap 4 -->
 <script src="{{asset($addPublic.'plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- DataTables -->
-<script src="{{asset($addPublic.'../../plugins/datatables/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset($addPublic.'../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-<script src="{{asset($addPublic.'../../plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
-<script src="{{asset($addPublic.'../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
 <!-- Select2 -->
-<script src="{{asset($addPublic.'../../plugins/select2/js/select2.full.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/select2/js/select2.full.min.js')}}"></script>
 <!-- ChartJS -->
 <script src="{{asset($addPublic.'plugins/chart.js/Chart.min.js')}}"></script>
 <!-- Sparkline -->
@@ -89,20 +89,33 @@
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{asset($addPublic.'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <!-- Bootstrap Switch -->
-<!-- <script src="{{asset($addPublic.'../../plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script> -->
+<!-- <script src="{{asset($addPublic.'plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script> -->
 <!-- Bootstrap toogle -->
 <script src="{{asset($addPublic.'js/bootstrap4-toggle.min.js')}}"></script>
 <!-- Summernote -->
 <script src="{{asset($addPublic.'plugins/summernote/summernote-bs4.min.js')}}"></script>
 <!-- overlayScrollbars -->
 <script src="{{asset($addPublic.'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+<!-- DataTables  & Plugins -->
+<script src="{{asset($addPublic.'plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/jszip/jszip.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/pdfmake/pdfmake.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/pdfmake/vfs_fonts.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset($addPublic.'dist/js/adminlte.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset($addPublic.'dist/js/pages/dashboard.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 <!-- Toastr -->
-<script src="{{asset($addPublic.'../../plugins/toastr/toastr.min.js')}}"></script>
+<script src="{{asset($addPublic.'plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{asset($addPublic.'dist/js/demo.js')}}"></script>
 <!-- page script -->
 <!-- sweet alert -->
@@ -119,6 +132,23 @@
     })
   });
 </script>
+{{-- <script>
+  $(function () {
+    $(".example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('.example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script> --}}
 <script>
   $(function () {
     $(".example1").DataTable({

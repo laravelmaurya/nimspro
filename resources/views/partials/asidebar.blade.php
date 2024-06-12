@@ -15,8 +15,9 @@
           <img src="{{ url('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">
-            {{-- {{ Auth::user()->name }} --}}
+          <h5>{{ Auth::user()->name }}</h5> 
+          <a href="{{route('signout')}}" class="d-block">
+            logout
           </a>
         </div>
       </div>
@@ -35,7 +36,7 @@
               </p>
             </a>
           </li>
-      
+          @can('users-menu')
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
@@ -46,20 +47,26 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+              @can('user-list')
               <li class="nav-item">
                 <a href="{{route('users.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>All Users</p>
                 </a>
               </li>
+              @endcan 
+              @can('user-create')
               <li class="nav-item">
                 <a href="{{route('users.create')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Create</p>
                 </a>
-              </li>              
+              </li> 
+              @endcan             
             </ul>
           </li>
+          @endcan 
+          @can('roles-menu')
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
@@ -70,20 +77,26 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+              @can('role-list')
               <li class="nav-item">
                 <a href="{{route('roles.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>All Roles</p>
                 </a>
               </li>
+              @endcan 
+              @can('role-create')
               <li class="nav-item">
                 <a href="{{route('roles.create')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Create</p>
                 </a>
-              </li>              
+              </li> 
+              @endcan             
             </ul>
           </li>
+          @endcan   
+          @can('permissions-menu')
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
@@ -94,20 +107,25 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+              @can('permission-list')
               <li class="nav-item">
                 <a href="{{route('permissions.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>All Permission</p>
                 </a>
               </li>
+              @endcan 
+              @can('permission-create')
               <li class="nav-item">
                 <a href="{{route('permissions.create')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Create</p>
                 </a>
-              </li>              
+              </li> 
+              @endcan              
             </ul>
-          </li>                         
+          </li>  
+          @endcan                         
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

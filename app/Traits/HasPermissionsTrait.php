@@ -53,4 +53,5 @@ trait HasPermissionsTrait{
     protected function getAllPermissions(array $permissions) {
         return Permission::whereIn('name', $permissions)->get();
     }
+    
 }

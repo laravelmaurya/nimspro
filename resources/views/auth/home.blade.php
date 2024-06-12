@@ -23,12 +23,10 @@
                     @endrole
 
                     @can('create-user')
-                    {{ __('You are t') }}    
+                    {{ __('You are create-user') }}    
                     @endcan
                    
-                    @permission('create-user')
-                    {{ __('You are t') }}    
-                    @endpermission
+                   
                 </div>
             </div>
         </div>

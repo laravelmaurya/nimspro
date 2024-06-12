@@ -51,5 +51,7 @@ class RoleSeeder extends Seeder {
             $user->save();
             $user->roles()->attach($userRole);
             $user->permissions()->attach($create_user);
+
+            
         }
     }

@@ -83,9 +83,9 @@ class RoleController extends Controller
 
         // Validate the incoming request data
         $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name,'.$role->id,
-            'permissions' => 'required',
-            // 'permissions.*' => 'exists:permissions,id',
+            'name' => 'required|string|max:255|unique:roles,name,' . $role->id,
+            'permissions' => 'required|array',
+            'permissions.*' => 'exists:permissions,id',
         ]);
 
         // Update the role's basic details
@@ -94,6 +94,25 @@ class RoleController extends Controller
         // Sync roles
         $role->permissions()->sync($request->permissions);
 
+        // Update users' permissions in users_permissions
+        $this->syncUsersPermissions($role, $request->permissions);
+
         return redirect()->route('roles.index')->with('success', 'Role updated successfully');
+    }
+    // this function for sys permissions in users_permissions intermediate table
+    protected function syncUsersPermissions(Role $role, array $permissions)
+    {
+        // Get all users with the specified role
+        $users = $role->users;
+
+        foreach ($users as $user) {
+            // Detach all current permissions of the user
+            $user->permissions()->detach();
+
+            // Attach all permissions of the user's roles
+            foreach ($user->roles as $userRole) {
+                $user->permissions()->syncWithoutDetaching($userRole->permissions);
+            }
+        }
     }
 }

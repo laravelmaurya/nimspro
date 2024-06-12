@@ -49,18 +49,29 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'roles' => 'required|array',
-            // 'roles.*' => 'exists:roles,name',
         ]);
 
-        // dd($request->all());
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // $user->givePermissionsTo(...$request->roles);
+        // Sync roles to the user
         $user->roles()->sync($request->roles);
+
+        // Fetch all permissions associated with the selected roles
+        $permissions = [];
+        foreach ($request->roles as $roleId) {
+            $role = Role::find($roleId);
+            if ($role) {
+                $permissions = array_merge($permissions, $role->permissions->pluck('id')->toArray());
+            }
+        }
+
+        // Attach permissions to the user
+        $user->permissions()->sync($permissions);
+
         return redirect()->route('users.index')->with('success', 'User created successfully!');
     }
 
@@ -84,7 +95,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::find($id);
-
+// dd($user);
         // Validate the incoming request data
         $request->validate([
             'name' => 'required|string|max:255',
@@ -97,8 +108,21 @@ class UserController extends Controller
         $user->update($request->only('name', 'email'));
 
         // Sync roles
+        // Sync roles to the user
         $user->roles()->sync($request->roles);
 
+        // Fetch all permissions associated with the selected roles
+        $permissions = [];
+        foreach ($request->roles as $roleId) {
+            $role = Role::find($roleId);
+            if ($role) {
+                $permissions = array_merge($permissions, $role->permissions->pluck('id')->toArray());
+            }
+        }
+
+        // Attach permissions to the user
+        $user->permissions()->sync($permissions);
         return redirect()->route('users.index')->with('success', 'User updated successfully');
+        
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -24,7 +25,20 @@ class CustomAuthController extends Controller
    
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            // dd(session()->getId());
+           $user = Auth::user();
+            // dd($user->hasRole($role));
             // dd(auth()->user()->roles,auth()->user()->permissions);
+            // dd(auth()->user()->roles);
+            $roles = auth()->user()->roles;
+            foreach ($roles as $role) {
+                // echo $role->name;
+                if(empty($role->name)){
+                    return redirect()->route('login')->withErrors(['error' => 'The credentials do not match.']);
+                }
+            }
+            
             return redirect()->intended('dashboard')
                         ->withSuccess('Signed in');
         }

@@ -116,24 +116,49 @@ class UserController extends Controller
      public function edit($id)
     {
         $user = User::with('roles')->find($id);
+        // dd($user);
         $roles = Role::all();
-        return view('users.edit', compact('user', 'roles'));
+        $departments = Department::all();
+        return view('users.edit', compact('user', 'roles','departments'));
     }
 
     public function update(Request $request, $id)
     {
         $user = User::find($id);
+        // dd($request->all());
 // dd($user);
         // Validate the incoming request data
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-            'roles' => 'required|array',
-            'roles.*' => 'exists:roles,id',
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+        //     'roles' => 'required|array',
+        //     'roles.*' => 'exists:roles,id',
+        // ]);
+
+        $full_name = $request->employe_surname. $request->user_last_name;
+        $roles =   json_encode($request->roles);
+        $salt = 'asldkjdslakjdsaldjsourrekjhkfhds';
+        $password = 'Test@123#';
+        $userpassword_insert = hash('sha256', $password . $salt); 
+        // $logged_in_user = '_'.auth()->user()->roles()->first()->name;
+        $logged_in_user = $full_name;
+        date_default_timezone_set('Asia/Kolkata');  
+        $publish_date = date('Y-m-d',strtotime(str_replace('/', '-', date('d/m/Y H:i'))));
 
         // Update the user's basic details
-        $user->update($request->only('name', 'email'));
+        $user->update(['nims_employe_code'=> $request->emp_code,
+        'nims_wp_user_name'=> $full_name ,
+        'nims_wp_user_email'=> $request->user_email ,
+        'nims_wp_user_password'=>  $userpassword_insert ,
+        'nims_employe_mob_no'=> $request->user_mobile_no ,
+        'e_email'=> $request->personal_email ,
+        'nims_wp_department_name'=> $request->dep_name ,
+        'nims_wp_user_type'=> $roles,
+        'nims_wp_user_created_by'=> $logged_in_user,
+        'nims_wp_user_created_on'=>  $publish_date,
+        'nims_wp_user_status'=>0,
+        'user'=>$roles,
+        'nims_wp_salt_random'=> $salt ]);
 
         // Sync roles
         // Sync roles to the user

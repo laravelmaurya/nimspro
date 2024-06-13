@@ -33,7 +33,7 @@ class CustomAuthController extends Controller
 
         if ($user && Hash::check($credentials['nims_wp_user_password'], $user->nims_wp_user_password)) {
             Auth::login($user);
-            dd(auth()->user()->roles);
+            // dd(auth()->user()->roles);
             return redirect()->intended('dashboard')
                         ->withSuccess('Signed in');
         }

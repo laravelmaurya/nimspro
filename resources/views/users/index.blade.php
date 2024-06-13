@@ -49,8 +49,8 @@
                      data-offstyle="danger" data-toggle="toggle" data-size="xs" data-on="Active"
                      data-off="InActive" {{ $user->status ? 'checked' : '' }}>
                   </td>
-                  <td id="name">{{$user->name}}</td>
-                  <td>{{$user->email}}</td>
+                  <td id="name">{{$user->nims_wp_user_name}}</td>
+                  <td>{{$user->nims_wp_user_email}}</td>
                   <td>
                     @foreach ($user->roles as $role)
                         <h4 class="d-inline"><span class="badge bg-info">{{ $role->name }}</span></h4>

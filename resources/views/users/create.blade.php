@@ -79,8 +79,8 @@
                   <div class="form-group">
                     <label>Select Department <span class="text--danger">*</span></label>
                     <select name="dep_name" id="dep_name" class="select2" data-placeholder="Select a State" style="width: 100%;">
-                      @foreach ($departments as $departments)                   
-                      <option value="{{ $departments->nims_wp_department_id }}">{{ $departments->nims_wp_department_name }}</option>
+                      @foreach ($departments as $department)                   
+                      <option value="{{ $department->nims_wp_department_id }}">{{ $department->nims_wp_department_name }}</option>
                       @endforeach
                     </select>
                     @error('departments')

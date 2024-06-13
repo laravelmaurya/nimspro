@@ -17,6 +17,8 @@ class CustomAuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // echo '<h1>custome auth middleware</h1>';
+        // dd(Auth::check());
+
         if (!Auth::check()) {
             return redirect()->route('login')->withErrors(['error' => 'You are not allowed to access.']);
         }

@@ -19,31 +19,26 @@ class CustomAuthController extends Controller
     public function customLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required',
-            'password' => 'required',
+            'nims_wp_user_email' => 'required',
+            'nims_wp_user_password' => 'required',
         ]);
    
-        $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            // dd(session()->getId());
-           $user = Auth::user();
-            // dd($user->hasRole($role));
-            // dd(auth()->user()->roles,auth()->user()->permissions);
-            // dd(auth()->user()->roles);
-            $roles = auth()->user()->roles;
-            foreach ($roles as $role) {
-                // echo $role->name;
-                if(empty($role->name)){
-                    return redirect()->route('login')->withErrors(['error' => 'The credentials do not match.']);
-                }
-            }
-            
+        $credentials = [
+            'nims_wp_user_email' => $request->input('nims_wp_user_email'),
+            'nims_wp_user_password' => $request->input('nims_wp_user_password'),
+        ];
+
+        // Custom user retrieval
+        $user = User::where('nims_wp_user_email', $credentials['nims_wp_user_email'])->first();
+
+        if ($user && Hash::check($credentials['nims_wp_user_password'], $user->nims_wp_user_password)) {
+            Auth::login($user);
+            dd(auth()->user()->roles);
             return redirect()->intended('dashboard')
                         ->withSuccess('Signed in');
         }
   
-        return back()->withErrors(['error' => 'The credentials do not match.']);
+        return back()->withErrors(['error' => 'The credentials do not matchaaa.']);
     }
     public function registration()
     {

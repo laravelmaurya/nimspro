@@ -15,16 +15,16 @@
                         <form method="POST" action="{{ route('login.custom') }}">
                             @csrf
                             <div class="form-group mb-3">
-                                <input type="text" placeholder="Email" id="email" class="form-control" name="email" required
+                                <input type="text" placeholder="Email" id="email" class="form-control" name="nims_wp_user_email" required
                                     autofocus>
-                                @if ($errors->has('email'))
-                                <span class="text-danger">{{ $errors->first('email') }}</span>
+                                @if ($errors->has('nims_wp_user_email'))
+                                <span class="text-danger">{{ $errors->first('nims_wp_user_email') }}</span>
                                 @endif
                             </div>
                             <div class="form-group mb-3">
-                                <input type="password" placeholder="Password" id="password" class="form-control" name="password" required>
-                                @if ($errors->has('password'))
-                                <span class="text-danger">{{ $errors->first('password') }}</span>
+                                <input type="password" placeholder="Password" id="password" class="form-control" name="nims_wp_user_password" required>
+                                @if ($errors->has('nims_wp_user_password'))
+                                <span class="text-danger">{{ $errors->first('nims_wp_user_password') }}</span>
                                 @endif
                             </div>
                             <div class="form-group mb-3">

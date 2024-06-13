@@ -15,7 +15,8 @@
           <img src="{{ url('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <h5>{{ Auth::user()->name }}</h5> 
+          <h5>{{ Auth::user()->nims_wp_user_name }}</h5>
+          <p>{{ Auth::user()->nims_wp_user_email }}</p> 
           <a href="{{route('signout')}}" class="d-block">
             logout
           </a>
@@ -116,6 +117,36 @@
               </li>
               @endcan 
               @can('permission-create')
+              <li class="nav-item">
+                <a href="{{route('permissions.create')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Create</p>
+                </a>
+              </li> 
+              @endcan              
+            </ul>
+          </li>  
+          @endcan        
+          @can('settings-menu')
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Settings
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right">6</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              @can('setting-list')
+              <li class="nav-item">
+                <a href="{{route('permissions.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>All Permission</p>
+                </a>
+              </li>
+              @endcan 
+              @can('setting-create')
               <li class="nav-item">
                 <a href="{{route('permissions.create')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>

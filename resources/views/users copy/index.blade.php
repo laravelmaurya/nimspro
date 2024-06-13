@@ -45,7 +45,7 @@
                 <tr>
                   <td>{{$user->id}}</td>
                   <td>
-                    <input data-id="{{$user->nims_wp_user_id}}" class="toggle-class" type="checkbox" data-onstyle="success"
+                    <input data-id="{{$user->id}}" class="toggle-class" type="checkbox" data-onstyle="success"
                      data-offstyle="danger" data-toggle="toggle" data-size="xs" data-on="Active"
                      data-off="InActive" {{ $user->status ? 'checked' : '' }}>
                   </td>
@@ -65,7 +65,7 @@
                       @csrf
                       <button class="btn btn-sm bg-warning"><i class="fas fa-eye"></i></button>
                   </form>
-                  <a href="{{route('users.destroy', $user->nims_wp_user_id)}}" class="delete-confirm">
+                  <a href="{{route('users.destroy', $user->id)}}" class="delete-confirm">
                     <i class="text-danger fas fa-trash"></i>
                   </a>
                   <!-- <form method="POST" action="{{route('users.destroy', $user)}}">

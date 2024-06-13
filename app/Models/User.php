@@ -15,15 +15,29 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, HasPermissionsTrait;
     // public $connection = 'pgsql';
     // protected $table = 'ahiscl.hivt_user_test_mst';
+
+     // public $connection = 'pgsql';
+    protected $table = 'nims_wp_user_login';
+    protected $primaryKey = 'nims_wp_user_id';
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'nims_employe_code',
+        'nims_wp_user_name',
+        'nims_wp_user_email',
+        'nims_wp_user_password',
+        'nims_employe_mob_no',
+        'e_email',
+        'nims_wp_department_name',
+        'nims_wp_user_type',
+        'nims_wp_user_created_by',
+        'nims_wp_user_created_on',
+        'user',
+        'nims_wp_user_status',
+        'nims_wp_salt_random',
     ];
 
     /**
@@ -32,20 +46,29 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        'nims_wp_user_password',
         'remember_token',
     ];
 
+    public $timestamps = false;
+
+    public function getAuthPassword()
+    {
+        return $this->nims_wp_user_password;
+    }
     /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    // protected $casts = [
+    //     'email_verified_at' => 'datetime',
+    // ];
 
     // protected $casts = ['email_verified_at' => 'datetime', 'password' => 'hashed', ];
 
-   
+    public function departments() {
+        return $this->hasMany(Department::class);
+        // return $this->belongsToMany(Role::class, 'users_roles');
+    }
 }

@@ -34,61 +34,35 @@
               @csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Employee Code <span class="text-danger">*</span></label>
-                    <input value="{{old('emp_code')}}" name="emp_code" id="emp_code" type="text" class="form-control @error('emp_code') is-invalid @enderror" placeholder="Enter Name">
-                    @error('emp_code')
+                    <label for="exampleInputEmail1">Name</label>
+                    <input value="{{old('name')}}" name="name" id="name" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter Name">
+                    @error('name')
                      <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">First Name <span class="text-danger">*</span></label>
-                    <input value="{{old('employe_surname')}}" name="employe_surname" id="employe_surname" type="text" class="form-control @error('employe_surname') is-invalid @enderror" placeholder="Enter Name first">
-                    @error('employe_surname')
+                    <label for="exampleInputEmail1">Email</label>
+                    <input value="{{old('email')}}" name="email" id="email" type="text" class="form-control @error('email') is-invalid @enderror" placeholder="Enter email">
+                    @error('name')
                      <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Last Name <span class="text--danger">*</span></label>
-                    <input value="{{old('user_last_name')}}" name="user_last_name" id="user_last_name" type="text" class="form-control @error('user_last_name') is-invalid @enderror" placeholder="Enter Name user_last_name">
-                    @error('user_last_name')
+                    <label for="exampleInputEmail1">Password</label>
+                    <input value="" name="password" id="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter password">
+                    @error('password')
                      <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Email (Treated as Login ID) <span class="text--danger">*</span></label>
-                    <input value="{{old('user_email')}}" name="user_email" id="user_email" type="text" class="form-control @error('user_email') is-invalid @enderror" placeholder="Enter user_email">
-                    @error('user_email')
+                    <label for="exampleInputEmail1">Confirm Password</label>
+                    <input value="" name="password_confirmation" id="password_confirmation" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter Name">
+                    @error('password_confirmation')
                      <strong class="text-danger">{{ $message }}</strong>
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Personal Email Id <span class="text--danger">*</span></label>
-                    <input value="{{old('personal_email')}}" name="personal_email" id="personal_email" type="text" class="form-control @error('personal_email') is-invalid @enderror" placeholder="Enter personal_email">
-                    @error('user_email')
-                     <strong class="text-danger">{{ $message }}</strong>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Mobile <span class="text--danger">*</span></label>
-                    <input value="{{old('user_mobile_no')}}" name="user_mobile_no" id="user_mobile_no" type="text" class="form-control @error('user_mobile_no') is-invalid @enderror" placeholder="Enter user_mobile_no">
-                    @error('user_mobile_no')
-                     <strong class="text-danger">{{ $message }}</strong>
-                    @enderror
-                  </div>
-                  
-                  <div class="form-group">
-                    <label>Select Department <span class="text--danger">*</span></label>
-                    <select name="dep_name" id="dep_name" class="select2" data-placeholder="Select a State" style="width: 100%;">
-                      @foreach ($departments as $departments)                   
-                      <option value="{{ $departments->nims_wp_department_id }}">{{ $departments->nims_wp_department_name }}</option>
-                      @endforeach
-                    </select>
-                    @error('departments')
-                    <strong class="text-danger">{{ $message }}</strong>
-                   @enderror
-                  </div>                             
-                  <div class="form-group">
-                    <label>User Type (Roles) <span class="text--danger">*</span> </label>
+                    <label>Roles</label>
                     <select name="roles[]" id="roles" class="select2" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
                       @foreach ($roles as $role)                   
                       <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -97,8 +71,7 @@
                     @error('roles')
                     <strong class="text-danger">{{ $message }}</strong>
                    @enderror
-                  </div> 
-                                          
+                  </div>                             
                 <!-- /.card-body -->
 
                 <div class="card-footer">

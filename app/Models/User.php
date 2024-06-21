@@ -19,12 +19,14 @@ class User extends Authenticatable
      // public $connection = 'pgsql';
     protected $table = 'nims_wp_user_login';
     protected $primaryKey = 'nims_wp_user_id';
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
+        'nims_wp_user_id',
         'nims_employe_code',
         'nims_wp_user_name',
         'nims_wp_user_email',
@@ -50,7 +52,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public $timestamps = false;
+ 
 
     public function getAuthPassword()
     {

@@ -6,6 +6,8 @@
   <title>AdminLTE 3 | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- CSRF Token -->
+   <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- Font Awesome -->
   <?php $addPublic = config('app.url').'/public/';?>
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/fontawesome-free/css/all.min.css')}}">
@@ -35,11 +37,27 @@
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/summernote/summernote-bs4.css')}}">
   <!-- Toastr -->
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/toastr/toastr.min.css')}}">
+  
+  {{-- datetimepicker --}}
+  <link rel="stylesheet" href="{{asset($addPublic.'css/jquery.datetimepicker.min.css')}}">
+  
+  {{-- datepicker --}}
+  <link rel="stylesheet" href="{{asset($addPublic.'css/jquery-ui.css')}}">
+
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <script>
+    var base_url = "<?php echo url('') ?>";
+  </script>
+<script type="text/javascript">
+  $(document).ready(function(){
+     $('#ui-datepicker-div').removeClass("ui-datepicker");
 
+    });
+    
+  </script>
   <?php 
-  
+  date_default_timezone_set('Asia/Kolkata');  
   ?>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -116,11 +134,101 @@
 <!-- AdminLTE for demo purposes -->
 <!-- Toastr -->
 <script src="{{asset($addPublic.'plugins/toastr/toastr.min.js')}}"></script>
-<script src="{{asset($addPublic.'dist/js/demo.js')}}"></script>
+{{-- <script src="{{asset($addPublic.'dist/js/demo.js')}}"></script> --}}
 <!-- page script -->
 <!-- sweet alert -->
 <script src="{{asset($addPublic.'js/sweetalert.min.js')}}"></script>
+<script  src="{{asset($addPublic.'js/ckeditor/ckeditor.js')}}"></script>
 
+{{-- only datetimepicker js --}}
+<script  src="{{asset($addPublic.'js/jquery.datetimepicker.full.min.js')}}"> </script>
+<script  src="{{asset($addPublic.'plugins/jquery-validation/jquery.validate.min.js')}}"> </script>
+<script  src="{{asset($addPublic.'plugins/jquery-validation/additional-methods.min.js')}}"> </script>
+
+<script>
+  $.ajaxSetup({
+  headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+</script>
+<script>
+  var i = 1;
+  $("#rowAdder").click(function () {
+
+     // Check if the main document input is empty
+      var mainDocInput = $('#main_doc');
+      if (mainDocInput[0].files.length === 0) {         
+          var errorNewFile = 'Please choose a file for the Attachment before adding new rows.';
+          $('.errorNewFile').text(errorNewFile);          
+          return;
+      }
+
+      // Find the last file input element
+      var lastFileInput = $('#newFile').find('input[type="file"]').last();
+
+      // Check if the last file input is empty
+      if (lastFileInput.length > 0 && lastFileInput[0].files.length === 0) {
+          var errorNewFile = 'Please choose a file before adding a new Attachment.';
+          $('.errorNewFile').text(errorNewFile);
+          return;
+      }
+
+      if (i <= 10) {
+          var newRowAdd = '<div class="row" id="rowFile">'
+              + '<div class="col-md-12">'
+              + '<div class="form-group">'
+              + '<label class="" for="exampleInputFile"> Attachment ' + i + '.</label>'
+              + '<div class="input-group">'
+              + '<div class="input-group-prepend">'
+              + '<button class="btn btn-danger" id="DeleteRow" type="button">'
+              + '<i class="bi bi-trash"></i> Delete </button>'
+              + '</div>'
+              + '<div class="custom-file">'
+              + '<input type="file" name="attachment_'+i+'" class="custom-file-input" id="attachment_'+i+'">'
+              + '<label class="custom-file-label" for="attachment_'+i+'">Choose Document </label>'
+              + '</div>'
+              + '</div>'
+              + '</div>'
+              + '</div>'
+              + '</div>';
+          i++;
+
+          $('#newFile').append(newRowAdd);
+      } else {
+          var errorNewFile = 'Maximum file add is 10.';
+          $('.errorNewFile').text(errorNewFile);
+      }
+  });
+
+  $("body").on("click", "#DeleteRow", function () {
+      i--;
+      $(this).parents("#rowFile").remove();
+  });
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+  $(".datetimepicker").each(function () {
+      $(this).datetimepicker();
+  });
+  });
+  
+</script>
+<script type="text/javascript">
+  $(function() {
+  var date = new Date();
+  var currentMonth = date.getMonth();
+  var currentDate = date.getDate();
+  var currentYear = date.getFullYear();
+  $('.datepicker').datepicker({
+    minDate: -7,dateFormat: 'dd/mm/yy'
+  
+  
+  });
+  });
+  </script>
 <script>
   $(function () {
     //Initialize Select2 Elements
@@ -182,6 +290,9 @@
 </script>
 @endif
 
+<script>
+
+</script>
 @stack('scripts')
 </body>
 </html>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TenderController;
 use App\Http\Controllers\TutorialController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\PermissionController;
@@ -41,10 +42,12 @@ Route::get('t', [TutorialController::class, 'index']);
 //     Route::resource('permissions','App\Http\Controllers\PermissionController');
 //  });
 Route::group(['middleware' => 'custom_auth'], function() {
-    Route::get('dashboard', [CustomAuthController::class, 'dashboard'])->name('dashboard'); 
+    Route::resource('tenders', TenderController::class);  
+    Route::post('changeStatusUser', [UserController::class,'changeStatusUser']); 
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
+    Route::get('dashboard', [CustomAuthController::class, 'dashboard'])->name('dashboard');
 });
 
 

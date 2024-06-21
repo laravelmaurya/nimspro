@@ -42,19 +42,12 @@
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">First Name <span class="text-danger">*</span></label>
+                    <label for="exampleInputEmail1">User Name <span class="text-danger">*</span></label>
                     <input value="{{$user->nims_wp_user_name}}"  name="employe_surname" id="employe_surname" type="text" class="form-control @error('employe_surname') is-invalid @enderror" placeholder="Enter Name first">
                     @error('employe_surname')
                      <strong class="text-danger">{{ $message }}</strong>
                     @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Last Name <span class="text--danger">*</span></label>
-                    <input value="{{$user->nims_wp_user_name}}"  value="{{old('user_last_name')}}" name="user_last_name" id="user_last_name" type="text" class="form-control @error('user_last_name') is-invalid @enderror" placeholder="Enter Name user_last_name">
-                    @error('user_last_name')
-                     <strong class="text-danger">{{ $message }}</strong>
-                    @enderror
-                  </div>
+                  </div>                 
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email (Treated as Login ID) <span class="text--danger">*</span></label>
                     <input value="{{$user->nims_wp_user_email}}"  value="{{old('user_email')}}" name="user_email" id="user_email" type="text" class="form-control @error('user_email') is-invalid @enderror" placeholder="Enter user_email">
@@ -81,9 +74,9 @@
                           @endforeach --}}
                   <div class="form-group">
                     <label>Select Department <span class="text--danger">*</span></label>
-                    <select name="dep_name" id="dep_name" class="select2" data-placeholder="Select a State" style="width: 100%;">
-                      @foreach ($departments as $department)                                               
-                      <option value="{{ $department->nims_wp_department_id }}"  {{ $user->nims_wp_department_name === $department->nims_wp_department_id ? "selected" : "" }} >{{ $department->nims_wp_department_name }}</option>
+                    <select name="department_id" id="department_id" class="select2" data-placeholder="Select a State" style="width: 100%;">
+                      @foreach ($departments as $department)  
+                      <option value="{{$department->nims_wp_department_id}}" {{ (int)$user->nims_wp_department_name == (int)$department->nims_wp_department_id ? 'selected' : '' }}> {{$department->nims_wp_department_name}}</option>                      
                       @endforeach
                     </select>
                     @error('departments')

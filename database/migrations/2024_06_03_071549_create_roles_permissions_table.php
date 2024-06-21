@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('roles_permissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Role::class)->constrained()->cascadeOnDelete();            
-            $table->foreignIdFor(Permission::class)->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('role_nims_wp_role_id');
+            $table->unsignedBigInteger('permission_nims_wp_permission_id');
             $table->timestamps();
         });
     }

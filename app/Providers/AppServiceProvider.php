@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Permission;
 use App\Traits\HasPermissionsTrait;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void    
     {       
+        Paginator::useBootstrap();
         try {            
             Permission::get()->map(function ($permission) {               
                 Gate::define($permission->name, function ($user) use ($permission) {                   

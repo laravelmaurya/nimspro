@@ -11,15 +11,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('users_permissions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();            
-            $table->foreignIdFor(Permission::class)->constrained()->cascadeOnDelete();
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('users_permissions', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('user_nims_wp_user_id');
+        $table->unsignedBigInteger('permission_nims_wp_permission_id');
+
+
+
+
+    });
+}
+
 
     /**
      * Reverse the migrations.

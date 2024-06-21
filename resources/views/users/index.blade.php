@@ -43,22 +43,21 @@
                 <tbody>
                 @foreach($users as $user)
                 <tr>
-                  <td>{{$user->id}}</td>
+                  <td>{{$user->nims_wp_user_id}}</td>
                   <td>
                     <input data-id="{{$user->nims_wp_user_id}}" class="toggle-class" type="checkbox" data-onstyle="success"
                      data-offstyle="danger" data-toggle="toggle" data-size="xs" data-on="Active"
-                     data-off="InActive" {{ $user->status ? 'checked' : '' }}>
+                     data-off="InActive" {{ $user->nims_wp_user_status ? 'checked' : '' }}>
                   </td>
                   <td id="name">{{$user->nims_wp_user_name}}</td>
                   <td>{{$user->nims_wp_user_email}}</td>
                   <td>
                     @foreach ($user->roles as $role)
                         <h4 class="d-inline"><span class="badge bg-info">{{ $role->name }}</span></h4>
-                       
                     @endforeach
                  </td>
                               
-                  <td>{{$user->created_at}}</td>
+                  <td>{{$user->nims_wp_user_created_on}}</td>
                   <td>
                   <a href="{{route('users.edit', $user)}}"><i class="fas fa-edit"></i></a>
                   <form method="GET" action="{{route('users.show', $user)}}">
@@ -123,17 +122,16 @@
 <script>
 $(document).ready(function(){
     $('.toggle-class').change(function() {
-      //alert('jklllllllllll');
-        var status = $(this).prop('checked') == true ? 1 : 0; 
+      // alert(base_url+'jklllllllllll');
         var id = $(this).data('id'); 
-         console.log(status);
+        url = base_url+'/changeStatusUser';
         $.ajax({
-            type: "GET",
+            type: "POST",
             dataType: "json",
-            url: '/changeStatusCategory',
-            data: {'status': status, 'id': id},
+            url: url,
+            data: {'id': id},
             success: function(data){
-              console.log(data.success)
+              console.log(data)
                 toastr.success(data.success)
             }
         });

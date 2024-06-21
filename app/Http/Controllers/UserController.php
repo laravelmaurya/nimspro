@@ -24,16 +24,10 @@ class UserController extends Controller
      */
 
      public function index(Request $request): View
-
      {
- 
         //  $users = User::latest()->paginate(5);
          $users = User::with('roles')->get();
- 
-   
- 
          return view('users.index',compact('users'));
- 
      }
 
      
@@ -56,14 +50,14 @@ class UserController extends Controller
         // ]);
 
    
-        $full_name = $request->employe_surname. $request->user_last_name;
+        $full_name = $request->employe_surname.' '.$request->user_last_name;
         $roles =   json_encode($request->roles);
         $salt = 'asldkjdslakjdsaldjsourrekjhkfhds';
         $password = 'Test@123#';
         $userpassword_insert = hash('sha256', $password . $salt); 
         $logged_in_user = '_'.auth()->user()->roles()->first()->name;
         date_default_timezone_set('Asia/Kolkata');  
-        $publish_date = date('Y-m-d',strtotime(str_replace('/', '-', date('d/m/Y H:i'))));
+        $publish_date = date('Y-m-d H:i:s',strtotime(str_replace('/', '-', date('d/m/Y H:i:s'))));
     
 
         $user = User::create([
@@ -135,7 +129,7 @@ class UserController extends Controller
         //     'roles.*' => 'exists:roles,id',
         // ]);
 
-        $full_name = $request->employe_surname. $request->user_last_name;
+        $full_name = $request->employe_surname;
         $roles =   json_encode($request->roles);
         $salt = 'asldkjdslakjdsaldjsourrekjhkfhds';
         $password = 'Test@123#';
@@ -143,8 +137,8 @@ class UserController extends Controller
         // $logged_in_user = '_'.auth()->user()->roles()->first()->name;
         $logged_in_user = $full_name;
         date_default_timezone_set('Asia/Kolkata');  
-        $publish_date = date('Y-m-d',strtotime(str_replace('/', '-', date('d/m/Y H:i'))));
-
+        $publish_date = date('Y-m-d H:i:s',strtotime(str_replace('/', '-', date('d/m/Y H:i:s'))));
+        // dd($request->roles);
         // Update the user's basic details
         $user->update(['nims_employe_code'=> $request->emp_code,
         'nims_wp_user_name'=> $full_name ,
@@ -152,7 +146,7 @@ class UserController extends Controller
         'nims_wp_user_password'=>  $userpassword_insert ,
         'nims_employe_mob_no'=> $request->user_mobile_no ,
         'e_email'=> $request->personal_email ,
-        'nims_wp_department_name'=> $request->dep_name ,
+        'nims_wp_department_name'=> $request->department_id ,
         'nims_wp_user_type'=> $roles,
         'nims_wp_user_created_by'=> $logged_in_user,
         'nims_wp_user_created_on'=>  $publish_date,
@@ -160,9 +154,10 @@ class UserController extends Controller
         'user'=>$roles,
         'nims_wp_salt_random'=> $salt ]);
 
-        // Sync roles
+
         // Sync roles to the user
         $user->roles()->sync($request->roles);
+        
 
         // Fetch all permissions associated with the selected roles
         $permissions = [];
@@ -177,5 +172,22 @@ class UserController extends Controller
         $user->permissions()->sync($permissions);
         return redirect()->route('users.index')->with('success', 'User updated successfully');
         
+    }
+
+    public function changeStatusUser(Request $request)
+    {
+    	//\Log::info($request->all());
+        // dd($request->all());
+        // dd($request->id);
+        $user = User::find($request->id);
+        $status = ($user->nims_wp_user_status == 1) ? 0: 1; 
+        $user->nims_wp_user_status = $status;
+        $user->save();
+        if($status)
+        {
+          return response()->json(['success'=>'InActivat successfully.']);         
+        }else{
+            return response()->json(['success'=>'Activat successfully.']); 
+        }
     }
 }

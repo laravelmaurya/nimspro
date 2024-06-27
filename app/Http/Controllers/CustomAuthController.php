@@ -13,7 +13,13 @@ class CustomAuthController extends Controller
 {
     public function index()
     {
-        return view('auth.login');
+        $user=Auth::user();
+        // dd();
+        if(empty($user)){
+          return view('auth.login');
+       }
+
+       return redirect("dashboard");
     }  
       
     public function customLogin(Request $request)
@@ -79,10 +85,19 @@ class CustomAuthController extends Controller
         // return redirect("login")->withSuccess('You are not allowed to access');
     }
     
+    public function dataTampering(Request $request)
+    {
+        $error = session('errorTampering');
+        if($error){
+            return view('auth.error-data-tampering');
+        }
+        return redirect("dashboard");
+    }
+    
     public function signOut() {
         Session::flush();
         Auth::logout();
   
-        return Redirect('login');
+        return Redirect('/');
     }
 }

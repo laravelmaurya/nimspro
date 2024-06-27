@@ -23,9 +23,12 @@ use App\Http\Controllers\PermissionController;
 //     return view('welcome');
 // });
 
+// Route::get('/', function(){
+//     return "hi";
+// });
 
 
-Route::get('login', [CustomAuthController::class, 'index'])->name('login');
+Route::get('/', [CustomAuthController::class, 'index'])->name('login');
 Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name('login.custom'); 
 Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
 Route::post('custom-registration', [CustomAuthController::class, 'customRegistration'])->name('register.custom'); 
@@ -48,6 +51,7 @@ Route::group(['middleware' => 'custom_auth'], function() {
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::get('dashboard', [CustomAuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('error-page', [CustomAuthController::class,'dataTampering'])->name('error-page'); 
 });
 
 

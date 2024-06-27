@@ -46,7 +46,53 @@ class TenderController extends Controller
 
     public function store(Request $request)
     {
+
+
+
+       
         // dd($request->all());
+      
+
+        // Sanitize input data
+        $title = $this->sanitizeInput($request->title);
+        $h1_title = $request->h1;
+        $number = $this->sanitizeInput($request->number);
+        $h2_number = $request->h2;
+
+        // description value sanitizeInput for both and hidden field decode before snitize
+        $description = $request->description;
+        $h3_des = $request->h3;
+
+        // echo $description;
+        // echo'<br>'. $h3_des;
+
+        // // echo'<br>'. base64_decode($h3_des);
+   
+        // echo 'title='.$this->dataTamper($title,$h1_title);
+        // echo 'number='.$this->dataTamper($number,$h2_number);
+        // echo 'compare resulte='.$this->dataTamperDes($description,$h3_des);
+
+
+        if(!$this->dataTamper($title,$h1_title) || !$this->dataTamper($number,$h2_number) || !$this->dataTamperDes($description,$h3_des) ){            
+            return redirect()->route('error-page') ->with('errorTampering',true);;
+        }
+        $description = $this->sanitizeInput($description);
+// dd('tttttttttttttttt');
+        // Format dates
+        date_default_timezone_set('Asia/Kolkata'); 
+        $start_date = date('Y-m-d', strtotime(str_replace('/', '-', $request->start_date)));
+        $h3_sd = base64_decode($request->h3);
+        $end_date = date('Y-m-d h:i', strtotime(str_replace('/', '-', $request->end_date)));                
+        $h4_ed = base64_decode($request->h4);
+
+        $publish_date = date('Y-m-d', strtotime(str_replace('/', '-', date('d/m/Y'))));
+        $entry_date = date('Y-m-d h:i:s A', strtotime(str_replace('/', '-', date('d/m/Y h:i:s A'))));
+
+        $add_id = rand(10, 10000000);
+        $archive = 1;
+        $main_num = 1;
+
+
    
          // Define validation rules
          $rules = [
@@ -55,7 +101,7 @@ class TenderController extends Controller
                 'string',
                 'unique:nims_wp_tenders,nims_wp_tender_title',
                 'regex:/^[a-zA-Z1-9 ]+$/',
-                'min:5',
+                'min:3',
                 'max:255'
             ],
             'number' => [
@@ -95,14 +141,10 @@ class TenderController extends Controller
         }
 
         // Validate the request
-        try {
+        
             $request->validate($rules, [], $attributeNames);
             Log::info('Request validated successfully');
-        } catch (\Exception $e) {
-            Log::error('Validation failed: ' . $e->getMessage());
-            return back()->with('error', 'Validation failed: ' . $e->getMessage());
-        }
-
+        
         // Handle file uploads
         $uploadedFiles = [];
         $directoryDate = date("Y-m-d");
@@ -131,20 +173,9 @@ class TenderController extends Controller
             }
         }
 
-        // Format dates
-        date_default_timezone_set('Asia/Kolkata'); 
-        $start_date = date('Y-m-d', strtotime(str_replace('/', '-', $request->start_date)));
-        $end_date = date('Y-m-d h:i', strtotime(str_replace('/', '-', $request->end_date)));
-        $publish_date = date('Y-m-d', strtotime(str_replace('/', '-', date('d/m/Y'))));
-        $entry_date = date('Y-m-d h:i:s A', strtotime(str_replace('/', '-', date('d/m/Y h:i:s A'))));
-        $add_id = rand(10, 10000000);
-        $archive = 1;
-        $main_num = 1;
+      
 
-        // Sanitize input data
-        $title = $this->sanitizeInput($request->title);
-        $number = $this->sanitizeInput($request->number);
-        $description = $this->sanitizeInput($request->description);
+
 
         // Create a new tender and notification data
         $tenderData = [

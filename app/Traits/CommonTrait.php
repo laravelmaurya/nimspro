@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 trait CommonTrait{
     
+   
     // Helper function to upload and sanitize a file
     // private function uploadAndSanitizeFile($number, $path, $file)
     // {
@@ -26,8 +27,9 @@ trait CommonTrait{
         
         // dd($filename);
          // Generate a unique file name
-        //  $fileName = time() . '_'.$numberData.'_' . Str::slug($file->getClientOriginalName());        
-         $fileName = time() . '_'.$numberData.'_' . $file->getClientOriginalName();        
+        //  $fileName = time() . '_'.$numberData.'_' . Str::slug($file->getClientOriginalName());       
+       
+         $fileName = time() . '_'.$numberData.'_' .trim(str_replace(" ","_",$file->getClientOriginalName())) ;        
 
          // Store the file in the storage/app/uploads directory
          //  3rd parameter is local or public
@@ -43,4 +45,22 @@ trait CommonTrait{
         $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');  
         return $data;  
       } 
+
+      function dataTamper($value,$base64EncodedValue){
+         if($value === base64_decode($base64EncodedValue)){
+            return 1;        
+        }
+        return 0;
+        
+      }
+      function dataTamperDes($value,$matchValue){
+
+        // echo'compare='. stripos($value,$matchValue);die;    
+        $stripos = stripos($value,$matchValue);
+        if($stripos ==0 && $stripos !=''){
+           return 1;        
+       }
+       return 0;
+       
+     }
 }

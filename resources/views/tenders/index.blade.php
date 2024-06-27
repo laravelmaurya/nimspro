@@ -66,9 +66,9 @@
                   </td>
                   <td id="name">{{$tender->nims_wp_tender_title}}</td>
                   <td>{{$tender->nims_wp_tender_number}}</td>
-                  <td>{{date('d-m-Y',strtotime($tender->nims_wp_tender_submit_datenims_wp_tender_submit_date))}}</td>
-                  <td>{{date('d-m-Y',strtotime($tender->nims_wp_tender_submit_datenims_wp_tender_start_date))}}</td>
-                  <td>{{date('d-m-Y',strtotime($tender->nims_wp_tender_submit_datenims_wp_tender_end_date))}}</td>
+                  <td>{{date('d-m-Y',strtotime($tender->nims_wp_tender_submit_date))}}</td>
+                  <td>{{date('d-m-Y',strtotime($tender->nims_wp_tender_start_date))}}</td>
+                  <td>{{date('d-m-Y h:s',strtotime($tender->nims_wp_tender_end_date))}}</td>
 
                               
                   {{-- <td>{{$tender->created_at}}</td> --}}

@@ -300,6 +300,34 @@ $(document).ready(function(){
     })
   });
 </script>
+
+<script>
+  $(document).ready(function() {
+    function fetch_data(query = '', page = 1) {
+      $.ajax({
+        url: "{{ route('tenders.index') }}",
+        method: 'GET',
+        data: { search: query, page: page },
+        success: function(data) {
+          $('#tender-table').html(data.data);
+          $('#pagination-links').html(data.links);
+        }
+      });
+    }
+  
+    $('#table_search').on('keyup', function() {
+      var query = $(this).val();
+      fetch_data(query);
+    });
+  
+    $(document).on('click', '.pagination a', function(event) {
+      event.preventDefault();
+      var page = $(this).attr('href').split('page=')[1];
+      var query = $('#table_search').val();
+      fetch_data(query, page);
+    });
+  });
+  </script>
 {{-- <script>
   $(function () {
     $(".example1").DataTable({
@@ -318,14 +346,14 @@ $(document).ready(function(){
   });
 </script> --}}
 <script>
-  $(function () {
-    $(".example1").DataTable({
-      "responsive": true,
-      "autoWidth": false,
-    "paging": false, // Disable DataTables pagination
-    "info": false, // Disable the table information
-    "searching": true // Enable the search functionality
-    });
+  // $(function () {
+  //   $(".example1").DataTable({
+  //     "responsive": true,
+  //     "autoWidth": false,
+  //   "paging": false, // Disable DataTables pagination
+  //   "info": false, // Disable the table information
+  //   "searching": false // Enable the search functionality
+  //   });
     // $('.example2').DataTable({
     //   "paging": false,
     //   "lengthChange": false,
@@ -335,7 +363,7 @@ $(document).ready(function(){
     //   "autoWidth": false,
     //   "responsive": true,
     // });
-  });
+  // });
 
   $("input[data-bootstrap-switch]").each(function(){
       $(this).bootstrapSwitch('state', $(this).prop('checked'));

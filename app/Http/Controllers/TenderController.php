@@ -38,20 +38,52 @@ class TenderController extends Controller
     //  }
 
     public function index(Request $request)
-{
-    $tenders = Tender::latest('nims_wp_tender_id')->paginate(5);
-    if ($request->ajax()) {
+    {
+        $query = Tender::where('nims_wp_tender_archive', 0);
       
-
-        return response()->json([
-            'data' => $tenders->items(),
-            'recordsTotal' => $tenders->total(),
-            'recordsFiltered' => $tenders->total(),
-        ]);
+    
+        // $query = Tender::where('nims_wp_tender_archive', 0)
+        //                ->where('nims_wp_tender_end_date', '>=', now());
+    
+        if ($request->ajax()) {
+            if ($request->has('search') && $request->search != '') {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('nims_wp_tender_title', 'like', '%' . $search . '%')
+                      ->orWhere('nims_wp_tender_number', 'like', '%' . $search . '%')
+                      ->orWhere('nims_wp_tender_submit_date', 'like', '%' . $search . '%')
+                      ->orWhere('nims_wp_tender_start_date', 'like', '%' . $search . '%')
+                      ->orWhere('nims_wp_tender_end_date', 'like', '%' . $search . '%');
+    
+                });
+            }
+    
+            $tenders = $query->latest('nims_wp_tender_id')->paginate(5);
+    
+            $tenders->getCollection()->transform(function ($tender) {
+                $tender->nims_wp_tender_title = Str::limit($tender->nims_wp_tender_title, 50);
+                $tender->nims_wp_tender_number = Str::limit($tender->nims_wp_tender_number, 50);
+                return $tender;
+            });
+    
+            return response()->json([
+                'data' => view('tenders.tender_table', compact('tenders'))->render(),
+                'links' => (string) $tenders->links()
+            ]);
+        }
+    
+        $tenders = $query->latest('nims_wp_tender_id')->paginate(5);
+    
+        $tenders->getCollection()->transform(function ($tender) {
+            $tender->nims_wp_tender_title = Str::limit($tender->nims_wp_tender_title, 50);
+            $tender->nims_wp_tender_number = Str::limit($tender->nims_wp_tender_number, 50);
+            return $tender;
+        });
+    
+        return view('tenders.index', compact('tenders'));
     }
 
-    return view('tenders.index',compact('tenders'));
-}
+
     public function create()
     {
         // $files = Storage::files('uploads');

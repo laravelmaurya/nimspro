@@ -28,18 +28,18 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
-              <table id="example2" class="table table-bordered example1">
+              <table id="tenders-table" class="table table-bordered example1">
                 <thead>
                 <tr>
-                  <th>#</th>
-                  <th>i</th>
-                  <th>Status</th>                                 
-                  <th>Name</th>
+                  <th class="th-serial-no">#</th>
+                  <th class="th-imgage">image</th>
+                  <th class="th-status" >Status</th>                                 
+                  <th>Name</th>      
                   <th>Number</th> 
-                  <th>Published on</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Action</th>
+                  <th class="th-publishes-on">Published on</th>
+                  <th class="th-start-date">Start Date</th>
+                  <th class="th-end-date">End Date</th>
+                  <th class="th-action">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,11 +48,16 @@
                   <td>{{$tender->nims_wp_tender_id}}</td>
                   <td> 
 
-                    <?php $image = $tender->nims_wp_tender_doc; ?>
+                    @php 
+                     $image = $tender->nims_wp_tender_doc; 
+                     $nims_wp_tender_link1 = $tender->nims_wp_tender_link1; 
+                     $url_img = url('public'.Storage::url($image));
+                     $nims_wp_tender_link1 = url('public'.Storage::url($nims_wp_tender_link1));
+                    @endphp
                   
-                    @if(in_array(pathinfo($image, PATHINFO_EXTENSION), ['jpeg','jpg', 'png']))
-                    <img src="{{ url(Storage::url($image)) }}" alt="{{ basename($image) }}" style="max-width: 200px;">
-                       
+                    @if(in_array(pathinfo($image, PATHINFO_EXTENSION), ['jpeg','jpg', 'png','pdf']))
+                    <img src="{{ $url_img }}" alt="{{ basename($image) }}" style="max-width: 50px;">
+                    <img src="{{ $nims_wp_tender_link1 }}" alt="{{ basename($nims_wp_tender_link1) }}" style="max-width: 50px;">
                     @else
                         <strong class="">No Image</strong>
                     @endif
@@ -64,8 +69,8 @@
                      data-offstyle="danger" data-toggle="toggle" data-size="xs" data-on="Active"
                      data-off="InActive" {{ $tender->status ? 'checked' : '' }}>
                   </td>
-                  <td id="name">{{$tender->nims_wp_tender_title}}</td>
-                  <td>{{$tender->nims_wp_tender_number}}</td>
+                  <td id="name">{{ Illuminate\Support\Str::limit($tender->nims_wp_tender_title, 20) }}</td>
+                  <td>{{ Illuminate\Support\Str::limit($tender->nims_wp_tender_number, 30)}}</td>
                   <td>{{date('d-m-Y',strtotime($tender->nims_wp_tender_submit_date))}}</td>
                   <td>{{date('d-m-Y',strtotime($tender->nims_wp_tender_start_date))}}</td>
                   <td>{{date('d-m-Y h:s',strtotime($tender->nims_wp_tender_end_date))}}</td>
@@ -106,7 +111,8 @@
                 </tfoot>
        
               </table>
-             {{-- {{ $tenders->links() }} --}}
+             {{ $tenders->links() }}
+             {{-- {{ $paginator->links() }} --}}
             </div>
             <!-- /.card-body -->
           </div>

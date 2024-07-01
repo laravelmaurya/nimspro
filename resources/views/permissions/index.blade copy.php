@@ -31,18 +31,18 @@
               <table id="example2" class="table table-bordered example1">
                 <thead>
                 <tr>
-                  <th class="th-serial-no">#</th>
-                  <th class="th-status" >Status</th>                                     
+                  <th>#</th>
+                  <th>Status</th>                                 
                   <th>Name</th>                 
-                  <th class="th-created-at">created_at</th>
-                  <th class="th-action">Action</th>
+                  <th>created_at</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($permissions as $permission)
                 <tr>
                   <td>{{$permission->id}}</td>
-                  <td class="text-center">
+                  <td>
                     <input data-id="{{$permission->id}}" class="toggle-class" type="checkbox" data-onstyle="success"
                      data-offstyle="danger" data-toggle="toggle" data-size="xs" data-on="Active"
                      data-off="InActive" {{ $permission->status ? 'checked' : '' }}>
@@ -52,14 +52,14 @@
                   <td>{{$permission->created_at}}</td>
                   <td>
                   <a href="{{route('permissions.edit', $permission)}}"><i class="fas fa-edit"></i></a>
-                  <form class="d-inline" action="{{route('permissions.show', $permission)}}">
+                  <form method="GET" action="{{route('permissions.show', $permission)}}">
                       @csrf
                       <button class="btn btn-sm bg-warning"><i class="fas fa-eye"></i></button>
                   </form>
                   <a href="{{route('permissions.destroy', $permission->id)}}" class="delete-confirm">
                     <i class="text-danger fas fa-trash"></i>
                   </a>
-                  <!-- <form clss="d-inline"  method="POST" action="{{route('permissions.destroy', $permission)}}">
+                  <!-- <form method="POST" action="{{route('permissions.destroy', $permission)}}">
                       @method('delete')
                       @csrf
                       <button class="btn btn-sm bg-danger"><i class="fas fa-trash"></i></button>

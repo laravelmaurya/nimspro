@@ -177,7 +177,7 @@ class UserController extends Controller
     public function changeStatusUser(Request $request)
     {
     	//\Log::info($request->all());
-        // dd($request->all());
+        dd($request->all());
         // dd($request->id);
         $user = User::find($request->id);
         $status = ($user->nims_wp_user_status == 1) ? 0: 1; 

@@ -149,13 +149,13 @@
     <!-- /.content -->
 @endsection
 @push('scripts')
-<script>
+{{-- <script>
 $(document).ready(function() { 
     $('#name').keyup(function () {
       $('#slug').val($('#name').val());
     });
 });
-</script>
+</script> --}}
 <script>
 // function readURL(input) {
 //         if (input.files && input.files[0]) {

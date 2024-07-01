@@ -35,16 +35,12 @@ Route::post('custom-registration', [CustomAuthController::class, 'customRegistra
 Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout');
 
 
-Route::get('t', [TutorialController::class, 'index']);
 
-
-// Route::group(['middleware' => 'role:user'], function() {
-//     Route::get('dashboard', [CustomAuthController::class, 'dashboard']); 
-//     Route::resource('users','App\Http\Controllers\UserController');
-//     Route::resource('roles','App\Http\Controllers\RoleController');
-//     Route::resource('permissions','App\Http\Controllers\PermissionController');
-//  });
 Route::group(['middleware' => 'custom_auth'], function() {
+
+    // Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle']); 
+    Route::post('tender/main-image-delete', [TenderController::class,'mainImgDelete'])->name('tender.main-image-delete'); 
+    Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle'])->name('tender.image-delete-only'); 
     Route::resource('tenders', TenderController::class);  
     Route::post('changeStatusUser', [UserController::class,'changeStatusUser']); 
     Route::resource('users', UserController::class);

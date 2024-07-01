@@ -9,7 +9,10 @@
    <!-- CSRF Token -->
    <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- Font Awesome -->
-  <?php $addPublic = config('app.url').'/public/';?>
+  @php 
+     $addPublic = config('app.url').'public/';
+     $onlyPublic = 'public';
+   @endphp
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/fontawesome-free/css/all.min.css')}}">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'">
@@ -47,7 +50,8 @@
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <script>
-    var base_url = "<?php echo url('') ?>";
+    var base_url = "<?php echo url('')  ?>";
+    // var base_url = urlPublic + 'public/';
   </script>
 <script type="text/javascript">
   $(document).ready(function(){
@@ -56,9 +60,26 @@
     });
     
   </script>
+ 
   <?php 
   date_default_timezone_set('Asia/Kolkata');  
   ?>
+   
+   <?php 
+
+   ?>
+   <style>
+    .table td{
+      padding: 0px;
+
+
+    }
+     th{
+      width: auto% !important;
+    }
+    .th-serial-no, .th-image,.th-status,.th-action{width:5%}
+    .th-created-at,.th-published-on,.th-start-date,.th-end-date{width:10%}
+   </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 
@@ -190,6 +211,7 @@ $(document).ready(function(){
 });
 });
 </script>
+
 <script>
   var i = 1;
   $("#rowAdder").click(function () {
@@ -300,16 +322,19 @@ $(document).ready(function(){
     $(".example1").DataTable({
       "responsive": true,
       "autoWidth": false,
+    "paging": false, // Disable DataTables pagination
+    "info": false, // Disable the table information
+    "searching": true // Enable the search functionality
     });
-    $('.example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
+    // $('.example2').DataTable({
+    //   "paging": false,
+    //   "lengthChange": false,
+    //   "searching": true,
+    //   "ordering": true,
+    //   "info": false,
+    //   "autoWidth": false,
+    //   "responsive": true,
+    // });
   });
 
   $("input[data-bootstrap-switch]").each(function(){
@@ -465,8 +490,12 @@ $(document).ready(function(){
 @endif
 
 <script>
-
+  function redirectToCurrentPage() {
+    window.location.reload();
+}  
 </script>
+
+
 @stack('scripts')
 </body>
 </html>

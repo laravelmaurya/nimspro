@@ -43,57 +43,53 @@ class TenderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $columns = [
-                'nims_wp_tender_id',
-                'nims_wp_tender_title',
-                'nims_wp_tender_number',
-                'nims_wp_tender_submit_date',
-                'nims_wp_tender_start_date',
-                'nims_wp_tender_end_date',
-                'nims_wp_tender_doc'
-            ];
+            $query = Tender::where('nims_wp_tender_archive', 0)
+                        //    ->where('nims_wp_tender_end_date', '>=', now())
+                           ->select([
+                                'nims_wp_tender_id as id',
+                                'nims_wp_tender_title as title',
+                                'nims_wp_tender_number as number',
+                                'nims_wp_tender_submit_date as submit_date',
+                                'nims_wp_tender_start_date as start_date',
+                                'nims_wp_tender_end_date as end_date'
+                            ])
+                           ->latest('id');
     
-            $query = $data = Tender::where('nims_wp_tender_archive', 0)
-
-            ->latest('nims_wp_tender_id')
-            ->get();
-    
-            return DataTables::of($data)
-            ->addIndexColumn()
-            ->editColumn('nims_wp_tender_title', function($row) {
-                return Str::limit($row->nims_wp_tender_title, 50);
-            })
-            ->editColumn('nims_wp_tender_number', function($row) {
-                return Str::limit($row->nims_wp_tender_number, 20);
-            })
-                ->editColumn('nims_wp_tender_submit_date', function($row) {
-                    return $row->nims_wp_tender_submit_date ? date('d-m-Y', strtotime($row->nims_wp_tender_submit_date)) : '';
+                return DataTables::eloquent($query)
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search.value')) {
+                        $search = $request->input('search.value');
+                        $query->where(function ($query) use ($search) {
+                            $query->where('nims_wp_tender_title', 'like', "%{$search}%")
+                                  ->orWhere('nims_wp_tender_number', 'like', "%{$search}%")
+                                  ->orWhere('nims_wp_tender_submit_date', 'like', "%{$search}%")
+                                  ->orWhere('nims_wp_tender_start_date', 'like', "%{$search}%")
+                                  ->orWhere('nims_wp_tender_end_date', 'like', "%{$search}%");
+                        });
+                    }
                 })
-                ->editColumn('nims_wp_tender_start_date', function($row) {
-                    return $row->nims_wp_tender_start_date ? date('d-m-Y', strtotime($row->nims_wp_tender_start_date)) : '';
+                ->editColumn('title', function($row) {
+                    return Str::limit($row->title, 30);
                 })
-                ->editColumn('nims_wp_tender_end_date', function($row) {
-                    return $row->nims_wp_tender_end_date ? date('d-m-Y', strtotime($row->nims_wp_tender_end_date)) : '';
+                ->editColumn('number', function($row) {
+                    return Str::limit($row->number, 20);
                 })
-                ->addColumn('status', function($row) {
-                    $statusBtn = $row->status == 1 ? '<button class="btn btn-success btn-sm status-toggle" data-id="'.$row->nims_wp_tender_id.'">Active</button>' : '<button class="btn btn-danger btn-sm status-toggle" data-id="'.$row->nims_wp_tender_id.'">Inactive</button>';
-                    return $statusBtn;
-                })
-                ->addColumn('nims_wp_tender_doc', function($row) {
-                    $image = $row->nims_wp_tender_doc;
-                    if(in_array(pathinfo($image, PATHINFO_EXTENSION), ['jpeg','jpg', 'png','pdf'])) {              
-                        return  url('public'.Storage::url($image));
-                       
-                    }                   
-                    return 'No Image';
-                })
-                ->addColumn('action', function($row) {
-                    $btn = '<a href="'.route('tenders.show', $row->nims_wp_tender_id).'" class="edit btn btn-info btn-sm">Show</a>';
-                    $btn .= '<a href="'.route('tenders.edit', $row->nims_wp_tender_id).'" class="edit btn btn-primary btn-sm">Edit</a>';
-                    $btn .= '<button class="btn btn-sm btn-danger delete-btn" data-id="'.$row->nims_wp_tender_id.'" data-url="'.route('tenders.destroy', $row->nims_wp_tender_id).'">Delete</button>';
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $btn = '<a href="'.route('tenders.edit', $row->id).'" class="edit btn btn-success btn-sm">Edit</a>';                   
                     return $btn;
                 })
-                ->rawColumns(['action', 'status', 'image'])
+                ->editColumn('submit_date', function($row){
+                    // return $row->submit_date ? date('d-m-Y', strtotime($row->submit_date)) : '';                   
+                    return $row->submit_date? date('Y-m-d', strtotime(str_replace('/', '-', ($row->submit_date)))) : '';                   
+                })
+                ->editColumn('start_date', function($row){
+                    return $row->start_date ? date('Y-m-d', strtotime(str_replace('/', '-', ($row->start_date)))) : '';  
+                })
+                ->editColumn('end_date', function($row){
+                    return $row->end_date ? date('Y-m-d h:i:s', strtotime(str_replace('/', '-', ($row->end_date)))) : '';  
+                })
+                ->rawColumns(['action'])
                 ->make(true);
         }
     

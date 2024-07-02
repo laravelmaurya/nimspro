@@ -78,7 +78,13 @@
       width: auto% !important;
     }
     .th-serial-no, .th-image,.th-status,.th-action{width:5%}
-    .th-created-at,.th-published-on,.th-start-date,.th-end-date{width:10%}
+    .th-created-at,.th-published-on,.th-start-date,.th-end-date{width:9%}
+
+    table.dataTable tbody tr:hover {
+   background-color:#007bff !important;
+   color:#fff;
+   font-weight: bold;
+}
    </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -482,7 +488,44 @@ $(document).ready(function() {
   }
   }
   </script>
+<script language="javascript">
+  document.onmousedown=disableclick;
+  status="Right Click Disabled";
+  function disableclick(event)
+  {
+    if(event.button==2)
+     {
+       alert(status);
+       return false;    
+     }
+  }
+$(document).ready(function(){
+  $(document).keydown(function(event) {
+      if (event.ctrlKey==true && (event.which == '118' || event.which == '86')) {
+          alert('CTRL +V(PASTE) Disabled!');
+          event.preventDefault();
+       }
+  });
+});
 
+$(document).ready(function() {
+      document.onkeydown = checkKeycode
+      function checkKeycode(e) {
+          var keycode;
+          if (window.event) {
+              keycode = window.event.keyCode;
+          }
+          else if (e) {
+              keycode = e.which;
+          }
+          //alert(keycode);
+          if (keycode == 45) {
+              alert('shift insert Disabled');
+              return false;
+          }
+        }
+     });
+</script>
 @if ($message = session('success'))
 <script>
   var message = <?php echo json_encode($message); ?>;

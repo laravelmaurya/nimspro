@@ -26,19 +26,17 @@
             <h3 class="card-title">Tenders</h3>
             <a href="{{ route('tenders.create') }}" class="btn btn-success float-right">Add Tender</a>
           </div>
-          <div class="card-body">
-            <table class="table table-bordered data-table">
+          <div class="card-body table-responsive">
+            <table class="table table-bordered data-table table-hover">
               <thead>
                 <tr>
-                  <th>No</th>
+                  <th class="th-serial-no">No</th>
                   <th>Title</th>
                   <th>Number</th>
-                  <th>Published Date</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Status</th>
-                  <th>Image</th>
-                  <th width="150px">Action</th>
+                  <th class="th-published-on">Published Date</th>
+                  <th class="th-start-date">Start Date</th>
+                  <th class="th-end-date">End Date</th>
+                  <th class="th-action">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -55,93 +53,22 @@
 @push('scripts')
 
 <script>
-$(function () {
+ $(function () {
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
         ajax: "{{ route('tenders.index') }}",
         columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'nims_wp_tender_title', name: 'nims_wp_tender_title'},
-            {data: 'nims_wp_tender_number', name: 'nims_wp_tender_number'},
-            {data: 'nims_wp_tender_submit_date', name: 'nims_wp_tender_submit_date'},
-            {data: 'nims_wp_tender_start_date', name: 'nims_wp_tender_start_date'},
-            {data: 'nims_wp_tender_end_date', name: 'nims_wp_tender_end_date'},
-            {data: 'status', name: 'status'},
-            {data: 'nims_wp_tender_doc', name: 'nims_wp_tender_doc', orderable: false, searchable: false,
-            render: function( data, type, full, meta ) {
-                        return "<img  src=\" "+ data + "\" height=\"50\"/>";
-                    }
-            
-            },
+            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+            {data: 'title', name: 'nims_wp_tender_title'},
+            {data: 'number', name: 'nims_wp_tender_number'},
+            {data: 'submit_date', name: 'nims_wp_tender_submit_date'},
+            {data: 'start_date', name: 'nims_wp_tender_start_date'},
+            {data: 'end_date', name: 'nims_wp_tender_end_date'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ],
-        // order: [[1, 'desc']] // Initial sorting on the Title column
-    });
-
-    // Delete confirmation
-    $('body').on('click', '.delete-btn', function () {
-        var tender_id = $(this).data("id");
-        var url = $(this).data("url");
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    success: function (response) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your record has been deleted.',
-                            'success'
-                        )
-                        table.draw();
-                    }
-                });
-            }
-        })
-    });
-
-    // Toggle status
-    $('body').on('click', '.status-toggle', function () {
-        var tender_id = $(this).data("id");
-        var url = "{{ route('tenders.toggleStatus', ':id') }}".replace(':id', tender_id);
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                "_token": "{{ csrf_token() }}",
-            },
-            success: function (response) {
-                table.draw();
-                Swal.fire(
-                    'Updated!',
-                    'Status has been updated.',
-                    'success'
-                )
-            }
-        });
-    });
-
-    // Image show
-    $('body').on('click', '.image-show', function () {
-        var imageUrl = $(this).data("url");
-        Swal.fire({
-            imageUrl: imageUrl,
-            imageHeight: 200,
-            imageAlt: 'Image'
-        });
+        order: [[1, 'desc']] // Initial sorting on the Title column
     });
 });
-</script>
+  </script>
 @endpush

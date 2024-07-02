@@ -68,7 +68,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label for="start_date">Published Date<span class="text-danger">*</span></label>
-                    <input value="{{ old('publish_date', date('d/m/Y', strtotime($tender->nims_wp_tender_submit_date))) }}" name="publish_date" id="publish_date" type="text" class="datepicker form-control @error('start_date') is-invalid @enderror" placeholder="Enter Publish Date">
+                    <input value="{{ old('publish_date', date('d/m/Y', strtotime($tender->nims_wp_tender_submit_date))) }}" name="publish_date" id="publish_date" type="text" class="datepicker form-control @error('publish_date') is-invalid @enderror" placeholder="Enter Publish Date">
                     @error('publish_date')
                     <strong class="text-danger">{{ $message }}</strong>
                     @enderror

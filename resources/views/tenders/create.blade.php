@@ -124,12 +124,12 @@
                
 
                 <div class="card-footer p-0 bg-white">
-                  <input  name="h1" id="titletwo" type="text">
-                  <input  name="h2" id="numbertwo" type="text">
+                  <input  name="h1" id="titletwo" type="hidden">
+                  <input  name="h2" id="numbertwo" type="hidden">
                   <input  name="h3" id="notes1" class="ckeditor" type="hidden">
                   <input  name="h3_two" id="notes2" class="ckeditor" type="hidden">
-                  <input  name="h4" id="datepicker_s" type="text">
-                  <input  name="h5" id="datepicker_e" type="text">
+                  <input  name="h4" id="datepicker_s" type="hidden">
+                  <input  name="h5" id="datepicker_e" type="hidden">
           
                   <button id="formSubmit" type="button" class="btn-sm btn btn-primary"><i class="fas fa-paper-plane"></i> Submit</button>
                   <a href="{{route('tenders.index')}}" class="btn-sm btn bg-danger text-white"><i class="fas fa-arrow-left"></i> Cancel</a>

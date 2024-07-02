@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class TenderController extends Controller
 {
@@ -40,50 +42,65 @@ class TenderController extends Controller
 
     public function index(Request $request)
     {
-        // $query = Tender::where('nims_wp_tender_archive', 0);
-        // $query = Tender::where('nims_wp_tender_archive', 0)
-        //     ->where('nims_wp_tender_end_date', '>=', Carbon::now());
-    
-        $query = Tender::query();
         if ($request->ajax()) {
-            if ($request->has('search') && $request->search != '') {
-                $search = $request->search;
-                $query->where(function ($query) use ($search) {
-                    $query->where('nims_wp_tender_title', 'like', '%' . $search . '%')
-                        ->orWhere('nims_wp_tender_number', 'like', '%' . $search . '%');
-                });
-            }
-    // dd($request->sort_direction ,$request->get('sort_by'));
-            if ($request->has('sort_by') && !empty($request->get('sort_by'))) {
-                $sort_by = $request->sort_by;
-                $sort_direction = $request->sort_direction ?? 'asc';
-                $query->orderBy($sort_by, $sort_direction);
-            }
+            $columns = [
+                'nims_wp_tender_id',
+                'nims_wp_tender_title',
+                'nims_wp_tender_number',
+                'nims_wp_tender_submit_date',
+                'nims_wp_tender_start_date',
+                'nims_wp_tender_end_date',
+                'nims_wp_tender_doc'
+            ];
     
-            $tenders = $query->latest('nims_wp_tender_id')->paginate(5);
+            $query = $data = Tender::where('nims_wp_tender_archive', 0)
+
+            ->latest('nims_wp_tender_id')
+            ->get();
     
-            $tenders->getCollection()->transform(function ($tender) {
-                $tender->nims_wp_tender_title = str::limit($tender->nims_wp_tender_title, 50);
-                $tender->nims_wp_tender_number = str::limit($tender->nims_wp_tender_number, 50);
-                return $tender;
-            });
-    
-            return response()->json([
-                'data' => view('tenders.tender_table', compact('tenders'))->render(),
-                'links' => (string) $tenders->links()
-            ]);
+            return DataTables::of($data)
+            ->addIndexColumn()
+            ->editColumn('nims_wp_tender_title', function($row) {
+                return Str::limit($row->nims_wp_tender_title, 50);
+            })
+            ->editColumn('nims_wp_tender_number', function($row) {
+                return Str::limit($row->nims_wp_tender_number, 20);
+            })
+                ->editColumn('nims_wp_tender_submit_date', function($row) {
+                    return $row->nims_wp_tender_submit_date ? date('d-m-Y', strtotime($row->nims_wp_tender_submit_date)) : '';
+                })
+                ->editColumn('nims_wp_tender_start_date', function($row) {
+                    return $row->nims_wp_tender_start_date ? date('d-m-Y', strtotime($row->nims_wp_tender_start_date)) : '';
+                })
+                ->editColumn('nims_wp_tender_end_date', function($row) {
+                    return $row->nims_wp_tender_end_date ? date('d-m-Y', strtotime($row->nims_wp_tender_end_date)) : '';
+                })
+                ->addColumn('status', function($row) {
+                    $statusBtn = $row->status == 1 ? '<button class="btn btn-success btn-sm status-toggle" data-id="'.$row->nims_wp_tender_id.'">Active</button>' : '<button class="btn btn-danger btn-sm status-toggle" data-id="'.$row->nims_wp_tender_id.'">Inactive</button>';
+                    return $statusBtn;
+                })
+                ->addColumn('nims_wp_tender_doc', function($row) {
+                    $image = $row->nims_wp_tender_doc;
+                    if(in_array(pathinfo($image, PATHINFO_EXTENSION), ['jpeg','jpg', 'png','pdf'])) {              
+                        return  url('public'.Storage::url($image));
+                       
+                    }                   
+                    return 'No Image';
+                })
+                ->addColumn('action', function($row) {
+                    $btn = '<a href="'.route('tenders.show', $row->nims_wp_tender_id).'" class="edit btn btn-info btn-sm">Show</a>';
+                    $btn .= '<a href="'.route('tenders.edit', $row->nims_wp_tender_id).'" class="edit btn btn-primary btn-sm">Edit</a>';
+                    $btn .= '<button class="btn btn-sm btn-danger delete-btn" data-id="'.$row->nims_wp_tender_id.'" data-url="'.route('tenders.destroy', $row->nims_wp_tender_id).'">Delete</button>';
+                    return $btn;
+                })
+                ->rawColumns(['action', 'status', 'image'])
+                ->make(true);
         }
     
-        $tenders = $query->latest('nims_wp_tender_id')->paginate(5);
-    
-        $tenders->getCollection()->transform(function ($tender) {
-            $tender->nims_wp_tender_title = str::limit($tender->nims_wp_tender_title, 50);
-            $tender->nims_wp_tender_number = str::limit($tender->nims_wp_tender_number, 50);
-            return $tender;
-        });
-    
-        return view('tenders.index', compact('tenders'));
+        return view('tenders.index');
     }
+    
+
     public function create()
     {
         // $files = Storage::files('uploads');
@@ -518,7 +535,14 @@ class TenderController extends Controller
             return response()->json(['error' => 'Image is not deleted.']);
         }        
     }
-    
+    public function destroy($id)
+    {
+        // dd($id);
+       $tender = Tender::find($id)->delete();
+    //    dd($tender);
+        return redirect()->back()
+                    ->with('success', 'Tender deleted successfully');
+    }
     public function changeStatusTender(Request $request)
     {
     	//\Log::info($request->all());

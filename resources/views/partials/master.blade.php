@@ -159,6 +159,7 @@
 <!-- page script -->
 <!-- sweet alert -->
 <script src="{{asset($addPublic.'js/sweetalert.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script  src="{{asset($addPublic.'js/ckeditor/ckeditor.js')}}"></script>
 
 {{-- only datetimepicker js --}}
@@ -305,7 +306,7 @@ $(document).ready(function() {
   function fetch_data(query = '', page = 1, sort_by = '', sort_direction = 'asc') {
     $.ajax({
       url: "{{ route('tenders.index') }}",
-      method: 'GET',
+      method: 'Get',
       data: { search: query, page: page, sort_by: sort_by, sort_direction: sort_direction },
       success: function(data) {
         $('#tender-table').html(data.data);

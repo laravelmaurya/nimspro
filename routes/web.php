@@ -37,10 +37,14 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 
 
 Route::group(['middleware' => 'custom_auth'], function() {
-    Route::post('tenders/{id}/toggle-status', [TenderController::class, 'toggleStatus'])->name('tenders.toggleStatus');
+    // Route::get('/api/tenders', [TenderController::class, 'index'])->name('api.tenders');
+    Route::post('tenders/toggle-status/{id}', [TenderController::class, 'toggleStatus'])->name('tenders.toggleStatus');
+
+    // Route::post('tenders/{id}/toggle-status', [TenderController::class, 'toggleStatus'])->name('tenders.toggleStatus');
     // Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle']); 
     Route::post('tender/main-image-delete', [TenderController::class,'mainImgDelete'])->name('tender.main-image-delete'); 
     Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle'])->name('tender.image-delete-only'); 
+    Route::post('tenders/{id}', [TenderController::class,'destroy'])->name('tenders.delete'); 
     Route::resource('tenders', TenderController::class);  
     Route::post('changeStatusUser', [UserController::class,'changeStatusUser']); 
     Route::resource('users', UserController::class);

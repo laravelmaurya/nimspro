@@ -9,6 +9,7 @@ use App\Traits\CommonTrait;
 use Illuminate\Support\Str;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
@@ -39,30 +40,31 @@ class TenderController extends Controller
 
     public function index(Request $request)
     {
-        $query = Tender::where('nims_wp_tender_archive', 0);
-      
-    
+        // $query = Tender::where('nims_wp_tender_archive', 0);
         // $query = Tender::where('nims_wp_tender_archive', 0)
-        //                ->where('nims_wp_tender_end_date', '>=', now());
+        //     ->where('nims_wp_tender_end_date', '>=', Carbon::now());
     
+        $query = Tender::query();
         if ($request->ajax()) {
             if ($request->has('search') && $request->search != '') {
                 $search = $request->search;
-                $query->where(function($q) use ($search) {
-                    $q->where('nims_wp_tender_title', 'like', '%' . $search . '%')
-                      ->orWhere('nims_wp_tender_number', 'like', '%' . $search . '%')
-                      ->orWhere('nims_wp_tender_submit_date', 'like', '%' . $search . '%')
-                      ->orWhere('nims_wp_tender_start_date', 'like', '%' . $search . '%')
-                      ->orWhere('nims_wp_tender_end_date', 'like', '%' . $search . '%');
-    
+                $query->where(function ($query) use ($search) {
+                    $query->where('nims_wp_tender_title', 'like', '%' . $search . '%')
+                        ->orWhere('nims_wp_tender_number', 'like', '%' . $search . '%');
                 });
+            }
+    // dd($request->sort_direction ,$request->get('sort_by'));
+            if ($request->has('sort_by') && !empty($request->get('sort_by'))) {
+                $sort_by = $request->sort_by;
+                $sort_direction = $request->sort_direction ?? 'asc';
+                $query->orderBy($sort_by, $sort_direction);
             }
     
             $tenders = $query->latest('nims_wp_tender_id')->paginate(5);
     
             $tenders->getCollection()->transform(function ($tender) {
-                $tender->nims_wp_tender_title = Str::limit($tender->nims_wp_tender_title, 50);
-                $tender->nims_wp_tender_number = Str::limit($tender->nims_wp_tender_number, 50);
+                $tender->nims_wp_tender_title = str::limit($tender->nims_wp_tender_title, 50);
+                $tender->nims_wp_tender_number = str::limit($tender->nims_wp_tender_number, 50);
                 return $tender;
             });
     
@@ -75,15 +77,13 @@ class TenderController extends Controller
         $tenders = $query->latest('nims_wp_tender_id')->paginate(5);
     
         $tenders->getCollection()->transform(function ($tender) {
-            $tender->nims_wp_tender_title = Str::limit($tender->nims_wp_tender_title, 50);
-            $tender->nims_wp_tender_number = Str::limit($tender->nims_wp_tender_number, 50);
+            $tender->nims_wp_tender_title = str::limit($tender->nims_wp_tender_title, 50);
+            $tender->nims_wp_tender_number = str::limit($tender->nims_wp_tender_number, 50);
             return $tender;
         });
     
         return view('tenders.index', compact('tenders'));
     }
-
-
     public function create()
     {
         // $files = Storage::files('uploads');
@@ -132,7 +132,7 @@ class TenderController extends Controller
         $entry_date = date('Y-m-d h:i:s A', strtotime(str_replace('/', '-', date('d/m/Y h:i:s A'))));
 
         $add_id = rand(10, 10000000);
-        $archive = 1;
+        $archive = 0;
         $main_num = 1;
 
 
@@ -335,10 +335,13 @@ class TenderController extends Controller
         $entry_date = date('Y-m-d h:i:s A', strtotime(str_replace('/', '-', date('d/m/Y h:i:s A'))));
 
 
+        $add_id = rand(10, 10000000);
+
         $archive = ($request->archive == 'on') ? 1: 0; 
 
         $main_num = 1;
 
+        // dd($archive);
         // Define validation rules
         $rules = [
             'title' => [
@@ -420,6 +423,9 @@ class TenderController extends Controller
 
         // Prepare the updated tender and notification data
         $tenderData = [
+            'nims_add_id'=> $add_id,
+            'nims_maintender' => $main_num, 
+            'nims_wp_tender_archive' => $archive,  
             'nims_wp_tender_title' => $title,
             'nims_wp_tender_number' => $number,
             'nims_wp_tender_description' => $description,
@@ -431,7 +437,7 @@ class TenderController extends Controller
         ];
 
         $notificationData = [
-            'nims_main_id' => $tender->nims_add_id,
+            'nims_main_id' => $add_id,
             'nims_main' => $main_num,
             'notifi_archive' => $archive,
             'type' => 'tender',

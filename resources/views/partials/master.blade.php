@@ -300,71 +300,48 @@ $(document).ready(function(){
     })
   });
 </script>
+<script>
+$(document).ready(function() {
+  function fetch_data(query = '', page = 1, sort_by = '', sort_direction = 'asc') {
+    $.ajax({
+      url: "{{ route('tenders.index') }}",
+      method: 'GET',
+      data: { search: query, page: page, sort_by: sort_by, sort_direction: sort_direction },
+      success: function(data) {
+        $('#tender-table').html(data.data);
+        $('#pagination-links').html(data.links);
+      }
+    });
+  }
+
+  $('#table_search').on('keyup', function() {
+    var query = $(this).val();
+    fetch_data(query);
+  });
+
+  $(document).on('click', '.pagination a', function(event) {
+    event.preventDefault();
+    var page = $(this).attr('href').split('page=')[1];
+    var query = $('#table_search').val();
+    var sort_by = $('.sort.active').data('sort');
+    var sort_direction = $('.sort.active').data('direction') || 'asc';
+    fetch_data(query, page, sort_by, sort_direction);
+  });
+
+  $(document).on('click', '.sort', function(event) {
+    event.preventDefault();
+    var sort_by = $(this).data('sort');
+    var direction = $(this).data('direction') === 'asc' ? 'desc' : 'asc';
+    
+    $('.sort').removeClass('active');
+    $(this).addClass('active').data('direction', direction);
+    var query = $('#table_search').val();
+    fetch_data(query, 1, sort_by, direction);
+  });
+});
+</script>
 
 <script>
-  $(document).ready(function() {
-    function fetch_data(query = '', page = 1) {
-      $.ajax({
-        url: "{{ route('tenders.index') }}",
-        method: 'GET',
-        data: { search: query, page: page },
-        success: function(data) {
-          $('#tender-table').html(data.data);
-          $('#pagination-links').html(data.links);
-        }
-      });
-    }
-  
-    $('#table_search').on('keyup', function() {
-      var query = $(this).val();
-      fetch_data(query);
-    });
-  
-    $(document).on('click', '.pagination a', function(event) {
-      event.preventDefault();
-      var page = $(this).attr('href').split('page=')[1];
-      var query = $('#table_search').val();
-      fetch_data(query, page);
-    });
-  });
-  </script>
-{{-- <script>
-  $(function () {
-    $(".example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('.example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-  });
-</script> --}}
-<script>
-  // $(function () {
-  //   $(".example1").DataTable({
-  //     "responsive": true,
-  //     "autoWidth": false,
-  //   "paging": false, // Disable DataTables pagination
-  //   "info": false, // Disable the table information
-  //   "searching": false // Enable the search functionality
-  //   });
-    // $('.example2').DataTable({
-    //   "paging": false,
-    //   "lengthChange": false,
-    //   "searching": true,
-    //   "ordering": true,
-    //   "info": false,
-    //   "autoWidth": false,
-    //   "responsive": true,
-    // });
-  // });
-
   $("input[data-bootstrap-switch]").each(function(){
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
     });

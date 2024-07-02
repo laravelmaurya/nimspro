@@ -37,7 +37,7 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 
 
 Route::group(['middleware' => 'custom_auth'], function() {
-
+    Route::post('tenders/{id}/toggle-status', [TenderController::class, 'toggleStatus'])->name('tenders.toggleStatus');
     // Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle']); 
     Route::post('tender/main-image-delete', [TenderController::class,'mainImgDelete'])->name('tender.main-image-delete'); 
     Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle'])->name('tender.image-delete-only'); 

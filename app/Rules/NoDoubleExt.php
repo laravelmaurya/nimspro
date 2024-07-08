@@ -23,6 +23,15 @@ class NoDoubleExt implements ValidationRule
             $fail('Attachment contain not suported special characters, multiple dots, or double extensions.');
         }
 
+        $validMimeTypes = ['image/jpg','image/jpeg', 'image/png', 'application/pdf'];
+        if(!in_array($value->getClientMimeType(), $validMimeTypes)){
+            $fail('Attachment name not suported.');
+        }
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf'];
+        $extension = strtolower($value->getClientOriginalExtension());
+        if(!in_array($extension, $allowedExtensions)){
+            $fail('Attachment name not suported.');
+        }
         // Check for multiple dots and double extensions
         $parts = explode('.', $fileName);
         if (count($parts) > 2) {

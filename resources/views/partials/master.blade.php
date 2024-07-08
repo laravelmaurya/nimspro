@@ -15,7 +15,7 @@
    @endphp
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/fontawesome-free/css/all.min.css')}}">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'">
+  {{-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'"> --}}
   <!-- DataTables -->
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{asset($addPublic.'plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
@@ -53,13 +53,7 @@
     var base_url = "<?php echo url('')  ?>";
     // var base_url = urlPublic + 'public/';
   </script>
-<script type="text/javascript">
-  $(document).ready(function(){
-     $('#ui-datepicker-div').removeClass("ui-datepicker");
 
-    });
-    
-  </script>
  
   <?php 
   date_default_timezone_set('Asia/Kolkata');  
@@ -181,17 +175,65 @@
 });
 </script>
 
-  
 <script>
-$(document).ready(function(){
-  $('#formSubmit').click(function(e){ //
+  function syncEdit(){
+    //     const form = document.querySelector("form");
+    // const allElements = form.querySelectorAll("[name]");
+
+    // // Loop through each form element and log its value
+    // allElements.forEach((element) => {
+    //     console.log('llllllllllllllllllllllllllllllllllllllllll='+`${element.name} = ${element.value}`);
+    // });
+    // alert("Submitted");
+    var number = document.getElementById("edit_number");    
+      var numbertwo = document.getElementById("edit_numbertwo");      
+      numbertwo.value= Base64.encode(number.value);
+      // console.log('number ='number.value  \n +'numbertwo = ' +numbertwo.value);
+      // console.log(`number = ${number.value} \n numbertwo = ${numbertwo.value}`);
+      var title = document.getElementById("edit_title");
+
+      var titletwo = document.getElementById("edit_titletwo");
+       
+      titletwo.value= Base64.encode(title.value); 
+
+      // console.log('         '+title.value+'              '+titletwo.value);
+      // console.log(`title = ${title.value} \n titletwo = ${titletwo.value}`);
+      
+      var start_date = document.getElementById("edit_start_date");
+      var datepicker_s = document.getElementById("edit_datepicker_s");
+      datepicker_s.value= Base64.encode(start_date.value); 
+
+      var end_date = document.getElementById("edit_end_date");
+      var datepicker_e = document.getElementById("edit_datepicker_e");
+      
+      datepicker_e.value= Base64.encode(end_date.value); 
+      // console.log('         '+start_date.value+'              '+datepicker_s.value);
+      // console.log('         '+end_date.value+'              '+datepicker_e.value);
+      
+      // console.log(`start_date = ${start_date.value} \n datepicker_s = ${datepicker_s.value}`);
+      // console.log(`end_date = ${end_date.value} \n datepicker_e = ${datepicker_e.value}`);
+      var notes = CKEDITOR.instances.edit_notes.getData();
+      CKEDITOR.instances.edit_notes.setData(notes);
+
+      console.log(notes);
+      // alert(notes);
+      // $("#edit_notes1").val(Base64.encode(notes));
+      $("#edit_notes1").val(notes);
+
+
+    // $('form').submit();
+  }
+
+</script>
+<script>
+  function sync(){
 
     // alert("Submitted");
-      var getNumber = document.getElementById("getNumber");
+    var number = document.getElementById("number");
       var numbertwo = document.getElementById("numbertwo");
-      // numbertwo.value= Base64.encode(getNumber.value);
-      numbertwo.value= Base64.encode(getNumber.value);
-      console.log(getNumber.value + '     ' +numbertwo.value);
+      // numbertwo.value= Base64.encode(number.value);
+      numbertwo.value= Base64.encode(number.value);
+      console.log(number.value + '     ' +numbertwo.value);
       var title = document.getElementById("title");
       var titletwo = document.getElementById("titletwo");
       // titletwo.value= Base64.encode(title.value); 
@@ -208,17 +250,21 @@ $(document).ready(function(){
       datepicker_e.value= Base64.encode(end_date.value); 
       console.log('         '+start_date.value+'              '+datepicker_s.value);
       console.log('         '+end_date.value+'              '+datepicker_e.value);
-      var notes = CKEDITOR.instances.notes.getData();
-      console.log(notes);
-      // alert(notes);
-      $("#notes1").val(notes);
-      // alert(notes)
-      e.preventDefault();
-    $('form').submit();
-});
-});
-</script>
 
+      var notes = CKEDITOR.instances.notes.getData();
+      CKEDITOR.instances.notes.setData(notes);
+      console.log(notes);
+      $("#notes1").val(Base64.encode(notes));
+
+      // alert(notes)
+      // e.preventDefault();
+    // $('form').submit();
+  }
+
+</script>
+<script>
+  
+</script>
 <script>
   var i = 1;
   $("#rowAdder").click(function () {
@@ -355,138 +401,128 @@ $(document).ready(function() {
 </script>
 
 <script>
-  var Base64 = {
-  // private property
-  _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-  
-  // public method for encoding
-  encode : function (input) {
-      var output = "";
-      var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-      var i = 0;
-  
-      input = Base64._utf8_encode(input);
-  
-      while (i < input.length) {
-  
-          chr1 = input.charCodeAt(i++);
-          chr2 = input.charCodeAt(i++);
-          chr3 = input.charCodeAt(i++);
-  
-          enc1 = chr1 >> 2;
-          enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-          enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-          enc4 = chr3 & 63;
-  
-          if (isNaN(chr2)) {
-              enc3 = enc4 = 64;
-          } else if (isNaN(chr3)) {
-              enc4 = 64;
-          }
-  
-          output = output +
-          Base64._keyStr.charAt(enc1) + Base64._keyStr.charAt(enc2) +
-          Base64._keyStr.charAt(enc3) + Base64._keyStr.charAt(enc4);
-  
-      }
-  
-      return output;
-  },
-  
-  // public method for decoding
-  decode : function (input) {
-      var output = "";
-      var chr1, chr2, chr3;
-      var enc1, enc2, enc3, enc4;
-      var i = 0;
-  
-      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-  
-      while (i < input.length) {
-  
-          enc1 = Base64._keyStr.indexOf(input.charAt(i++));
-          enc2 = Base64._keyStr.indexOf(input.charAt(i++));
-          enc3 = Base64._keyStr.indexOf(input.charAt(i++));
-          enc4 = Base64._keyStr.indexOf(input.charAt(i++));
-  
-          chr1 = (enc1 << 2) | (enc2 >> 4);
-          chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-          chr3 = ((enc3 & 3) << 6) | enc4;
-  
-          output = output + String.fromCharCode(chr1);
-  
-          if (enc3 != 64) {
-              output = output + String.fromCharCode(chr2);
-          }
-          if (enc4 != 64) {
-              output = output + String.fromCharCode(chr3);
-          }
-  
-      }
-  
-      output = Base64._utf8_decode(output);
-  
-      return output;
-  
-  },
-  
-  // private method for UTF-8 encoding
-  _utf8_encode : function (string) {
-      string = string.replace(/\r\n/g,"\n");
-      var utftext = "";
-  
-      for (var n = 0; n < string.length; n++) {
-  
-          var c = string.charCodeAt(n);
-  
-          if (c < 128) {
-              utftext += String.fromCharCode(c);
-          }
-          else if((c > 127) && (c < 2048)) {
-              utftext += String.fromCharCode((c >> 6) | 192);
-              utftext += String.fromCharCode((c & 63) | 128);
-          }
-          else {
-              utftext += String.fromCharCode((c >> 12) | 224);
-              utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-              utftext += String.fromCharCode((c & 63) | 128);
-          }
-  
-      }
-  
-      return utftext;
-  },
-  
-  // private method for UTF-8 decoding
-  _utf8_decode : function (utftext) {
-      var string = "";
-      var i = 0;
-      var c = c1 = c2 = 0;
-  
-      while ( i < utftext.length ) {
-  
-          c = utftext.charCodeAt(i);
-  
-          if (c < 128) {
-              string += String.fromCharCode(c);
-              i++;
-          }
-          else if((c > 191) && (c < 224)) {
-              c2 = utftext.charCodeAt(i+1);
-              string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-              i += 2;
-          }
-          else {
-              c2 = utftext.charCodeAt(i+1);
-              c3 = utftext.charCodeAt(i+2);
-              string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-              i += 3;
-          }
-  
-      }
-      return string;
-  }
-  }
+ var Base64 = {
+    // private property
+    _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+    // public method for encoding
+    encode: function (input) {
+        var output = "";
+        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = Base64._utf8_encode(input);
+
+        while (i < input.length) {
+            chr1 = input.charCodeAt(i++);
+            chr2 = input.charCodeAt(i++);
+            chr3 = input.charCodeAt(i++);
+
+            enc1 = chr1 >> 2;
+            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+            enc4 = chr3 & 63;
+
+            if (isNaN(chr2)) {
+                enc3 = enc4 = 64;
+            } else if (isNaN(chr3)) {
+                enc4 = 64;
+            }
+
+            output = output +
+                Base64._keyStr.charAt(enc1) + Base64._keyStr.charAt(enc2) +
+                Base64._keyStr.charAt(enc3) + Base64._keyStr.charAt(enc4);
+        }
+
+        return output;
+    },
+
+    // public method for decoding
+    decode: function (input) {
+        var output = "";
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+        while (i < input.length) {
+            enc1 = Base64._keyStr.indexOf(input.charAt(i++));
+            enc2 = Base64._keyStr.indexOf(input.charAt(i++));
+            enc3 = Base64._keyStr.indexOf(input.charAt(i++));
+            enc4 = Base64._keyStr.indexOf(input.charAt(i++));
+
+            chr1 = (enc1 << 2) | (enc2 >> 4);
+            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+            chr3 = ((enc3 & 3) << 6) | enc4;
+
+            output = output + String.fromCharCode(chr1);
+
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+        }
+
+        output = Base64._utf8_decode(output);
+
+        return output;
+    },
+
+    // private method for UTF-8 encoding
+    _utf8_encode: function (string) {
+        // string = string.replace(/\r\n/g, "\n");
+        string = string.toString().replace(/\r\n/g, "\n");
+        var utftext = "";
+
+        for (var n = 0; n < string.length; n++) {
+            var c = string.charCodeAt(n);
+
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            } else if ((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            } else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+        }
+
+        return utftext;
+    },
+
+    // private method for UTF-8 decoding
+    _utf8_decode: function (utftext) {
+        var string = "";
+        var i = 0;
+        var c = 0, c1 = 0, c2 = 0, c3 = 0;
+
+        while (i < utftext.length) {
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            } else if ((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i + 1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            } else {
+                c2 = utftext.charCodeAt(i + 1);
+                c3 = utftext.charCodeAt(i + 2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+        }
+
+        return string;
+    }
+}
+
   </script>
 <script language="javascript">
   document.onmousedown=disableclick;
@@ -525,6 +561,34 @@ $(document).ready(function() {
           }
         }
      });
+</script>
+<script>
+ function downloadImage(imagePath,suggestFileName) {
+  alert('Downloading image');
+  var suggestFileName = suggestFileName ;
+  // Create an anchor element
+  var anchor = document.createElement("a");
+
+  // Set the href attribute to the image path
+  anchor.href = imagePath;
+
+  // Set the download attribute to suggest a filename for the download
+  anchor.download = "downloaded-"+suggestFileName;
+
+  // Simulate a click event on the anchor element
+  var clickEvent = new MouseEvent("click", {
+    view: window,
+    bubbles: true,
+    cancelable: false
+  });
+  anchor.dispatchEvent(clickEvent);
+}
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+     $('#ui-datepicker-div').removeClass("ui-datepicker");
+
+    });    
 </script>
 @if ($message = session('success'))
 <script>

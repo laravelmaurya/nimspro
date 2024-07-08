@@ -54,7 +54,7 @@ trait CommonTrait{
         
       }
       function dataTamperDes($value,$matchValue){
-
+      
         // echo'compare='. stripos($value,$matchValue);die;    
         $stripos = stripos($value,$matchValue);
         if($stripos ==0 && $stripos !=''){

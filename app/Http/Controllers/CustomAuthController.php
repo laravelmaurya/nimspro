@@ -87,8 +87,10 @@ class CustomAuthController extends Controller
     
     public function dataTampering(Request $request)
     {
+// dd($request->all());
         $error = session('errorTampering');
-        if($error){
+        $errorTampering = $request->errorTampering;
+        if($error || $errorTampering){
             return view('auth.error-data-tampering');
         }
         return redirect("dashboard");

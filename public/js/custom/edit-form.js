@@ -1,3 +1,55 @@
+var attachmentCounter = 0; // Counter to track the number of attachments
+
+// Function to remove attachment container
+$('body').on('click', '.removeAttachment', function () {
+
+  var number = $(this).attr('id');
+  var id = $('#attachment_id').val();
+
+console.log('id ='+id,'number = '+number);
+    // AJAX request to remove the attachment from the database
+    $.ajax({
+        url: '<?php echo route("tender.remove-attachment"); ?>', // Your backend endpoint to handle removal
+        type: 'POST',
+        data: {
+          id: id,
+          ci: Base64.encode(id),
+          attachment_number: number,
+          cn: Base64.encode(number)
+        },
+        success: function(response) {
+          // const myJSON1 = JSON.stringify(response);
+          // console.log('response ='+myJSON1);
+            if (response.status == 'success') {
+                console.log('Attachment ' + number + ' removed successfully');
+                Swal.fire({
+                            title: response.message,
+                            icon: "success"
+                });                
+                // Remove the attachment container from the DOM
+                $('#attachment_container_' + number).remove();
+                $('#edit-modal-xl').modal('hide');
+                table.draw();
+                // Decrement the counter to allow adding a new attachment
+                attachmentCounter--;
+            } 
+            else if (response.status === 'error')  
+            {       
+                console.error('Error removing attachment: ' + response.error);
+            }
+            else if (response.status === 422 || response.status === 400) 
+            {
+              if (response.status === 400) {
+                window.location.href = response.responseJSON.redirect + '=' + response.responseJSON.errorTamperingValue;
+              }              
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('An error occurred while removing the attachment: ' + error);
+        }
+    });
+  });
+
 var titleMaxlength = 50;
 var titleMinlength = 3;
 var numberMaxlength = 10;

@@ -266,14 +266,15 @@ class TenderController extends Controller
                 $notificationData['notifi_docu_link' . $i] = $uploadedFiles['attachment_' . $i];
             }
         }
-
+       
         // Use transactions to ensure atomic operations
         DB::beginTransaction();
         try {
             // Save the tender data
             $tender = Tender::create($tenderData);
             Log::info('Tender added: ' . $tender->nims_wp_tender_id);
-
+            $notificationData['type_id'] = $tender->nims_wp_tender_id;
+            // dd($notificationData);
             // Save the notification data
             $notification = Notification::create($notificationData);
             Log::info('Notification added: ' . $notification->notifi_id);
@@ -353,7 +354,7 @@ class TenderController extends Controller
         $entry_date = date('Y-m-d h:i:s A', strtotime(str_replace('/', '-', date('d/m/Y h:i:s A'))));
 
 
-        $add_id = rand(10, 10000000);
+        // $add_id = rand(10, 10000000);
 
         $archive = ($request->archive == 'on') ? 1: 0; 
 
@@ -472,7 +473,6 @@ class TenderController extends Controller
 
         // Prepare the updated tender and notification data
         $tenderData = [
-            'nims_add_id'=> $add_id,
             'nims_maintender' => $main_num, 
             'nims_wp_tender_archive' => $archive,  
             'nims_wp_tender_title' => $title,
@@ -486,7 +486,6 @@ class TenderController extends Controller
         ];
 
         $notificationData = [
-            'nims_main_id' => $add_id,
             'nims_main' => $main_num,
             'notifi_archive' => $archive,
             'type' => 'tender',
@@ -515,9 +514,10 @@ class TenderController extends Controller
             // Update the tender data
             $tender->update($tenderData);
             Log::info('Tender updated: ' . $tender->nims_wp_tender_id);
-
+            // dd($tender->type_id);
+            // dd($notificationData);
             // Update the notification data
-            Notification::where('notifi_number', $tender->nims_wp_tender_number)->update($notificationData);
+            Notification::where('type_id', $tender->nims_wp_tender_id)->update($notificationData);
             Log::info('Notification updated for tender ID and : tender number' .$tender->nims_wp_tender_id. ' and '. $tender->nims_wp_tender_number);
 
             DB::commit();
@@ -606,9 +606,9 @@ class TenderController extends Controller
         $tender = Tender::find($id); 
         $notification = Notification::where(['notifi_number' =>$tender->nims_wp_tender_number])->first('notifi_id'); 
 
-        // dd($tender);
-        // dd($notification);
-        if ($tender && $notification) {
+        // dd($tender,$notification);
+
+        if ($tender) {
             // Get the path of the image file
 
             $image = 'nims_wp_tender_link'.$attachment_number;

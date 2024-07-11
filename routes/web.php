@@ -37,16 +37,19 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 
 
 Route::group(['middleware' => 'custom_auth'], function() {
-    // Route::get('/api/tenders', [TenderController::class, 'index'])->name('api.tenders');
-    Route::post('tenders/toggle-status/{id}', [TenderController::class, 'toggleStatus'])->name('tenders.toggleStatus');
+    // Route::post('tender/main-image-delete', [TenderController::class,'mainImgDelete'])->name('tender.main-image-delete'); 
+    // Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle'])->name('tender.image-delete-only'); 
+    // Route::post('tenders/{id}', [TenderController::class,'destroy'])->name('tenders.delete'); 
+   
 
-    // Route::post('tenders/{id}/toggle-status', [TenderController::class, 'toggleStatus'])->name('tenders.toggleStatus');
-    // Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle']); 
+    Route::get('/tenders/get-tender-number', [TenderController::class, 'getTenderNumber'])->name('tenders.get-tender-number');
+    
+    Route::get('tenders/list-archive', [TenderController::class,'listArchive'])->name('tenders.list-archive'); 
+    Route::get('/tenders/list-archive/{id}/edit', [TenderController::class, 'edit'])->name('tenders.list-archive.edit'); 
+    Route::post('tenders/corrigendum', [TenderController::class,'storeCorrigendum'])->name('tenders.stroe-corrigendum'); 
     Route::post('tender/remove-attachment', [TenderController::class,'removeAttachment'])->name('tender.remove-attachment'); 
-    Route::post('tender/main-image-delete', [TenderController::class,'mainImgDelete'])->name('tender.main-image-delete'); 
-    Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle'])->name('tender.image-delete-only'); 
-    Route::post('tenders/{id}', [TenderController::class,'destroy'])->name('tenders.delete'); 
     Route::resource('tenders', TenderController::class);  
+
     Route::post('changeStatusUser', [UserController::class,'changeStatusUser']); 
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);

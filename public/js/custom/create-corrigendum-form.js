@@ -1,35 +1,64 @@
+
+$(document).ready(function () {
+    $('.getTenderNumber').click(function () {
+        var url  = $('#get_tender_number').val();
+        url=url.trim();
+        // alert(url);
+        // Fetch tender numbers via AJAX
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(data) {
+                var $tenderNumberSelect = $('#corrigendum_number');
+                $tenderNumberSelect.empty();
+                
+                if (data.length > 0) {
+                    $tenderNumberSelect.append('<option value="" readonly>-- Select Number --</option>');
+                    $.each(data, function(index, tender) {                        
+                        $tenderNumberSelect.append('<option value="' + tender.nims_wp_tender_number + '">' + tender.nims_wp_tender_number + '</option>');
+                    });
+                } else {
+                    $tenderNumberSelect.append('<option value="">-- No Record --</option>');
+                }
+            },
+            error: function() {
+                alert('Failed to fetch tender numbers.');
+            }
+        });
+    });
+});
+
 $(document).ready(function () {
     // Enforce maxlength dynamically
     var titleMaxlength = 50;  
     var titleMinlength = 3;  
     var numberMaxlength = 10; 
     var numberMinlength = 10; 
-    $('#title').on('keypress', function(e) {
+    $('#corrigendum_title').on('keypress', function(e) {
          if (!$(this).attr('maxlength')) {
              $(this).attr('maxlength',titleMaxlength);
          }
      });
 
-     $('#number').on('keypress', function(e) {
+     $('#corrigendum_number').on('keypress', function(e) {
          if (!$(this).attr('maxlength')) {
              $(this).attr('maxlength',numberMaxlength);
          }
      });
 
-     $('body').on('click', '#formSubmit', function () {
+     $('body').on('click', '.formSubmita', function () {
 
 
-    var url  = $('.create_form').attr("action");
-     // var url = "{{ route('tenders.store') }}";
-     url=url.trim();
-     // alert(url);
+    var url  = $('.create_form_corrigendum').attr("action");
+    url=url.trim();
+//    alert(url);
      // Validate the form
-     if ($('.create_form').valid()) {
+     if ($('.create_form_corrigendum').valid()) {
 
-         sync();
-         // var formData = new FormData($('#create_form')[0])+description;
-         var  form = $('.create_form')[0];
-         var notes = CKEDITOR.instances.notes.getData();
+        syncEditCorrigendum();
+         // var formData = new FormData($('#create_form_corrigendum')[0])+description;
+         var  form = $('.create_form_corrigendum')[0];
+         var notes = CKEDITOR.instances.corrigendum_notes.getData();
          var formData = new FormData(form);
          formData.append('description', notes);
          console.log(formData);
@@ -49,13 +78,13 @@ $(document).ready(function () {
                      icon: "success"
                      });
                      
-                     $('.create_form')[0].reset();
+                     $('.create_form_corrigendum')[0].reset();
                      CKEDITOR.instances.notes.setData('');
 
                      $('.is-invalid').removeClass('is-invalid');
                      $('.invalid-feedback').remove();
                     
-                     $('#create-modal-xl').modal('hide');
+                     $('#create-Corrigendum-modal-xl').modal('hide');
                      // table.DataTable().ajax.reload();
                      table.draw();
                      // Optionally, you can refresh the table or redirect the user
@@ -86,7 +115,7 @@ $(document).ready(function () {
      }
  });
 
- $('.create_form').validate({
+ $('.create_form_corrigendum').validate({
    rules: {
          title: {
              required: true,
@@ -95,8 +124,6 @@ $(document).ready(function () {
          },
          number: {
              required: true,
-             minlength: numberMinlength,
-             maxlength: numberMaxlength
          },
          start_date: {
              required: true                
@@ -111,11 +138,7 @@ $(document).ready(function () {
              minlength: "Title must be at least" +titleMinlength+ "characters long",
              maxlength: "Title cannot be more than " +titleMaxlength+ " characters long"
          },
-         number: {
-             required: "Please provide a number",
-             minlength: "Number must be exactly "+numberMinlength+" characters long",
-             maxlength: "Number cannot be more than "+ numberMaxlength +" characters long"
-         },
+
          main_doc: {
              required: "Please attach a file",
              extension: "Only PDF, JPG, and PNG files are allowed"

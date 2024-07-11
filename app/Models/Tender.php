@@ -23,6 +23,8 @@ class Tender extends Model
             'nims_wp_tender_end_date',          
             'nims_wp_tender_submit_date',
             'entry_date',
+            'nims_wp_log_ip',
+            'nims_wp_user_id',
             'nims_wp_tender_doc',           
             'nims_wp_tender_link1','nims_wp_tender_link2','nims_wp_tender_link3','nims_wp_tender_link4',
             'nims_wp_tender_link5','nims_wp_tender_link6','nims_wp_tender_link7','nims_wp_tender_link8',

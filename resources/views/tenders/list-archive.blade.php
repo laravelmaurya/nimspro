@@ -10,7 +10,7 @@
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
-          <li class="breadcrumb-item active">Tenders</li>
+          <li class="breadcrumb-item active">Archive List of Tenders</li>
         </ol>
       </div>
     </div>
@@ -23,12 +23,12 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Tenders</h3>
+            <h3 class="card-title">Archive List of Tenders</h3>
             <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#create-modal-xl">
               Add Tender
             </button>
             <button type="button" class="getTenderNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal-xl">
-              Add New Corrigendum For Tender 
+                Add New Corrigendum For Tender 
             </button>
           </div>
           <div class="card-body table-responsive">
@@ -57,7 +57,7 @@
 $addPublic = config('app.url').'public/';
 @endphp
 @include('tenders.create-modal')
-@include('tenders.edit-modal')
+@include('tenders.edit-archive-modal')
 @include('tenders.create-Corrigendum-modal')
 @endsection
 
@@ -69,9 +69,10 @@ $(document).ready(function () {
     // Open the edit modal and populate the form with existing data
     $('body').on('click', '.editBtn', function () {
         var id = $(this).data('id');
-        $.get("{{ route('tenders.index') }}" + '/' + id + '/edit', function (data) {
-            // const myJSON = JSON.stringify(data);
+        $.get("{{ route('tenders.list-archive') }}" + '/' + id + '/edit', function (data) {
+            const myJSON = JSON.stringify(data);
             // alert('myJSON =' + myJSON);
+
             $('.is-invalid').removeClass('is-invalid');
             $('.invalid-feedback').remove();
             $('#edit-modal-xl').modal('show');
@@ -110,51 +111,20 @@ $(document).ready(function () {
 
             // const myJSON1 = JSON.stringify(data);
             // console.log('additional_attachments = ' + myJSON1);
+            if(data.nims_wp_tender_archive == 1){
+                $('#status_active_fields').html(`<div class="form-check">
+                    <input checked name="archive" id="archive" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="exampleCheck1">Click To ACTIVE </label>
+                  </div>`);
+            } if(data.nims_wp_tender_archive == 0) {
+                $('#status_active_fields').html(`<div class="form-check">
+                    <input name="archive" id="archive"  type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="exampleCheck1">Click To Active</label>
+                  </div>`);
+            }
+            
+             // Set status checkbox
 
-
-       
-            // Display existing attachments if available and existing attachments Download
-            if (typeof data.additional_attachments === 'object' && data.additional_attachments !== null) {
-                Object.keys(data.additional_attachments).forEach((key, index) => {
-                    const attachment = data.additional_attachments[key];
-                    console.log('attachment = ' + attachment);
-                    if (attachment) {
-                        var suggestFileName = attachment.split("/").pop();
-                        // Use Laravel's url() function to generate the full URL
-                        var attachmentUrl = "{{ url('storage') }}" + "/" + attachment;
-                        // Add "public" before "storage" in the URL
-                        var modifiedUrl = attachmentUrl.replace('/storage/public', '/public/storage');
-                        $('#additional_attachments').append(`
-                          <div class="row">
-                            <div class="col-md-12">
-                            <div class="form-group" id="attachment_container_${index + 1}">
-                                <label for="attachment_${index + 1}">Attachment ${index + 1}:</label>
-                                <div class="input-group">
-                                    <a href="javascript:void(0)" onclick="downloadImage('${modifiedUrl}', '${suggestFileName}')" class="form-control">Download existing attachment</a>
-                                    <input type="hidden" id="removeAttachment_${index + 1}" value="${index + 1}">
-                                    <input type="hidden" id="attachment_id" value="${id}">
-                                    <button type="button" class="btn btn-danger ml-2 removeAttachment" id="${index + 1}" >Remove</button>
-                                </div>
-                            </div>
-                          </div>
-                          </div>
-                        `);
-                    }else {
-                      $('#additional_attachments').append(`
-                          <div class="row">
-                            <div class="col-md-12">
-                            <div class="form-group" id="attachment_container_${index + 1}">
-                                <label for="attachment_${index + 1}">Attachment ${index + 1}:</label>
-                                <div class="input-group">
-                                    <input type="file" name="attachment_${index + 1}" id="attachment_${index + 1}" class="form-control">
-                                </div>
-                            </div>
-                          </div>
-                        </div>
-                        `);
-                    }
-                });
-            }  // End Display existing attachments if available
         });
     });
 });
@@ -170,7 +140,7 @@ $(document).ready(function () {
    window.table = $('.data-table').DataTable({
         processing: false,
         serverSide: true,
-        ajax: "{{ route('tenders.index') }}",
+        ajax: "{{ route('tenders.list-archive') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
             {data: 'title', name: 'nims_wp_tender_title'},
@@ -190,6 +160,6 @@ $(document).ready(function () {
   // var base_url = urlPublic + 'public/';
 </script>
   <script src="{{asset($addPublic.'js/custom/create-form.js')}}"></script>
-  <script src="{{asset($addPublic.'js/custom/edit-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/custom/edit-archive-form.js')}}"></script>
   <script src="{{asset($addPublic.'js/custom/create-Corrigendum-form.js')}}"></script>
 @endpush

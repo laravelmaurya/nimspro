@@ -9,14 +9,15 @@ use App\Traits\CommonTrait;
 use Illuminate\Support\Str;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Rules\CheckedSameDate;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class TenderController extends Controller
 {
@@ -42,18 +43,23 @@ class TenderController extends Controller
 
     public function index(Request $request)
 {
+
+    // dd($request->all());
     if ($request->ajax()) {
         $query = Tender::where('nims_wp_tender_archive', 0)
-            ->select([
-                'nims_wp_tender_id as id',
-                'nims_wp_tender_title as title',
-                'nims_wp_tender_number as number',
-                'nims_wp_tender_submit_date as submit_date',
-                'nims_wp_tender_start_date as start_date',
-                'nims_wp_tender_end_date as end_date'
-            ])
-            ->latest('id');
-
+        ->where('nims_wp_tender_end_date', '>', Carbon::now())
+        ->select([
+                    'nims_wp_tender_id as id',
+                    'nims_wp_tender_title as title',
+                    'nims_wp_tender_number as number',
+                    'nims_wp_tender_submit_date as submit_date',
+                    'nims_wp_tender_start_date as start_date',
+                    'nims_wp_tender_end_date as end_date'
+                ])
+        ->orderBy('nims_wp_tender_number', 'asc')
+        ->orderBy('nims_wp_tender_id', 'asc')
+        ->latest('id','asc');
+//dd($query->toSql());
         return DataTables::eloquent($query)
             ->filter(function ($query) use ($request) {
                 if ($request->has('search.value')) {
@@ -74,8 +80,8 @@ class TenderController extends Controller
                 return Str::limit($row->number, 20);
             })
             ->addIndexColumn()
-            ->addColumn('action', function($row){
-                $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit btn btn-success btn-sm editBtn">Edit</a>';
+            ->addColumn('action', function($row){               
+                $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
                 return $btn;
             })
             ->editColumn('submit_date', function($row){
@@ -105,6 +111,8 @@ class TenderController extends Controller
 
     public function store(Request $request)
     {
+        
+        // dd($request->all());
         // Define validation rules
         $rules = [
             'title' => [
@@ -168,14 +176,16 @@ class TenderController extends Controller
         $h2_number = $request->h2;
 
         // Description value sanitizeInput for both and hidden field decode before sanitize
+        // $description = base64_decode($h3);
+        $description = $request->description;
         $h3 = $request->h3;
-        $description = base64_decode($h3);
-        $h3_two = $request->h3_two;
+        // $h3 = base64_decode($h3);
+
         
 
         
         // dd($description,$h3_des);
-        if (!$this->dataTamper($title, $h1_title) || !$this->dataTamper($number, $h2_number) || !$this->dataTamperDes($description,$h3_two)) {
+        if (!$this->dataTamper($title, $h1_title) || !$this->dataTamper($number, $h2_number) || !$this->dataTamperDes($description,$h3)) {
             // return redirect()->route('error-page')->with('errorTampering', true);
             // return response()->json(['redirect' => route('error-page')], 400); 
             Log::error('Store Data error: ' . 'Data temporing.');
@@ -196,7 +206,8 @@ class TenderController extends Controller
 
         $publish_date = date('Y-m-d', strtotime(str_replace('/', '-', date('d/m/Y'))));
         $entry_date = date('Y-m-d h:i:s A', strtotime(str_replace('/', '-', date('d/m/Y h:i:s A'))));
-
+        $client_ip = $request->ip();
+        $user_id = $request->user()->nims_wp_user_id;
         $add_id = rand(10, 10000000);
         $archive = 0;
         $main_num = 1;
@@ -242,6 +253,8 @@ class TenderController extends Controller
             'nims_wp_tender_submit_date' => $publish_date,
             'nims_wp_tender_doc' => $main_doc,
             'entry_date' => $entry_date,
+            'nims_wp_log_ip' => $client_ip,
+            'nims_wp_user_id' => $user_id
         ];
 
         $notificationData = [
@@ -257,6 +270,8 @@ class TenderController extends Controller
             'notifi_submit_date' => $publish_date,
             'notifi_docu' => $main_doc,
             'entry_date' => $entry_date,
+            'nims_wp_log_ip' => $client_ip,
+            'nims_wp_user_id' => $user_id
         ];
 
         // Add attachment paths to the tender data and notification data
@@ -359,15 +374,17 @@ class TenderController extends Controller
         $archive = ($request->archive == 'on') ? 1: 0; 
 
         $main_num = 1;
+        $client_ip = $request->ip();
+        $user_id = $request->user()->nims_wp_user_id;
 
-        // dd($archive);
+        // dd($client_ip);
         // Define validation rules
         $rules = [
             'title' => [
                 'required',
                 'string',
                 'unique:nims_wp_tenders,nims_wp_tender_title,' . $id .  ',nims_wp_tender_id',
-                'regex:/^[a-zA-Z1-9 ]+$/',
+                'regex:/^(?!(?>[^.]*\.){2})[A-Za-z0-9 \.]+$/',
                 'min:3',
                 'max:50'
             ],
@@ -375,7 +392,7 @@ class TenderController extends Controller
                 'required',
                 'numeric',
                 'digits:10',
-                'unique:nims_wp_tenders,nims_wp_tender_number,' . $id .  ',nims_wp_tender_id'
+                // 'unique:nims_wp_tenders,nims_wp_tender_number,' . $id .  ',nims_wp_tender_id'
             ],
             'start_date' => ['required'],
             'end_date' => ['required'],
@@ -483,6 +500,8 @@ class TenderController extends Controller
             'nims_wp_tender_submit_date' => $publish_date,
             'nims_wp_tender_doc' => $main_doc,
             'entry_date' => $entry_date,
+            'nims_wp_log_ip' => $client_ip,
+            'nims_wp_user_id' => $user_id,
         ];
 
         $notificationData = [
@@ -497,6 +516,8 @@ class TenderController extends Controller
             'notifi_submit_date' => $publish_date,
             'notifi_docu' => $main_doc,
             'entry_date' => $entry_date,
+            'nims_wp_log_ip' => $client_ip,
+            'nims_wp_user_id' => $user_id,
         ];
 
         // Add attachment paths to the tender data and notification data
@@ -665,6 +686,257 @@ class TenderController extends Controller
         }else{
             return response()->json(['success'=>'Activat successfully.']); 
         }
+    }
+
+    
+    public function storeCorrigendum(Request $request)
+    {
+
+        // Define validation rules
+        $rules = [
+            'title' => [
+                'required',
+                'string',
+                'unique:nims_wp_tenders,nims_wp_tender_title',
+                'regex:/^[a-zA-Z1-9 ]+$/',
+                'min:3',
+                'max:50'
+            ],
+            'number' => [
+                'required',
+                'numeric',
+                'digits:10',
+                // 'unique:nims_wp_tenders,nims_wp_tender_number'
+            ],
+            'start_date' => ['required'],
+            'end_date' => ['required',new CheckedSameDate()],
+            'main_doc' => ['required', 'file', 'max:2048', 'mimes:jpg,jpeg,png,pdf', new NoDoubleExt()]
+        ];
+
+       
+
+        // Define attribute names
+        $attributeNames = [
+            'title' => 'title',
+            'number' => 'number',
+            'start_date' => 'Start date',
+            'end_date' => 'End date',
+            'main_doc' => 'Attachment'
+        ];
+
+        
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules, [], $attributeNames);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Sanitize input data
+        $title = $this->sanitizeInput($request->title);
+        $h1_title = $request->h1;
+        $number = $this->sanitizeInput($request->number);
+        $h2_number = $request->h2;
+
+        // Description value sanitizeInput for both and hidden field decode before sanitize
+        $description = $request->description;
+        // $description = base64_decode($description);
+        $h3 = $request->h3;
+ 
+     
+        
+
+        
+        // dd($description,$h3_des);
+        if (!$this->dataTamper($title, $h1_title) || !$this->dataTamper($number, $h2_number) || !$this->dataTamperDes($description,$h3)) {
+            // return redirect()->route('error-page')->with('errorTampering', true);
+            // return response()->json(['redirect' => route('error-page')], 400); 
+            Log::error('Store Data error: ' . 'Data temporing.');
+                return response()->json([
+                    'status' => 'error',
+                    'errorTamperingValue' => true,
+                    'redirect' => route('error-page','errorTampering')
+                ],400);
+                die;
+        }
+
+        // Format dates
+        date_default_timezone_set('Asia/Kolkata');
+        $start_date = date('Y-m-d', strtotime(str_replace('/', '-', $request->start_date)));
+        $h3_sd = base64_decode($request->h3);
+        $end_date = date('Y-m-d h:i', strtotime(str_replace('/', '-', $request->end_date)));
+        $h4_ed = base64_decode($request->h4);
+
+        $publish_date = date('Y-m-d', strtotime(str_replace('/', '-', date('d/m/Y'))));
+        $entry_date = date('Y-m-d h:i:s A', strtotime(str_replace('/', '-', date('d/m/Y h:i:s A'))));
+        $client_ip = $request->ip();
+        $user_id = $request->user()->nims_wp_user_id;
+        $add_id = rand(10, 10000000);
+        $archive = 0;
+        $main_num = 0;
+
+        // Handle file uploads
+        $uploadedFiles = [];
+        $directoryDate = date("Y-m-d");
+        $path = 'public/uploads/tenders/' . $directoryDate;
+
+        // Ensure the directory exists
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0777, true);
+            Log::info('Directory created: ' . $path);
+        }
+
+        // Upload main document
+        $file = $request->file('main_doc');
+        if ($file) {
+            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+            Log::info('Main document uploaded: ' . $main_doc);
+        }
+
+       
+
+        // Create a new tender and notification data
+        $tenderData = [
+            'nims_add_id' => $add_id,
+            'nims_maintender' => $main_num,
+            'nims_wp_tender_archive' => $archive,
+            'nims_wp_tender_title' => $title,
+            'nims_wp_tender_number' => $number,
+            'nims_wp_tender_description' => $description,
+            'nims_wp_tender_start_date' => $start_date,
+            'nims_wp_tender_end_date' => $end_date,
+            'nims_wp_tender_submit_date' => $publish_date,
+            'nims_wp_tender_doc' => $main_doc,
+            'entry_date' => $entry_date,
+            'nims_wp_log_ip' => $client_ip,
+            'nims_wp_user_id' => $user_id
+        ];
+
+        $notificationData = [
+            'nims_main_id' => $add_id,
+            'nims_main' => $main_num,
+            'notifi_archive' => $archive,
+            'type' => 'tender',
+            'notifi_title' => $title,
+            'notifi_number' => $number,
+            'notifi_desc' => $description,
+            'notifi_start_date' => $start_date,
+            'notifi_end_date' => $end_date,
+            'notifi_submit_date' => $publish_date,
+            'notifi_docu' => $main_doc,
+            'entry_date' => $entry_date,
+            'nims_wp_log_ip' => $client_ip,
+            'nims_wp_user_id' => $user_id
+        ];
+
+       
+       
+        // Use transactions to ensure atomic operations
+        DB::beginTransaction();
+        try {
+            // Save the tender data
+            $tender = Tender::create($tenderData);
+            Log::info('Tender added: ' . $tender->nims_wp_tender_id);
+            $notificationData['type_id'] = $tender->nims_wp_tender_id;
+            // dd($notificationData);
+            // Save the notification data
+            $notification = Notification::create($notificationData);
+        
+            Log::info('Notification added: ' . $notification->notifi_id);
+
+            DB::commit();
+            Log::info('Transaction committed successfully');
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Tender added successfully!'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Transaction failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while saving the data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getTenderNumber()
+    {
+        
+        $nims_maintender = 1;
+        $nims_wp_tender_archive = 0;
+
+        // Perform the query using Eloquent
+        $tenders = Tender::where('nims_maintender', $nims_maintender)
+                         ->where('nims_wp_tender_archive', $nims_wp_tender_archive)
+                         ->where('nims_wp_tender_end_date', '>',  Carbon::now())
+                         ->orderBy('nims_wp_tender_number', 'DESC')
+                         ->get(['nims_wp_tender_number']);
+
+        return response()->json($tenders);
+    }
+
+    public function listArchive(Request $request)
+    {
+            if ($request->ajax()) {
+                $query = Tender::where('nims_wp_tender_archive', 1)
+                            ->orWhere('nims_wp_tender_end_date', '<',  Carbon::now())
+                    ->select([
+                        'nims_wp_tender_id as id',
+                        'nims_wp_tender_title as title',
+                        'nims_wp_tender_number as number',
+                        'nims_wp_tender_submit_date as submit_date',
+                        'nims_wp_tender_start_date as start_date',
+                        'nims_wp_tender_end_date as end_date'
+                    ])
+                    // ->orderBy('nims_wp_tender_number', 'ASC')
+                    // ->orderBy('nims_wp_tender_id', 'ASC')
+                    ->latest('id','ASC');
+                    
+
+                return DataTables::eloquent($query)
+                    ->filter(function ($query) use ($request) {
+                        if ($request->has('search.value')) {
+                            $search = $request->input('search.value');
+                            $query->where(function ($query) use ($search) {
+                                $query->where('nims_wp_tender_title', 'like', "%{$search}%")
+                                    ->orWhere('nims_wp_tender_number', 'like', "%{$search}%")
+                                    ->orWhere('nims_wp_tender_submit_date', 'like', "%{$search}%")
+                                    ->orWhere('nims_wp_tender_start_date', 'like', "%{$search}%")
+                                    ->orWhere('nims_wp_tender_end_date', 'like', "%{$search}%");
+                            });
+                        }
+                    })
+                    ->editColumn('title', function($row) {
+                        return Str::limit($row->title, 50);
+                    })
+                    ->editColumn('number', function($row) {
+                        return Str::limit($row->number, 50);
+                    })
+                    ->addIndexColumn()
+                    ->addColumn('action', function($row){
+                        $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
+                        return $btn;
+                    })
+                    ->editColumn('submit_date', function($row){
+                        return $row->submit_date ? date('Y-m-d', strtotime(str_replace('/', '-', $row->submit_date))) : '';                   
+                    })
+                    ->editColumn('start_date', function($row){
+                        return $row->start_date ? date('Y-m-d', strtotime(str_replace('/', '-', $row->start_date))) : '';  
+                    })
+                    ->editColumn('end_date', function($row){
+                        return $row->end_date ? date('Y-m-d h:i:s', strtotime(str_replace('/', '-', $row->end_date))) : '';  
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+
+            return view('tenders.list-archive');
     }
 }
 

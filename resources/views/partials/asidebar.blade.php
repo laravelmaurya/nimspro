@@ -174,13 +174,21 @@
               </li>
               @endcan 
               @can('tender-create')
-              <li class="nav-item">
-                <a href="{{route('tenders.create')}}" class="nav-link">
+              <li class="nav-item">                          
+                <a href="javacript::void(0)" class="getTenderNumber nav-link" data-toggle="modal" data-target="#create-Corrigendum-modal-xl">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Create</p>
+                  <p>Add Corrigendum for Tender</p>
                 </a>
               </li> 
-              @endcan              
+              @endcan
+              @can('tender-list')
+              <li class="nav-item">
+                <a href="{{route('tenders.list-archive')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>All Archive</p>
+                </a>
+              </li>
+              @endcan               
             </ul>
           </li>  
           @endcan                             

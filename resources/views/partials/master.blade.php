@@ -79,6 +79,7 @@
    color:#fff;
    font-weight: bold;
 }
+
    </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -167,6 +168,8 @@
 <script  src="{{asset($addPublic.'plugins/jquery-validation/jquery.validate.min.js')}}"> </script>
 <script  src="{{asset($addPublic.'plugins/jquery-validation/additional-methods.min.js')}}"> </script>
 
+
+
 <script>
   $.ajaxSetup({
   headers: {
@@ -174,7 +177,42 @@
   }
 });
 </script>
+<script>
+function syncEditCorrigendum(){
 
+    var number = document.getElementById("corrigendum_number");    
+    var numbertwo = document.getElementById("corrigendum_numbertwo");      
+    numbertwo.value= Base64.encode(number.value);
+
+    // console.log(`number = ${number.value} \n numbertwo = ${numbertwo.value}`);
+    var title = document.getElementById("corrigendum_title");
+
+    var titletwo = document.getElementById("corrigendum_titletwo");
+     
+    titletwo.value= Base64.encode(title.value); 
+
+    // console.log(`title = ${title.value} \n titletwo = ${titletwo.value}`);
+    
+    var start_date = document.getElementById("corrigendum_start_date");
+    var datepicker_s = document.getElementById("corrigendum_datepicker_s");
+    datepicker_s.value= Base64.encode(start_date.value); 
+
+    var end_date = document.getElementById("corrigendum_end_date");
+    var datepicker_e = document.getElementById("corrigendum_datepicker_e");
+    
+    datepicker_e.value= Base64.encode(end_date.value); 
+    
+    // console.log(`start_date = ${start_date.value} \n datepicker_s = ${datepicker_s.value}`);
+    // console.log(`end_date = ${end_date.value} \n datepicker_e = ${datepicker_e.value}`);
+    var notes = CKEDITOR.instances.corrigendum_notes.getData();
+    // alert(notes);
+    // console.log(notes);
+    // $("#edit_notes1").val(Base64.encode(notes));
+    $("#corrigendum_notes1").val(notes);
+
+}
+
+</script>
 <script>
   function syncEdit(){
     //     const form = document.querySelector("form");
@@ -213,7 +251,7 @@
       // console.log(`start_date = ${start_date.value} \n datepicker_s = ${datepicker_s.value}`);
       // console.log(`end_date = ${end_date.value} \n datepicker_e = ${datepicker_e.value}`);
       var notes = CKEDITOR.instances.edit_notes.getData();
-      CKEDITOR.instances.edit_notes.setData(notes);
+  
 
       console.log(notes);
       // alert(notes);
@@ -252,9 +290,10 @@
       console.log('         '+end_date.value+'              '+datepicker_e.value);
 
       var notes = CKEDITOR.instances.notes.getData();
-      CKEDITOR.instances.notes.setData(notes);
+
       console.log(notes);
-      $("#notes1").val(Base64.encode(notes));
+      // $("#notes1").val(Base64.encode(notes));
+      $("#notes1").val(notes);
 
       // alert(notes)
       // e.preventDefault();
@@ -393,11 +432,33 @@ $(document).ready(function() {
   });
 });
 </script>
-
 <script>
-  $("input[data-bootstrap-switch]").each(function(){
+  function downloadImage(imagePath,suggestFileName) {
+    console.log('imagePath = ' + imagePath, 'suggestFileName =' +suggestFileName);
+   alert('Downloading image');
+   var suggestFileName = suggestFileName ;
+   // Create an anchor element
+   var anchor = document.createElement("a");
+ 
+   // Set the href attribute to the image path
+   anchor.href = imagePath;
+ 
+   // Set the download attribute to suggest a filename for the download
+   anchor.download = "downloaded-"+suggestFileName;
+ 
+   // Simulate a click event on the anchor element
+   var clickEvent = new MouseEvent("click", {
+     view: window,
+     bubbles: true,
+     cancelable: false
+   });
+   anchor.dispatchEvent(clickEvent);
+ }
+ </script>
+<script>
+$("input[data-bootstrap-switch]").each(function(){
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    });
+    })
 </script>
 
 <script>
@@ -524,7 +585,7 @@ $(document).ready(function() {
 }
 
   </script>
-<script language="javascript">
+{{-- <script language="javascript">
   document.onmousedown=disableclick;
   status="Right Click Disabled";
   function disableclick(event)
@@ -561,29 +622,8 @@ $(document).ready(function() {
           }
         }
      });
-</script>
-<script>
- function downloadImage(imagePath,suggestFileName) {
-  alert('Downloading image');
-  var suggestFileName = suggestFileName ;
-  // Create an anchor element
-  var anchor = document.createElement("a");
+</script> --}}
 
-  // Set the href attribute to the image path
-  anchor.href = imagePath;
-
-  // Set the download attribute to suggest a filename for the download
-  anchor.download = "downloaded-"+suggestFileName;
-
-  // Simulate a click event on the anchor element
-  var clickEvent = new MouseEvent("click", {
-    view: window,
-    bubbles: true,
-    cancelable: false
-  });
-  anchor.dispatchEvent(clickEvent);
-}
-</script>
 <script type="text/javascript">
   $(document).ready(function(){
      $('#ui-datepicker-div').removeClass("ui-datepicker");

@@ -25,6 +25,8 @@ class Notification extends Model
         'notifi_end_date',
         'notifi_submit_date',
         'entry_date',
+        'nims_wp_log_ip',
+        'nims_wp_user_id',
         'notifi_docu',
         'notifi_docu_link1','notifi_docu_link2','notifi_docu_link3','notifi_docu_link4',
         'notifi_docu_link5','notifi_docu_link6','notifi_docu_link7','notifi_docu_link8',

@@ -88,7 +88,7 @@
                    @enderror
                   </div>                             
                   <div class="form-group">
-                    <label>User Type (Roles) <span class="text--danger">*</span> </label>
+                    <label>User Type (Roles) <span class="text-danger">*</span> </label>
                     <select name="roles[]" id="roles" class="select2" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
                       @foreach ($roles as $role)                   
                       <option value="{{ $role->id }}">{{ $role->name }}</option>

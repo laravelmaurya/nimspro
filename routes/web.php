@@ -7,6 +7,7 @@ use App\Http\Controllers\TenderController;
 use App\Http\Controllers\TutorialController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\GoverningCouncilController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,9 +42,13 @@ Route::group(['middleware' => 'custom_auth'], function() {
     // Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle'])->name('tender.image-delete-only'); 
     // Route::post('tenders/{id}', [TenderController::class,'destroy'])->name('tenders.delete'); 
    
+   
+    Route::put('governing-council', [GoverningCouncilController::class, 'update'])->name('governing-council');
+    Route::get('governing-council/{id}/{te}/edit', [GoverningCouncilController::class, 'edit'])->name('governing-council.edit');
+    // Route::get('governing-council/{id}/{type}/edit', [GoverningCouncilController::class, 'edit'])->name('governing-council.edit');
+
 
     Route::get('/tenders/get-tender-number', [TenderController::class, 'getTenderNumber'])->name('tenders.get-tender-number');
-    
     Route::get('tenders/list-archive', [TenderController::class,'listArchive'])->name('tenders.list-archive'); 
     Route::get('/tenders/list-archive/{id}/edit', [TenderController::class, 'edit'])->name('tenders.list-archive.edit'); 
     Route::post('tenders/corrigendum', [TenderController::class,'storeCorrigendum'])->name('tenders.stroe-corrigendum'); 

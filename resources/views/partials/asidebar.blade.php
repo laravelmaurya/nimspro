@@ -175,7 +175,7 @@
               @endcan 
               @can('tender-create')
               <li class="nav-item">                          
-                <a href="javacript::void(0)" class="getTenderNumber nav-link" data-toggle="modal" data-target="#create-Corrigendum-modal-xl">
+                <a href="javacript::void(0)" class="getTenderNumber nav-link" data-toggle="modal" data-target="#create-Corrigendum-modal">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add Corrigendum for Tender</p>
                 </a>
@@ -188,10 +188,102 @@
                   <p>All Archive</p>
                 </a>
               </li>
-              @endcan               
+              @endcan                             
             </ul>
           </li>  
           @endcan                             
+          @can('permissions-menu')
+            <li class="nav-item">
+              {{-- LEVEL 1 --}}
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-circle"></i>
+                <p>
+                  Administration
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              {{-- END LEVEL 1 --}}
+               {{-- LEVEL 2 --}}
+              <ul class="nav nav-treeview">
+                @can('permission-list')
+                <li class="nav-item">
+                  <a href="javascript:void(0);"  class="editBtn2 nav-link" data-title="Members of Governing Council" data-cardtitle="Members of Governing Council" data-modalstype="Show" data-te="aboutus" data-id="governmentc" >
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Governing Council</p>
+                  </a>
+                </li>
+                @endcan   
+
+                @can('permission-create')
+                <li class="nav-item">
+                  <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Members of Executive Board" data-cardtitle="Members of Executive Board" data-modalstype="Show" data-te="aboutus" data-id="ex_board">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Executive Board</p>
+                  </a>
+                </li> 
+                @endcan   
+
+                @can('permission-create')
+                <li class="nav-item">
+                  <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Members of Finance Committee" data-cardtitle="Members of Finance Committee" data-modalstype="Show" data-te="aboutus" data-id="finance">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Finance Committee</p>
+                  </a>
+                </li> 
+                @endcan
+
+                @can('permission-create')
+                <li class="nav-item">
+                  <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Members of Academic Council" data-cardtitle="Members of Academic Council" data-modalstype="Show" data-te="aboutus" data-id="acadamiccouncil">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Academic Council</p>
+                  </a>
+                </li> 
+                @endcan
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>
+                      Director
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  {{-- LEVEL 3 --}}
+                  <ul class="nav nav-treeview">
+                    @can('permission-create')
+                    <li class="nav-item">
+                      <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="About Director" data-cardtitle="About Director" data-modalstype="Show" data-te="director" data-id="about">
+                        <i class="far fa-dot-circle nav-icon"></i>
+                        <p>About Director</p>
+                      </a>
+                    </li> 
+                    @endcan 
+                    @can('permission-create')
+                    <li class="nav-item">
+                      <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Overview" data-cardtitle="Overview" data-modalstype="Show" data-te="director" data-id="office">
+                        <i class="far fa-dot-circle nav-icon"></i>
+                        <p>Overview</p>
+                      </a>
+                    </li> 
+                    @endcan 
+                    @can('permission-create')
+                    <li class="nav-item">
+                      <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Ex-Directors" data-cardtitle="Ex-Directors" data-modalstype="Show" data-te="director" data-id="exdirector">
+                        <i class="far fa-dot-circle nav-icon"></i>
+                        <p>Ex-Directors</p>
+                      </a>
+                    </li> 
+                    @endcan 
+                                     
+                  </ul>
+                  {{-- END LEVEL 3 --}}
+                </li>
+                
+              </ul>
+               {{-- END LEVEL 2 --}}
+            </li>
+            @endcan                               
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

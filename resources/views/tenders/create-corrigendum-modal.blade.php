@@ -1,4 +1,4 @@
-<div class="modal fade" id="create-Corrigendum-modal-xl">
+<div class="modal fade" id="create-Corrigendum-modal">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -98,7 +98,7 @@
                                                 <div class="card-footer p-0 bg-white">
                                                     <input name="h1" id="corrigendum_titletwo" type="hidden">
                                                     <input name="h2" id="corrigendum_numbertwo" type="hidden">
-                                                    <input name="h3" id="corrigendum_notes1" class="ckeditor" type="hidden">
+                                                    <input name="h3" id="corrigendum_notes1" class="" type="hidden">
                                                     <input name="h4" id="corrigendum_datepicker_s" type="hidden">
                                                     <input name="h5" id="corrigendum_datepicker_e" type="hidden">
                                                     <input value="{{ route("tenders.get-tender-number") }}" id="get_tender_number" type="hidden">

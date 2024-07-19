@@ -59,6 +59,7 @@ class TenderController extends Controller
         ->orderBy('nims_wp_tender_number', 'asc')
         ->orderBy('nims_wp_tender_id', 'asc')
         ->latest('id','asc');
+        // dd($query);
 //dd($query->toSql());
         return DataTables::eloquent($query)
             ->filter(function ($query) use ($request) {
@@ -853,7 +854,7 @@ class TenderController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Tender added successfully!'
+                'message' => 'New Corrigendum added successfully!'
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

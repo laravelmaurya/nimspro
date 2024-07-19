@@ -81,6 +81,19 @@
 }
 
    </style>
+   <style>
+   .Btn-as-link {
+        background: none;
+        color: blue;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        font-size: 1em;
+        font-family: inherit;
+        margin-left:-10%;
+    }
+</style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 
@@ -96,7 +109,8 @@
         @include('partials.footer')
     </div>
     <!-- ./wrapper -->
-
+@include('partials.image-modals')
+@include('governing-council.edit-governing-council-modal')
 <!-- jQuery -->
 <script src="{{asset($addPublic.'plugins/jquery/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -177,6 +191,297 @@
   }
 });
 </script>
+
+<script>
+  $(document).ready(function () {
+    $('body').on('click', '#btnEditData', function () {
+      // var id = ele.data('id');
+      var id = $('#edit_id').val();
+      var te = $('#edit_te').val();
+      var title = $('#edit_modals_title').val();
+      var cardtitle = $('#edit_modals_cardtitle').val();
+      var modalstype = 'Edit'; // Assuming you have another data attribute for type
+      // var id = $('#edit_modals_modalstype').val();
+  
+ alert('id = '+" "+id);
+
+      // alert(cardtitle+" "+title);
+
+      var url = "{{ route('governing-council.edit', [':id', ':te']) }}";
+      url = url.replace(':id', id);
+      url = url.replace(':te', te);
+      // url = url.replace(':modalstype', modalstype);
+
+      // Debugging
+      console.log('Generated URL:', url);
+
+
+      $.ajax({
+                url: url,
+                method: 'GET',
+                success: function (data) 
+                {
+                      $('.is-invalid').removeClass('is-invalid');
+                      $('.invalid-feedback').remove();
+                      
+                      // const myJSON1 = JSON.stringify(data);
+                      // console.log('response =' + myJSON1);
+                      
+                      // Log the entire data object to see its structure
+                      // console.log('Response data:', data);
+
+                      // Check if the data object has the key property
+                      var data_id = htmlspecialchars_decode(data[id]);
+                      if (data.hasOwnProperty(id)) {
+                        // console.log(id + ':', data[id]);
+                        
+                        console.log(id + ':', data_id);
+                      } else {
+                        console.error(id + ' not found in the response data.');
+                      }
+                      
+                      // alert(cardtitle+" "+title);
+                      $('#edit-governing-council').modal('show');
+                      $('#modal-title-for-description').text(title);
+                      $('#card-title-for-description').text(cardtitle);
+                      $('#modal-type-edit-or-show').text(modalstype);
+                      // $('#edit_only_description').text(data_id);
+                  
+                        $('#editFormSubmit2').removeClass('d-none')
+                        $('#btnEditData').addClass('d-none')
+                        if (CKEDITOR.instances.edit_only_description) {
+                                    CKEDITOR.instances.edit_only_description.destroy(true);
+                                    // CKEDITOR.replace('edit_only_description');
+                                }
+                                  // Replace all elements with the 'editor' class with CKEditor
+                                  document.querySelectorAll('.ckeditor_only_description').forEach(function(element) {
+                                    CKEDITOR.replace(element)
+                                  });
+
+                      
+                      // Destroy existing CKEditor instance if it exists
+                      
+                      CKEDITOR.instances.edit_only_description.setData(data_id);
+                      $('#edit_id').val(id);
+                      $('#edit_description').val(data_id);       
+                      $('#edit_form_description').attr('action', "{{ url('governing-council') }}");
+                 },
+                 error: function (xhr, status, error) {          
+                        $('.is-invalid').removeClass('is-invalid');
+                        $('.invalid-feedback').remove();
+                        var response = xhr;
+                        // console.error('Error:', response);
+                        if (response.status === 422 || response.status === 400) {
+                          console.error('Error:', response);
+                            if (response.status === 400) {
+                                window.location.href = response.responseJSON.redirect + '=' + response.responseJSON.errorTamperingValue;
+                            }
+                            var errors = response.responseJSON.errors;
+                            $.each(errors, function (key, value) {
+                                var input = $('[name=' + key + ']');
+                                input.addClass('is-invalid');
+                                input.closest('.form-group').append('<span class="invalid-feedback d-inline">' + value[0] + '</span>');
+                            });
+                        } else {
+                            alert('An error occurred. Please try again.');
+                        }
+                  }
+      });
+    });
+  });
+</script>
+<script>
+  function htmlspecialchars_decode(str) {
+    var textArea = document.createElement('textarea');
+    textArea.innerHTML = str;
+    return textArea.value;
+}
+    $(document).ready(function () {
+      $('body').on('click', '.editBtn2', function () {
+        var title = $(this).data('title');
+        var cardtitle = $(this).data('cardtitle');
+        var modalstype = $(this).data('modalstype'); // Assuming you have another data attribute for type
+        var id = $(this).data('id');
+        var te = $(this).data('te');
+
+        // var element = $('#btnEditData');
+        //     element.attr('data-title',title);
+        //     element.attr('data-cardtitle',cardtitle);
+        //     element.attr('data-id',id);
+
+        // alert(cardtitle+" "+title);
+
+        var url = "{{ route('governing-council.edit', [':id', ':te']) }}";
+        url = url.replace(':id', id);
+        url = url.replace(':te', te);
+        // url = url.replace(':modalstype', modalstype);
+
+        // Debugging
+        // console.log('Generated URL:', url);
+
+
+        $.ajax({
+                url: url,
+                method: 'GET',
+                success: function (data) 
+                {
+                  // const myJSON1 = JSON.stringify(data);
+                  // console.log('response =' + myJSON1);
+                    
+                  // Log the entire data object to see its structure
+                    // console.log('Response data:', data);
+                    // alert('Response data:', data);
+          
+                    $('.is-invalid').removeClass('is-invalid');
+                    $('.invalid-feedback').remove();
+                                      
+         
+                    // Check if the data object has the key property
+                    if (data.hasOwnProperty(id)) {
+                      // console.log(id + ':', data_id);
+                      console.log(id + ':', 'yes data available');
+                    } else {
+                      console.error(id + ' not found in the response data.');
+                    }
+              
+                    // alert(cardtitle+" "+title);
+                    $('#edit-governing-council').modal('show');
+                    $('#modal-title-for-description').text(title);
+                    $('#card-title-for-description').text(cardtitle);         
+                    // $('#edit_only_description').text(data_id);
+                    $('#modal-type-edit-or-show').text(modalstype);
+                    if(modalstype == 'Show'){
+                            
+                              $('#editFormSubmit2').addClass('d-none');
+                              $('#btnEditData').removeClass('d-none');
+                              if (CKEDITOR.instances.edit_only_description) {
+                              // Destroy existing CKEditor instance if it exists
+                                  CKEDITOR.instances.edit_only_description.destroy(true);
+                                  // CKEDITOR.replace('edit_only_description');
+                              }
+                                // Replace all elements with the 'editor' class with CKEditor
+                              document.querySelectorAll('.ckeditor_only_description').forEach(function(element) {
+                                  CKEDITOR.replace(element, {
+                                      readOnly: true , // Set CKEditor to read-only mode
+                                      height: 1000,
+                                      toolbar: [{ name: 'styles', items: ['Format'] },
+                                                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
+                                                { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'] },
+                                                { name: 'links', items: ['Link', 'Unlink'] },
+                                                { name: 'undo', items: ['Undo', 'Redo'] },
+                                                { name: 'insert', items: ['Table', 'Image'] }  // Insert table and image
+                                      ]  
+                                  });
+                              });
+
+                              var data_id = htmlspecialchars_decode(data[id]);
+                              // alert(data_id)
+                              CKEDITOR.instances.edit_only_description.setData(data_id);
+                              $('#edit_id').val(id);
+                              $('#edit_te').val(te);
+                             
+                            
+                              
+                              $('#edit_description').val(data_id);       
+                              $('#edit_form_description').attr('action', "{{ url('governing-council') }}");
+                              $('#edit_modals_title').val(title);
+                              $('#edit_modals_cardtitle').val(cardtitle);
+                              $('#edit_modals_modalstype').val(modalstype);
+                    }else{
+                      alert('error')
+                    }
+                  },
+                error: function (xhr, status, error) {          
+                        $('.is-invalid').removeClass('is-invalid');
+                        $('.invalid-feedback').remove();
+                        var response = xhr;
+                        // console.error('Error:', response);
+                        if (response.status === 422 || response.status === 400) {
+                          console.error('Error:', response);
+                            if (response.status === 400) {
+                                window.location.href = response.responseJSON.redirect + '=' + response.responseJSON.errorTamperingValue;
+                            }
+                            var errors = response.responseJSON.errors;
+                            $.each(errors, function (key, value) {
+                                var input = $('[name=' + key + ']');
+                                input.addClass('is-invalid');
+                                input.closest('.form-group').append('<span class="invalid-feedback d-inline">' + value[0] + '</span>');
+                            });
+                        } else {
+                            alert('An error occurred. Please try again.');
+                        }
+                  }
+                                   
+        });
+      });
+    });
+  </script>
+<script>
+  // Submit the edit form via AJAX
+  $('body').on('click', '#editFormSubmit2', function () {
+    var url  = $('#edit_form_description').attr("action");
+    // alert(url);
+    // var url = "{{ route('tenders.store') }}";
+    url=url.trim();
+    // alert(url);
+
+        syncEditOnlyDescription();
+        var form = $('#edit_form_description')[0];
+        var notes = CKEDITOR.instances.edit_only_description.getData();
+        var formData = new FormData(form);
+        formData.append('description', notes);
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                // alert(response);
+                if (response.status === 'success') {
+                    Swal.fire({
+                        title: response.message,
+                        icon: "success"
+                    });
+                    $('.modal').modal('hide');                        
+                    // table.draw();
+                }
+            },
+            error: function (response) {
+                $('.is-invalid').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+                if (response.status === 422 || response.status === 400) {
+                    if (response.status === 400) {
+                        window.location.href = response.responseJSON.redirect + '=' + response.responseJSON.errorTamperingValue;
+                    }
+                    var errors = response.responseJSON.errors;
+                    $.each(errors, function (key, value) {
+                        var input = $('[name=' + key + ']');
+                        console.log('input',input);
+                        input.addClass('is-invalid');
+                        input.closest('.form-group').append('<span class="invalid-feedback d-inline">' + value[0] + '</span>');
+                    });
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
+            }
+        });
+
+});
+</script>
+<script>
+  function syncEditOnlyDescription(){
+  
+    // alert('syncEditOnlyDescription');
+      var notes = CKEDITOR.instances.edit_only_description.getData();
+      // alert(notes);
+      // console.log(notes);
+      // $("#edit_notes1").val(Base64.encode(notes));
+      $("#edit_description").val(notes);
+  
+  }
+  
+  </script>
 <script>
 function syncEditCorrigendum(){
 
@@ -455,6 +760,16 @@ $(document).ready(function() {
    anchor.dispatchEvent(clickEvent);
  }
  </script>
+
+ <script>
+  $(document).ready(function() {
+      $('body').on('click', '.viewImageBtn', function () {
+          var imageUrl = $(this).data('image-url');
+          $('#image-modal').modal('show');
+          $('#image_modal_img').attr('src', imageUrl);
+      });
+  });
+  </script>
 <script>
 $("input[data-bootstrap-switch]").each(function(){
       $(this).bootstrapSwitch('state', $(this).prop('checked'));

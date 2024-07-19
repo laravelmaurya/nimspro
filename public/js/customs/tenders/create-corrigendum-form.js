@@ -1,6 +1,10 @@
 
 $(document).ready(function () {
     $('.getTenderNumber').click(function () {
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').remove();
+        CKEDITOR.instances.corrigendum_notes.setData('');
+        // $('#corrigendum_notes').val('');
         var url  = $('#get_tender_number').val();
         url=url.trim();
         // alert(url);
@@ -84,7 +88,7 @@ $(document).ready(function () {
                      $('.is-invalid').removeClass('is-invalid');
                      $('.invalid-feedback').remove();
                     
-                     $('#create-Corrigendum-modal-xl').modal('hide');
+                     $('#create-Corrigendum-modal').modal('hide');
                      // table.DataTable().ajax.reload();
                      table.draw();
                      // Optionally, you can refresh the table or redirect the user

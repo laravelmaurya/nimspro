@@ -27,7 +27,7 @@
             <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#create-modal-xl">
               Add Tender
             </button>
-            <button type="button" class="getTenderNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal-xl">
+            <button type="button" class="getTenderNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal">
                 Add New Corrigendum For Tender 
             </button>
           </div>
@@ -159,7 +159,7 @@ $(document).ready(function () {
   var base_url = "<?php echo url('')  ?>";
   // var base_url = urlPublic + 'public/';
 </script>
-  <script src="{{asset($addPublic.'js/custom/create-form.js')}}"></script>
-  <script src="{{asset($addPublic.'js/custom/edit-archive-form.js')}}"></script>
-  <script src="{{asset($addPublic.'js/custom/create-Corrigendum-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/tenders/create-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/tenders/edit-archive-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/tenders/create-Corrigendum-form.js')}}"></script>
 @endpush

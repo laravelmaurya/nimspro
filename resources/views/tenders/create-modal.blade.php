@@ -102,7 +102,7 @@
                                                 <div class="card-footer p-0 bg-white">
                                                     <input name="h1" id="titletwo" type="hidden">
                                                     <input name="h2" id="numbertwo" type="hidden">
-                                                    <input name="h3" id="notes1" class="ckeditor" type="hidden">
+                                                    <input name="h3" id="notes1" class="" type="hidden">
                                                     <input name="h4" id="datepicker_s" type="hidden">
                                                     <input name="h5" id="datepicker_e" type="hidden">
                                                 </div>

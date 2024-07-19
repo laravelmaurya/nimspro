@@ -27,7 +27,7 @@
             <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#create-modal-xl">
               Add Tender
             </button>
-            <button type="button" class="getTenderNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal-xl">
+            <button type="button" class="getTenderNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal">
               Add New Corrigendum For Tender 
             </button>
           </div>
@@ -66,7 +66,8 @@ $addPublic = config('app.url').'public/';
 <script>
 
 $(document).ready(function () {
-    // Open the edit modal and populate the form with existing data
+    // Open the edit modal and populate the form with existing data 
+    // .editBtn define in index function in controller 
     $('body').on('click', '.editBtn', function () {
         var id = $(this).data('id');
         $.get("{{ route('tenders.index') }}" + '/' + id + '/edit', function (data) {
@@ -78,6 +79,7 @@ $(document).ready(function () {
             $('#h').val(id);
             $('#edit_title').val(data.nims_wp_tender_title);
             $('#edit_number').val(data.nims_wp_tender_number);
+            // console.log('nims_wp_tender_description = ',data.nims_wp_tender_description);
             CKEDITOR.instances.edit_notes.setData(data.nims_wp_tender_description);
             $('#edit_publish_date').val(data.nims_wp_tender_submit_date);
             $('#edit_start_date').val(data.nims_wp_tender_start_date);
@@ -131,6 +133,9 @@ $(document).ready(function () {
                                 <label for="attachment_${index + 1}">Attachment ${index + 1}:</label>
                                 <div class="input-group">
                                     <a href="javascript:void(0)" onclick="downloadImage('${modifiedUrl}', '${suggestFileName}')" class="form-control">Download existing attachment</a>
+                                     <button type="button" class="btn btn-primary viewImageBtn" data-id="${id}" data-image-url="${modifiedUrl}">
+                                     View Image
+                                    </button>
                                     <input type="hidden" id="removeAttachment_${index + 1}" value="${index + 1}">
                                     <input type="hidden" id="attachment_id" value="${id}">
                                     <button type="button" class="btn btn-danger ml-2 removeAttachment" id="${index + 1}" >Remove</button>
@@ -185,11 +190,12 @@ $(document).ready(function () {
 
 });
 </script>
+
 <script>
   var base_url = "<?php echo url('')  ?>";
   // var base_url = urlPublic + 'public/';
 </script>
-  <script src="{{asset($addPublic.'js/custom/create-form.js')}}"></script>
-  <script src="{{asset($addPublic.'js/custom/edit-form.js')}}"></script>
-  <script src="{{asset($addPublic.'js/custom/create-Corrigendum-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/tenders/create-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/tenders/edit-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/tenders/create-Corrigendum-form.js')}}"></script>
 @endpush

@@ -82,7 +82,7 @@
                                                 <input name="h" id="id" type="hidden">
                                                 <input name="h1" id="edit_titletwo" type="hidden">
                                                 <input name="h2" id="edit_numbertwo" type="hidden">
-                                                <input name="h3" id="edit_notes1" class="ckeditor" type="hidden">
+                                                <input name="h3" id="edit_notes1" class="" type="hidden">
                                                 <input name="h4" id="edit_datepicker_s" type="hidden">
                                                 <input name="h5" id="edit_datepicker_e" type="hidden">
                                                 <input  value="<?php echo route("tender.remove-attachment"); ?>" id="remove-attachment" type="hidden">

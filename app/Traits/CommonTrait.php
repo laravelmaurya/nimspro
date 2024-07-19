@@ -45,6 +45,12 @@ trait CommonTrait{
         $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');  
         return $data;  
       } 
+    function unsanitizeInput($data) {  
+        $data = trim($data);  
+        $data = stripslashes($data);  
+        $data =  htmlspecialchars_decode($data, ENT_QUOTES);  
+        return $data;  
+      } 
 
       function dataTamper($value,$base64EncodedValue){
          if($value === base64_decode($base64EncodedValue)){

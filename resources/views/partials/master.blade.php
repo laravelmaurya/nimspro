@@ -111,6 +111,7 @@
     <!-- ./wrapper -->
 @include('partials.image-modals')
 @include('governing-council.edit-governing-council-modal')
+@include('partials.file-upload-modals')
 <!-- jQuery -->
 <script src="{{asset($addPublic.'plugins/jquery/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -193,10 +194,149 @@
 </script>
 
 <script>
-  $(document).ready(function () {
-    $('body').on('click', '#btnEditData', function () {
-      // var id = ele.data('id');
-      var id = $('#edit_id').val();
+ 
+    $(document).ready(function () {
+      $('body').on('click', '.ShowModalFileUpload', function () {
+        var title = $(this).data('title');
+        var cardtitle = $(this).data('cardtitle');
+        var modalstype = $(this).data('modalstype'); // Assuming you have another data attribute for type
+        var id = $(this).data('id');
+        var te = $(this).data('te');
+
+        // var element = $('#btnEditData');
+        //     element.attr('data-title',title);
+        //     element.attr('data-cardtitle',cardtitle);
+        //     element.attr('data-id',id);
+
+        // alert(cardtitle+" "+title);
+
+        var url = "{{ route('file-upload.edit', [':id', ':te']) }}";
+        url = url.replace(':id', id);
+        url = url.replace(':te', te);
+        // url = url.replace(':modalstype', modalstype);
+
+        // Debugging
+        console.log('Generated URL:', url);
+
+
+        $.ajax({
+                url: url,
+                method: 'GET',
+                success: function (data) 
+                {
+                  // const myJSON1 = JSON.stringify(data);
+                  // console.log('response =' + myJSON1);
+                    
+                  // Log the entire data object to see its structure
+                    console.log('Response data:', data);
+                    // alert('Response data:', data);
+          
+                    $('.is-invalid').removeClass('is-invalid');
+                    $('.invalid-feedback').remove();
+                                      
+         
+                    // Check if the data object has the key property
+                    if (data.hasOwnProperty(id)) {
+                      console.log(id + ':', data);
+                      // console.log(id + ':', 'yes data available');
+                    } else {
+                      console.error(id + ' not found in the response data.');
+                    }
+    
+            
+                    // alert(cardtitle+" "+title);
+                    $('#modal-file-upload').modal('show');
+                    $('#modal-title-file-upload').text(title);
+                    $('#card-title-for-file-upload').text(cardtitle);         
+                    // $('#edit_only_description').text(data_id);
+                    $('#modal-type-edit-or-show').text(modalstype);
+                  
+                            
+                    $('#editFormSubmit2').addClass('d-none');
+                    $('#btnEditData').removeClass('d-none');
+                    
+                    $('#edit_id_fu').val(id);
+                    $('#edit_te_fu').val(te);
+                    
+                  
+                    
+                    // $('#edit_description').val(data_id);       
+                    $('#edit_form_file_upload').attr('action', "{{ url('file-upload') }}");
+                    $('#edit_modals_title_fu').val(title);
+                    $('#edit_modals_cardtitle_fu').val(cardtitle);
+                    $('#edit_modals_modalstype_fu').val(modalstype);
+                  id = 'nims_'+id;
+                    var attachment = data[id];
+                    console.log('attachment = ' + attachment);
+                
+                    if (attachment) {
+                        var suggestFileName = attachment.split("/").pop();
+                        // Use Laravel's url() function to generate the full URL
+                        var attachmentUrl = "{{ url('storage') }}" + "/" + attachment;
+                         // Add "public" before "storage" in the URL
+                         var modifiedUrl = attachmentUrl.replace('/storage/public', '/public/storage');
+                         let child = document.getElementById('file_upload_row');
+                         // Alternatively, you can use remove method (modern browsers)
+                         if (child != null){
+                             child.remove();
+                         }
+                             $('#attachment_download').append(`
+                                                                <div class="row" id="file_upload_row">                         
+                                                                      <div class="col-sm-12">
+                                                                          <div class="form-group">
+                                                                              <label for="main_doc">Main Attachment <span class="text-danger">*</span></label>                                                                                                               
+                                                                                <div class="input-group">                                                        
+                                                                                  <a href="javascript:void(0)" onclick="downloadImage('${modifiedUrl}', '${suggestFileName}')" class="form-control">Download existing attachment</a>
+                                                                                  <button type="button" class="btn btn-primary viewImageBtn" data-id="${id}" data-image-url="${modifiedUrl}">
+                                                                                  View Image
+                                                                                  </button>
+                                                                                  <div class="custom-file">
+                                                                                        <input name="main_doc" id="edit_main_doc" type="file" class="custom-file-input @error('main_doc') is-invalid @enderror">
+                                                                                        <label class="custom-file-label" for="main_doc">Choose file</label>
+                                                                                    </div>
+                                                                                    <input type="hidden" id="removeAttachment_${1}" value="${1}">
+                                                                                    <input type="hidden" id="attachment_id" value="${id}">                                   
+                                                                                </div>
+                                                                          </div>
+                                                                      </div>
+                                                                      < class="row" id="file_upload_row">
+                                                                      </
+                                                                  </div>`);
+                   
+                    
+                  }
+                },
+                error: function (xhr, status, error) {          
+                        $('.is-invalid').removeClass('is-invalid');
+                        $('.invalid-feedback').remove();
+                        var response = xhr;
+                        // console.error('Error:', response);
+                        if (response.status === 422 || response.status === 400) {
+                          console.error('Error:', response);
+                            if (response.status === 400) {
+                                window.location.href = response.responseJSON.redirect + '=' + response.responseJSON.errorTamperingValue;
+                            }
+                            var errors = response.responseJSON.errors;
+                            $.each(errors, function (key, value) {
+                                var input = $('[name=' + key + ']');
+                                input.addClass('is-invalid');
+                                input.closest('.form-group').append('<span class="invalid-feedback d-inline">' + value[0] + '</span>');
+                            });
+                        } else {
+                            alert('An error occurred. Please try again.');
+                        }
+                  }
+                                   
+        });
+      });
+    });
+  </script>
+<script>
+ 
+  // Submit the edit form via AJAX
+  $('body').on('click', '#submitFormFileUpload', function () {
+    // var id = ele.data('id');
+    var id = $('#edit_id').val();
       var te = $('#edit_te').val();
       var title = $('#edit_modals_title').val();
       var cardtitle = $('#edit_modals_cardtitle').val();
@@ -206,6 +346,75 @@
  alert('id = '+" "+id);
 
       // alert(cardtitle+" "+title);
+
+      var url = "{{ route('governing-council.edit', [':id', ':te']) }}";
+      url = url.replace(':id', id);
+      url = url.replace(':te', te);
+      // url = url.replace(':modalstype', modalstype);
+
+      // Debugging
+      console.log('Generated URL:', url);
+    var url  = $('#edit_form_file_upload').attr("action");
+    // alert(url);
+    // var url = "{{ route('tenders.store') }}";
+    url=url.trim();
+    // alert(url);
+
+        var form = $('#edit_form_file_upload')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                // alert(response);
+                if (response.status === 'success') {
+                    Swal.fire({
+                        title: response.message,
+                        icon: "success"
+                    });
+                    $('.modal').modal('hide');                        
+                    // table.draw();
+                }
+            },
+            error: function (response) {
+                $('.is-invalid').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+                if (response.status === 422 || response.status === 400) {
+                    if (response.status === 400) {
+                        window.location.href = response.responseJSON.redirect + '=' + response.responseJSON.errorTamperingValue;
+                    }
+                    var errors = response.responseJSON.errors;
+                    $.each(errors, function (key, value) {
+                        var input = $('[name=' + key + ']');
+                        console.log('input',input);
+                        input.addClass('is-invalid');
+                        input.closest('.form-group').append('<span class="invalid-feedback d-inline">' + value[0] + '</span>');
+                    });
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
+            }
+        });
+
+});
+</script>
+<script>
+                 
+  $(document).ready(function () {
+   
+    $('body').on('click', '#btnEditData', function () {
+   
+      // var id = ele.data('id');
+      var id = $('#edit_id').val();
+      var te = $('#edit_te').val();
+      var title = $('#edit_modals_title').val();
+      var cardtitle = $('#edit_modals_cardtitle').val();
+      var modalstype = 'Edit'; // Assuming you have another data attribute for type
+      // var id = $('#edit_modals_modalstype').val();
 
       var url = "{{ route('governing-council.edit', [':id', ':te']) }}";
       url = url.replace(':id', id);
@@ -265,6 +474,8 @@
                       $('#edit_id').val(id);
                       $('#edit_description').val(data_id);       
                       $('#edit_form_description').attr('action', "{{ url('governing-council') }}");
+
+
                  },
                  error: function (xhr, status, error) {          
                         $('.is-invalid').removeClass('is-invalid');
@@ -290,6 +501,7 @@
     });
   });
 </script>
+
 <script>
   function htmlspecialchars_decode(str) {
     var textArea = document.createElement('textarea');
@@ -329,7 +541,7 @@
                   // console.log('response =' + myJSON1);
                     
                   // Log the entire data object to see its structure
-                    // console.log('Response data:', data);
+                    console.log('Response data:', data);
                     // alert('Response data:', data);
           
                     $('.is-invalid').removeClass('is-invalid');
@@ -338,12 +550,13 @@
          
                     // Check if the data object has the key property
                     if (data.hasOwnProperty(id)) {
-                      // console.log(id + ':', data_id);
-                      console.log(id + ':', 'yes data available');
+                      console.log(id + ':', data_id);
+                      // console.log(id + ':', 'yes data available');
                     } else {
                       console.error(id + ' not found in the response data.');
                     }
-              
+    
+            
                     // alert(cardtitle+" "+title);
                     $('#edit-governing-council').modal('show');
                     $('#modal-title-for-description').text(title);
@@ -469,6 +682,172 @@
 
 });
 </script>
+
+<script>
+
+  $(document).ready(function () {
+    $('body').on('click', '#morningService', function () {
+      var title = $(this).data('title');
+      var cardtitle = $(this).data('cardtitle');
+      var modalstype = $(this).data('modalstype'); // Assuming you have another data attribute for type
+      var id = $(this).data('id');
+      var te = $(this).data('te');
+
+      // var element = $('#btnEditData');
+      //     element.attr('data-title',title);
+      //     element.attr('data-cardtitle',cardtitle);
+      //     element.attr('data-id',id);
+
+      // alert(cardtitle+" "+title);
+
+      var url = "{{ route('governing-council.edit', [':id', ':te']) }}";
+      url = url.replace(':id', id);
+      url = url.replace(':te', te);
+      // url = url.replace(':modalstype', modalstype);
+
+      // Debugging
+      // console.log('Generated URL:', url);
+
+
+      $.ajax({
+              url: url,
+              method: 'GET',
+              success: function (data) 
+              {
+                // const myJSON1 = JSON.stringify(data);
+                // console.log('response =' + myJSON1);
+                  
+                // Log the entire data object to see its structure
+                  console.log('Response data:', data);
+                  // alert('Response data:', data);
+        
+                  $('.is-invalid').removeClass('is-invalid');
+                  $('.invalid-feedback').remove();
+                                    
+       
+                  // Check if the data object has the key property
+                  if (data.hasOwnProperty(id)) {
+                    console.log(id + ':', data_id);
+                    // console.log(id + ':', 'yes data available');
+                  } else {
+                    console.error(id + ' not found in the response data.');
+                  }
+            
+                  // alert(cardtitle+" "+title);
+                  $('#edit-governing-council').modal('show');
+                  $('#modal-title-for-description').text(title);
+                  $('#card-title-for-description').text(cardtitle);         
+                  // $('#edit_only_description').text(data_id);
+                  $('#modal-type-edit-or-show').text(modalstype);
+                  if(modalstype == 'Show'){
+                          
+                            $('#editFormSubmit2').addClass('d-none');
+                            $('#btnEditData').removeClass('d-none');
+                            if (CKEDITOR.instances.edit_only_description) {
+                            // Destroy existing CKEditor instance if it exists
+                                CKEDITOR.instances.edit_only_description.destroy(true);
+                                // CKEDITOR.replace('edit_only_description');
+                            }
+                            $('#edit_only_description').addClass('d-none');
+                            $('#btnEditData').addClass('d-none');
+
+                            var data_id = htmlspecialchars_decode(data[id]);
+                            // alert(data_id)
+
+                            if(te == 'hospital_services' && id == 'morning_service'){
+                                  // Function to display data in CKEditor instances
+                                      function displayData(data_id) {
+                                          const container = document.getElementById('data-container');
+                                          const morningService = data_id.morning_service;
+
+                                          for (const key in morningService) {
+                                              if (morningService.hasOwnProperty(key)) {
+                                                  const div = document.createElement('div');
+                                                  if(key == 'morning_service' ){
+                                                  div.innerHTML = `<label for="${key}">Morning Services - Out patient Department</label>
+                                                                  <button  id="btnEditDataMorningService" class="btn btn-sm btn-light  float-right  text-blue font-weight-bold" data-modalstype="Edit"> 
+                                                                    Edit Content
+                                                                  </button>
+                                                                  <textarea name="${key}" id="${key}" class="mt-2 ckeditor_only_description_ms">${morningService[key]}</textarea>`;
+                                                  }else if(key == 'millennium'){
+                                                    div.innerHTML = `<label for="${key}">Morning Services - Millennium Block</label>
+                                                                    <textarea name="${key}" id="${key}" class="mt-2 ckeditor_only_description_ms">${morningService[key]}</textarea>`;
+                                                  }else if(key == 'miscellaneous'){
+                                                    div.innerHTML = `<label for="${key}">Miscellaneous</label>
+                                                                    <textarea name="${key}" id="${key}" class="mt-2 ckeditor_only_description_ms">${morningService[key]}</textarea>`;                    
+                                                  }else if(key == 'specialityb'){
+                                                    div.innerHTML = `<label for="${key}">Morning Services - Speciality Block</label>
+                                                                    <textarea name="${key}" id="${key}" class="mt-2 ckeditor_only_description_ms">${morningService[key]}</textarea>`;
+                                                  }
+                                                                  
+                                                  container.appendChild(div);
+                                              }
+                                          }
+
+                                          // Replace all elements with the 'ckeditor_only_description' class with CKEditor
+                                          document.querySelectorAll('.ckeditor_only_description_ms').forEach(function(element) {
+                                              CKEDITOR.replace(element, {
+                                                  readOnly: true, // Set CKEditor to read-only mode
+                                                  height: 1000,
+                                                  toolbar: [
+                                                      { name: 'styles', items: ['Format'] },
+                                                      { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
+                                                      { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'] },
+                                                      { name: 'links', items: ['Link', 'Unlink'] },
+                                                      { name: 'undo', items: ['Undo', 'Redo'] },
+                                                      { name: 'insert', items: ['Table', 'Image'] }  // Insert table and image
+                                                  ]
+                                              });
+                                          });
+                                      }
+
+                                      // Call the function to display data
+                                      displayData(data);
+                            }
+                              // CKEDITOR.instances.edit_only_description.setData(data_id);
+                            
+                            $('#edit_id').val(id);
+                            $('#edit_te').val(te);
+                           
+                          
+                            
+                            $('#edit_description').val(data_id);       
+                            $('#edit_form_description').attr('action', "{{ url('governing-council') }}");
+                            $('#edit_modals_title').val(title);
+                            $('#edit_modals_cardtitle').val(cardtitle);
+                            $('#edit_modals_modalstype').val(modalstype);
+                            
+                           
+                  }else{
+                    alert('error')
+                  }
+                },
+              error: function (xhr, status, error) {          
+                      $('.is-invalid').removeClass('is-invalid');
+                      $('.invalid-feedback').remove();
+                      var response = xhr;
+                      // console.error('Error:', response);
+                      if (response.status === 422 || response.status === 400) {
+                        console.error('Error:', response);
+                          if (response.status === 400) {
+                              window.location.href = response.responseJSON.redirect + '=' + response.responseJSON.errorTamperingValue;
+                          }
+                          var errors = response.responseJSON.errors;
+                          $.each(errors, function (key, value) {
+                              var input = $('[name=' + key + ']');
+                              input.addClass('is-invalid');
+                              input.closest('.form-group').append('<span class="invalid-feedback d-inline">' + value[0] + '</span>');
+                          });
+                      } else {
+                          alert('An error occurred. Please try again.');
+                      }
+                }
+                                 
+      });
+    });
+  });
+</script>
+
 <script>
   function syncEditOnlyDescription(){
   

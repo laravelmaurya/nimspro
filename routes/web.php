@@ -43,6 +43,9 @@ Route::group(['middleware' => 'custom_auth'], function() {
     // Route::post('tenders/{id}', [TenderController::class,'destroy'])->name('tenders.delete'); 
    
    
+    Route::put('file-upload', [GoverningCouncilController::class, 'fileUpload'])->name('file-upload');
+    Route::get('file-upload/{id}/{te}/edit', [GoverningCouncilController::class, 'editFileUpload'])->name('file-upload.edit');
+
     Route::put('governing-council', [GoverningCouncilController::class, 'update'])->name('governing-council');
     Route::get('governing-council/{id}/{te}/edit', [GoverningCouncilController::class, 'edit'])->name('governing-council.edit');
     // Route::get('governing-council/{id}/{type}/edit', [GoverningCouncilController::class, 'edit'])->name('governing-council.edit');

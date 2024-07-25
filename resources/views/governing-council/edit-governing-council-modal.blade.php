@@ -34,6 +34,8 @@
                                                 <textarea rows="10" name="description" id="edit_only_description" class="ckeditor_only_description form-control @error('description') is-invalid @enderror"></textarea>
                                             </div>
                                             
+                                            <div id="data-container"></div>
+                                            
                                             {{-- <button type="button" class="btn btn-secondary" id="add_attachment">Add Attachment</button> --}}
                                             <div class="edit-footer card-footer p-0 bg-white">
                                                 <input name="h" id="edit_id" type="hidden">                               

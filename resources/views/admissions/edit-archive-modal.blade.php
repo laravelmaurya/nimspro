@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Tender Archive</h4>
+                <h4 class="modal-title">Edit Admission Archive</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -14,7 +14,7 @@
                             <div class="col-md-12">
                                 <div class="card card-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Edit Tender Archive</h3>
+                                        <h3 class="card-title">Edit Admission Archive</h3>
                                     </div>
                                     <form id="edit_form" class="edit_form" role="form" method="POST"  enctype="multipart/form-data">
                                         @csrf
@@ -70,7 +70,7 @@
                                                                 <input name="main_doc" id="edit_main_doc" type="file" class="custom-file-input @error('main_doc') is-invalid @enderror">
                                                                 <label class="custom-file-label" for="main_doc">Choose file</label>
                                                             </div>
-                                                            <span id="main_doc_view_image" class="d-block"></span>
+                                                            <span id="main_doc_view_image" class="d-block"></span> 
                                                         </div>
                                                         <span id="main_doc_download" class="d-block"></span>
                                                     </div>
@@ -86,7 +86,7 @@
                                                 <input name="h3" id="edit_notes1" class="" type="hidden">
                                                 <input name="h4" id="edit_datepicker_s" type="hidden">
                                                 <input name="h5" id="edit_datepicker_e" type="hidden">
-                                                <input  value="<?php echo route("tender.remove-attachment"); ?>" id="remove-attachment" type="hidden">
+                                                <input  value="<?php echo route("admission.remove-attachment"); ?>" id="remove-attachment" type="hidden">
                                             </div>
                                         </div>
                                     </form>

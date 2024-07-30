@@ -5,6 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TenderController;
 use App\Http\Controllers\TutorialController;
+use App\Http\Controllers\AdmissionController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\GoverningCouncilController;
@@ -40,7 +41,7 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 Route::group(['middleware' => 'custom_auth'], function() {
     // Route::post('tender/main-image-delete', [TenderController::class,'mainImgDelete'])->name('tender.main-image-delete'); 
     // Route::post('tender/image-delete', [TenderController::class,'imgDeleteSingle'])->name('tender.image-delete-only'); 
-    // Route::post('tenders/{id}', [TenderController::class,'destroy'])->name('tenders.delete'); 
+    // Route::post('admissions/{id}', [TenderController::class,'destroy'])->name('admissions.delete'); 
    
    
     Route::put('file-upload', [GoverningCouncilController::class, 'fileUpload'])->name('file-upload');
@@ -51,7 +52,14 @@ Route::group(['middleware' => 'custom_auth'], function() {
     // Route::get('governing-council/{id}/{type}/edit', [GoverningCouncilController::class, 'edit'])->name('governing-council.edit');
 
 
-    Route::get('/tenders/get-tender-number', [TenderController::class, 'getTenderNumber'])->name('tenders.get-tender-number');
+    Route::get('/admissions/get-admission-number', [AdmissionController::class, 'getNumber'])->name('admissions.get-admission-number');
+    Route::get('admissions/list-archive', [AdmissionController::class,'listArchive'])->name('admissions.list-archive'); 
+    Route::get('/admissions/list-archive/{id}/edit', [AdmissionController::class, 'edit'])->name('admissions.list-archive.edit'); 
+    Route::post('admissions/corrigendum', [AdmissionController::class,'storeCorrigendum'])->name('admissions.stroe-corrigendum'); 
+    Route::post('admission/remove-attachment', [AdmissionController::class,'removeAttachment'])->name('admission.remove-attachment'); 
+    Route::resource('admissions', AdmissionController::class);  
+
+    Route::get('/tenders/get-tender-number', [TenderController::class, 'getNumber'])->name('tenders.get-tender-number');
     Route::get('tenders/list-archive', [TenderController::class,'listArchive'])->name('tenders.list-archive'); 
     Route::get('/tenders/list-archive/{id}/edit', [TenderController::class, 'edit'])->name('tenders.list-archive.edit'); 
     Route::post('tenders/corrigendum', [TenderController::class,'storeCorrigendum'])->name('tenders.stroe-corrigendum'); 

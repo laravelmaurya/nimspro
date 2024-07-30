@@ -94,6 +94,7 @@
         margin-left:-10%;
     }
 </style>
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 
@@ -193,6 +194,7 @@
 });
 </script>
 
+
 <script>
  
     $(document).ready(function () {
@@ -255,6 +257,8 @@
                     $('#editFormSubmit2').addClass('d-none');
                     $('#btnEditData').removeClass('d-none');
                     
+                    $('#edit_research_id').val(data.nims_research_id);
+                    $('#edit_rid').val(Base64.encode(data.nims_research_id));
                     $('#edit_id_fu').val(id);
                     $('#edit_te_fu').val(te);
                     
@@ -265,7 +269,7 @@
                     $('#edit_modals_title_fu').val(title);
                     $('#edit_modals_cardtitle_fu').val(cardtitle);
                     $('#edit_modals_modalstype_fu').val(modalstype);
-                  id = 'nims_'+id;
+                  id = 'nims_'+id+'_path';
                     var attachment = data[id];
                     console.log('attachment = ' + attachment);
                 
@@ -275,36 +279,47 @@
                         var attachmentUrl = "{{ url('storage') }}" + "/" + attachment;
                          // Add "public" before "storage" in the URL
                          var modifiedUrl = attachmentUrl.replace('/storage/public', '/public/storage');
-                         let child = document.getElementById('file_upload_row');
+                         let child = document.getElementById('file_download_row');
+                         let child_file_upload_row = document.getElementById('file_upload_row');
                          // Alternatively, you can use remove method (modern browsers)
                          if (child != null){
                              child.remove();
                          }
+                         if (child_file_upload_row != null){
+                          child_file_upload_row.remove();
+                         }
                              $('#attachment_download').append(`
-                                                                <div class="row" id="file_upload_row">                         
+                                                                <div class="row" id="file_download_row">                         
                                                                       <div class="col-sm-12">
                                                                           <div class="form-group">
-                                                                              <label for="main_doc">Main Attachment <span class="text-danger">*</span></label>                                                                                                               
+                                                                              <label for="main_doc">Download Attachment</label>                                                                                                               
                                                                                 <div class="input-group">                                                        
                                                                                   <a href="javascript:void(0)" onclick="downloadImage('${modifiedUrl}', '${suggestFileName}')" class="form-control">Download existing attachment</a>
                                                                                   <button type="button" class="btn btn-primary viewImageBtn" data-id="${id}" data-image-url="${modifiedUrl}">
                                                                                   View Image
-                                                                                  </button>
-                                                                                  <div class="custom-file">
-                                                                                        <input name="main_doc" id="edit_main_doc" type="file" class="custom-file-input @error('main_doc') is-invalid @enderror">
-                                                                                        <label class="custom-file-label" for="main_doc">Choose file</label>
-                                                                                    </div>
-                                                                                    <input type="hidden" id="removeAttachment_${1}" value="${1}">
-                                                                                    <input type="hidden" id="attachment_id" value="${id}">                                   
+                                                                                  </button>                                                                                                                  
                                                                                 </div>
                                                                           </div>
                                                                       </div>
-                                                                      < class="row" id="file_upload_row">
-                                                                      </
+                                                                     
                                                                   </div>`);
                    
                     
                   }
+                  $('#attachment_upload').append(`
+                          <div class="row" id="file_upload_row">
+                            <div class="col-md-12">
+                            <div class="form-group" id="attachment_container_${1}">
+                                <label for="attachment">Update File:</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input name="file_to_upload" id="file_to_upload" type="file" class="custom-file-input @error('file_to_upload') is-invalid @enderror">
+                                        <label class="custom-file-label" for="file_to_upload">Choose file</label>
+                                    </div>                                                                                                                     
+                                </div>
+                            </div>
+                          </div>
+                        </div>`);
                 },
                 error: function (xhr, status, error) {          
                         $('.is-invalid').removeClass('is-invalid');
@@ -1146,6 +1161,7 @@ $(document).ready(function() {
           var imageUrl = $(this).data('image-url');
           $('#image-modal').modal('show');
           $('#image_modal_img').attr('src', imageUrl);
+          $('.modal').modal('hide');
       });
   });
   </script>

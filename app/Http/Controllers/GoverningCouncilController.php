@@ -20,7 +20,8 @@ class GoverningCouncilController extends Controller
         
         $validTables = [ 'research_documents',                         
                        ]; // Add all your valid table names here
-        $validColumns = [ 'guideline','general_information','working_manual','crc','crc_form'   
+        $validColumns = [ 'guideline','general_information','working_manual','crc','crc_form','guideline_course','phd_admission_guideline',
+                          'workshop','clinical_research'   
         ]; // Add all your valid column names here                       
      // dd(!in_array($column, $validColumns),!in_array($te, $validTables));
      if (!in_array($column, $validColumns) || !in_array($te, $validTables)) {
@@ -71,7 +72,8 @@ class GoverningCouncilController extends Controller
 
         $validTables = [ 'research_documents',                         
                        ]; // Add all your valid table names here
-        $validColumns = [ 'guideline','general_information','working_manual','crc','crc_form'  
+        $validColumns = [ 'guideline','general_information','working_manual','crc','crc_form','guideline_course','phd_admission_guideline',
+                          'workshop','clinical_research'
         ]; // Add all your valid column names here                       
     //  dd(!in_array($column, $validColumns),!in_array($te, $validTables),!$this->dataTamper($nims_research_id, $hr));
         // dd($request->all());
@@ -84,7 +86,8 @@ class GoverningCouncilController extends Controller
         ],400);
         die;
     }
-        //    dd($column);
+
+            //    dd($column);
             $te = 'nims_wp_'.$te;
             $column = 'nims_'.$column.'_path';
             

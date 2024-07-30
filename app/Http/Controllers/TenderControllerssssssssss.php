@@ -126,8 +126,8 @@ class TenderController extends Controller
         }
 
         // Format dates
-        $start_date = date('Y-m-d', strtotime(str_replace('/', '-', $request->start_date)));
-        $end_date = date('Y-m-d H:i', strtotime(str_replace('/', '-', $request->end_date)));
+        $start_date = $this->convertDateTimeFormateYmd($request->start_date);
+        $end_date = $this->convertDateTimeFormateYmd_hi($request->end_date);
         $publish_date = date('Y-m-d', strtotime(str_replace('/', '-', date('d/m/Y'))));
         $add_id = rand(10, 10000000);
         $archive = 1;

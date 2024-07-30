@@ -192,6 +192,44 @@
             </ul>
           </li>  
           @endcan                             
+          @can('tender-menu')
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Admissions
+                <i class="fas fa-angle-left right"></i>
+                <span class="badge badge-info right">6</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              @can('tender-list')
+              <li class="nav-item">
+                <a href="{{route('admissions.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>All Admissions</p>
+                </a>
+              </li>
+              @endcan 
+              @can('tender-create')
+              <li class="nav-item">                          
+                <a href="javacript::void(0)" class="getTenderNumber nav-link" data-toggle="modal" data-target="#create-Corrigendum-modal">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add Corrigendum for Admissions</p>
+                </a>
+              </li> 
+              @endcan
+              @can('tender-list')
+              <li class="nav-item">
+                <a href="{{route('admissions.list-archive')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>All Archive</p>
+                </a>
+              </li>
+              @endcan                             
+            </ul>
+          </li>  
+          @endcan                             
           @can('permissions-menu')
             <li class="nav-item">
               {{-- LEVEL 1 --}}
@@ -1125,6 +1163,91 @@
                             </a>
                          </li> 
                         @endcan
+
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>
+                            Guidelines for Course Curriculam
+                              <i class="right fas fa-angle-left"></i>
+                          </p>
+                          </a>
+                          {{-- LEVEL 3 --}}
+                          <ul class="nav nav-treeview">
+                          @can('permission-create')
+                          <li class="nav-item">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title-Guidelines" data-cardtitle="Document Title - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="guideline_course">
+                              <i class="fas fa-pencil-alt nav-icon"></i>
+                              <p> View / Edit</p>
+                              </a>
+                          </li> 
+                          @endcan                                                                                                            
+                          </ul>
+                          {{-- END LEVEL 3 --}}
+                        </li>
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>
+                            Ph.D Admission Programme Guidelines
+                              <i class="right fas fa-angle-left"></i>
+                          </p>
+                          </a>
+                          {{-- LEVEL 3 --}}
+                          <ul class="nav nav-treeview">
+                          @can('permission-create')
+                          <li class="nav-item">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title-Guidelines" data-cardtitle="Document Title - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="phd_admission_guideline">
+                              <i class="fas fa-pencil-alt nav-icon"></i>
+                              <p> View / Edit</p>
+                              </a>
+                          </li> 
+                          @endcan                                                                                                            
+                          </ul>
+                          {{-- END LEVEL 3 --}}
+                        </li>
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>
+                            Workshop on writing for Resea- rchers and Publishing Skills 
+                              <i class="right fas fa-angle-left"></i>
+                          </p>
+                          </a>
+                          {{-- LEVEL 3 --}}
+                          <ul class="nav nav-treeview">
+                          @can('permission-create')
+                          <li class="nav-item">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title-Guidelines" data-cardtitle="Document Title - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="workshop">
+                              <i class="fas fa-pencil-alt nav-icon"></i>
+                              <p> View / Edit</p>
+                              </a>
+                          </li> 
+                          @endcan                                                                                                            
+                          </ul>
+                          {{-- END LEVEL 3 --}}
+                        </li>
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>
+                            Council for Clinical Research & Education - Application Form 
+                              <i class="right fas fa-angle-left"></i>
+                          </p>
+                          </a>
+                          {{-- LEVEL 3 --}}
+                          <ul class="nav nav-treeview">
+                          @can('permission-create')
+                          <li class="nav-item">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title-Guidelines" data-cardtitle="Document Title - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="clinical_research">
+                              <i class="fas fa-pencil-alt nav-icon"></i>
+                              <p> View / Edit</p>
+                              </a>
+                          </li> 
+                          @endcan                                                                                                            
+                          </ul>
+                          {{-- END LEVEL 3 --}}
+                        </li>
                        </ul>
                         {{-- END LEVEL 2 --}}
                         

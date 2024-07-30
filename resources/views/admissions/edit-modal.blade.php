@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Tender Archive</h4>
+                <h4 class="modal-title">Edit Tender</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -14,9 +14,9 @@
                             <div class="col-md-12">
                                 <div class="card card-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Edit Tender Archive</h3>
+                                        <h3 class="card-title">Edit Tender</h3>
                                     </div>
-                                    <form id="edit_form" class="edit_form" role="form" method="POST"  enctype="multipart/form-data">
+                                    <form id="edit_form" class="edit_form" role="form" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
                                         <div class="card-body">
@@ -75,8 +75,7 @@
                                                         <span id="main_doc_download" class="d-block"></span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div id="status_active_fields"></div>
+                                            </div>                                      
                                             <div id="additional_attachments"></div>
                                             {{-- <button type="button" class="btn btn-secondary" id="add_attachment">Add Attachment</button> --}}
                                             <div class="edit-footer card-footer p-0 bg-white">

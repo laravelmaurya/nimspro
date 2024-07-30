@@ -68,8 +68,9 @@
                                                         <div class="input-group">
                                                             <div class="custom-file">
                                                                 <input name="main_doc" id="edit_main_doc" type="file" class="custom-file-input @error('main_doc') is-invalid @enderror">
-                                                                <label class="custom-file-label" for="main_doc">Choose file</label>
+                                                                <label class="custom-file-label" for="main_doc">Choose file</label>                                                                
                                                             </div>
+                                                            <span id="main_doc_view_image" class="d-block"></span>
                                                         </div>
                                                         <span id="main_doc_download" class="d-block"></span>
                                                     </div>

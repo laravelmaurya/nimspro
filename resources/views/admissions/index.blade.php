@@ -5,12 +5,12 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1>Tenders</h1>
+        <h1>Admissions</h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
-          <li class="breadcrumb-item active">Tenders</li>
+          <li class="breadcrumb-item active">Admissions</li>
         </ol>
       </div>
     </div>
@@ -23,12 +23,12 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Tenders</h3>
+            <h3 class="card-title">Admissions</h3>
             <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#create-modal-xl">
-              Add Tender
+              Add Admission
             </button>
             <button type="button" class="getTenderNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal">
-              Add New Corrigendum For Tender 
+              Add New Corrigendum For Admission 
             </button>
           </div>
           <div class="card-body table-responsive">
@@ -56,9 +56,9 @@
 @php 
 $addPublic = config('app.url').'public/';
 @endphp
-@include('tenders.create-modal')
-@include('tenders.edit-modal')
-@include('tenders.create-Corrigendum-modal')
+@include('admissions.create-modal')
+@include('admissions.edit-modal')
+@include('admissions.create-Corrigendum-modal')
 @endsection
 
 @push('scripts')
@@ -70,25 +70,25 @@ $(document).ready(function () {
     // .editBtn define in index function in controller 
     $('body').on('click', '.editBtn', function () {
         var id = $(this).data('id');
-        $.get("{{ route('tenders.index') }}" + '/' + id + '/edit', function (data) {
+        $.get("{{ route('admissions.index') }}" + '/' + id + '/edit', function (data) {
             // const myJSON = JSON.stringify(data);
             // alert('myJSON =' + myJSON);
             $('.is-invalid').removeClass('is-invalid');
             $('.invalid-feedback').remove();
             $('#edit-modal-xl').modal('show');
             $('#h').val(id);
-            $('#edit_title').val(data.nims_wp_tender_title);
-            $('#edit_number').val(data.nims_wp_tender_number);
-            // console.log('nims_wp_tender_description = ',data.nims_wp_tender_description);
-            CKEDITOR.instances.edit_notes.setData(data.nims_wp_tender_description);
-            $('#edit_publish_date').val(data.nims_wp_tender_submit_date);
-            $('#edit_start_date').val(data.nims_wp_tender_start_date);
-            $('#edit_end_date').val(data.nims_wp_tender_end_date);
-            $('#edit_form').attr('action', "{{ url('tenders') }}" + '/' + id);
+            $('#edit_title').val(data.nims_admissions_title);
+            $('#edit_number').val(data.nims_admissions_number);
+            // console.log('nims_admissions_desc = ',data.nims_admissions_desc);
+            CKEDITOR.instances.edit_notes.setData(data.nims_admissions_desc);
+            $('#edit_publish_date').val(data.nims_admissions_submit_date);
+            $('#edit_start_date').val(data.nims_admissions_start_date);
+            $('#edit_end_date').val(data.nims_admissions_end_date);
+            $('#edit_form').attr('action', "{{ url('admissions') }}" + '/' + id);
 
-            if (data.nims_wp_tender_doc) {
+            if (data.nims_admissions_doc) {
               $('#hidden_edit_main_doc').addClass('d-none');
-                var main_doc = data.nims_wp_tender_doc;
+                var main_doc = data.nims_admissions_doc;
                 var suggestFileName = main_doc.split("/").pop();
 
                 // Use Laravel's url() function to generate the full URL
@@ -99,6 +99,7 @@ $(document).ready(function () {
 
                 // Add "public" before "storage" in the URL
                 var modifiedUrl = attachmentUrl.replace('/storage/public', '/public/storage');
+               
                 $('#main_doc_view_image').html(`<button type="button" class="btn btn-primary viewImageBtn" data-id="${id}" data-image-url="${modifiedUrl}">
                                                  View Image
                                                 </button>
@@ -178,14 +179,14 @@ $(document).ready(function () {
    window.table = $('.data-table').DataTable({
         processing: false,
         serverSide: true,
-        ajax: "{{ route('tenders.index') }}",
+        ajax: "{{ route('admissions.index') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-            {data: 'title', name: 'nims_wp_tender_title'},
-            {data: 'number', name: 'nims_wp_tender_number'},
-            {data: 'submit_date', name: 'nims_wp_tender_submit_date'},
-            {data: 'start_date', name: 'nims_wp_tender_start_date'},
-            {data: 'end_date', name: 'nims_wp_tender_end_date'},
+            {data: 'title', name: 'nims_admissions_title'},
+            {data: 'number', name: 'nims_admissions_number'},
+            {data: 'submit_date', name: 'nims_admissions_submit_date'},
+            {data: 'start_date', name: 'nims_admissions_start_date'},
+            {data: 'end_date', name: 'nims_admissions_end_date'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ],
         // order: [[1, 'desc']] // Initial sorting on the Title column
@@ -198,7 +199,7 @@ $(document).ready(function () {
   var base_url = "<?php echo url('')  ?>";
   // var base_url = urlPublic + 'public/';
 </script>
-  <script src="{{asset($addPublic.'js/customs/tenders/create-form.js')}}"></script>
-  <script src="{{asset($addPublic.'js/customs/tenders/edit-form.js')}}"></script>
-  <script src="{{asset($addPublic.'js/customs/tenders/create-Corrigendum-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/admissions/create-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/admissions/edit-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/admissions/create-Corrigendum-form.js')}}"></script>
 @endpush

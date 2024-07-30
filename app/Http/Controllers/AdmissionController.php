@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tender;
+use App\Models\Admission;
 use Illuminate\View\View;
 use App\Rules\NoDoubleExt;
 use App\Traits\CommonTrait;
@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
-class TenderController extends Controller
-{
+class AdmissionController extends Controller
+{  
     use CommonTrait;
      /**
 
@@ -34,11 +34,11 @@ class TenderController extends Controller
 
     //  public function index(Request $request): View
     //  {
-    //      $tenders = Tender::latest('nims_wp_tender_id')->paginate(5);
-    //     //  $tenders = Tender:: orderByDesc('nims_wp_tender_id')->paginate(5); // working pagination but searching not all page
-    //     //  $tenders = Tender:: orderByDesc('nims_wp_tender_id')->get();
+    //      $admissions = Admission::latest('nims_admissions_id')->paginate(5);
+    //     //  $admissions = Admission:: orderByDesc('nims_admissions_id')->paginate(5); // working pagination but searching not all page
+    //     //  $admissions = Admission:: orderByDesc('nims_admissions_id')->get();
 
-    //      return view('tenders.index',compact('tenders'));
+    //      return view('admissions.index',compact('admissions'));
     //  }
 
     public function index(Request $request)
@@ -46,18 +46,18 @@ class TenderController extends Controller
 
     // dd($request->all());
     if ($request->ajax()) {
-        $query = Tender::where('nims_wp_tender_archive', 0)
-        ->where('nims_wp_tender_end_date', '>', Carbon::now())
+        $query = Admission::where('nims_admissions_archive', 0)
+        ->where('nims_admissions_end_date', '>', Carbon::now())
         ->select([
-                    'nims_wp_tender_id as id',
-                    'nims_wp_tender_title as title',
-                    'nims_wp_tender_number as number',
-                    'nims_wp_tender_submit_date as submit_date',
-                    'nims_wp_tender_start_date as start_date',
-                    'nims_wp_tender_end_date as end_date'
+                    'nims_admissions_id as id',
+                    'nims_admissions_title as title',
+                    'nims_admissions_number as number',
+                    'nims_admissions_submit_date as submit_date',
+                    'nims_admissions_start_date as start_date',
+                    'nims_admissions_end_date as end_date'
                 ])
-        ->orderBy('nims_wp_tender_number', 'asc')
-        ->orderBy('nims_wp_tender_id', 'asc')
+        ->orderBy('nims_admissions_number', 'asc')
+        ->orderBy('nims_admissions_id', 'asc')
         ->latest('id','asc');
         // dd($query);
 //dd($query->toSql());
@@ -66,11 +66,11 @@ class TenderController extends Controller
                 if ($request->has('search.value')) {
                     $search = $request->input('search.value');
                     $query->where(function ($query) use ($search) {
-                        $query->where('nims_wp_tender_title', 'like', "%{$search}%")
-                            ->orWhere('nims_wp_tender_number', 'like', "%{$search}%")
-                            ->orWhere('nims_wp_tender_submit_date', 'like', "%{$search}%")
-                            ->orWhere('nims_wp_tender_start_date', 'like', "%{$search}%")
-                            ->orWhere('nims_wp_tender_end_date', 'like', "%{$search}%");
+                        $query->where('nims_admissions_title', 'like', "%{$search}%")
+                            ->orWhere('nims_admissions_number', 'like', "%{$search}%")
+                            ->orWhere('nims_admissions_submit_date', 'like', "%{$search}%")
+                            ->orWhere('nims_admissions_start_date', 'like', "%{$search}%")
+                            ->orWhere('nims_admissions_end_date', 'like', "%{$search}%");
                     });
                 }
             })
@@ -92,13 +92,14 @@ class TenderController extends Controller
                 return $row->start_date ? $this->convertDateTimeFormateYmd($row->start_date) : '';  
             })
             ->editColumn('end_date', function($row){
-                return $row->end_date ? date('Y-m-d h:i:s', strtotime(str_replace('/', '-', $row->end_date))) : '';  
+                // dd($row->end_date);
+                return $this->convertDateTimeSec($row->end_date)   ? $row->end_date : '';  
             })
             ->rawColumns(['action'])
             ->make(true);
     }
 
-    return view('tenders.index');
+    return view('admissions.index');
 }
     
 
@@ -106,7 +107,7 @@ class TenderController extends Controller
     {
         // $files = Storage::files('uploads');
         // dd($files);
-        return view('tenders.create');
+        return view('admissions.create');
     }
 
 
@@ -119,7 +120,7 @@ class TenderController extends Controller
             'title' => [
                 'required',
                 'string',
-                'unique:nims_wp_tenders,nims_wp_tender_title',
+                'unique:nims_wp_admissions,nims_admissions_title',
                 'regex:/^[a-zA-Z1-9 ]+$/',
                 'min:3',
                 'max:50'
@@ -128,7 +129,7 @@ class TenderController extends Controller
                 'required',
                 'numeric',
                 'digits:10',
-                'unique:nims_wp_tenders,nims_wp_tender_number'
+                'unique:nims_wp_admissions,nims_admissions_number'
             ],
             'start_date' => ['required'],
             'end_date' => ['required'],
@@ -216,7 +217,7 @@ class TenderController extends Controller
         // Handle file uploads
         $uploadedFiles = [];
         $directoryDate = date("Y-m-d");
-        $path = 'public/uploads/tenders/' . $directoryDate;
+        $path = 'public/uploads/admissions/' . $directoryDate;
 
         // Ensure the directory exists
         if (!File::exists($path)) {
@@ -241,18 +242,18 @@ class TenderController extends Controller
             }
         }
 
-        // Create a new tender and notification data
-        $tenderData = [
+        // Create a new admission and notification data
+        $admissionData = [
             'nims_add_id' => $add_id,
-            'nims_maintender' => $main_num,
-            'nims_wp_tender_archive' => $archive,
-            'nims_wp_tender_title' => $title,
-            'nims_wp_tender_number' => $number,
-            'nims_wp_tender_description' => $description,
-            'nims_wp_tender_start_date' => $start_date,
-            'nims_wp_tender_end_date' => $end_date,
-            'nims_wp_tender_submit_date' => $publish_date,
-            'nims_wp_tender_doc' => $main_doc,
+            'nims_main' => $main_num,
+            'nims_admissions_archive' => $archive,
+            'nims_admissions_title' => $title,
+            'nims_admissions_number' => $number,
+            'nims_admissions_desc' => $description,
+            'nims_admissions_start_date' => $start_date,
+            'nims_admissions_end_date' => $end_date,
+            'nims_admissions_submit_date' => $publish_date,
+            'nims_admissions_doc' => $main_doc,
             'entry_date' => $entry_date,
             'nims_wp_log_ip' => $client_ip,
             'nims_wp_user_id' => $user_id
@@ -262,7 +263,7 @@ class TenderController extends Controller
             'nims_main_id' => $add_id,
             'nims_main' => $main_num,
             'notifi_archive' => $archive,
-            'type' => 'tender',
+            'type' => 'admission',
             'notifi_title' => $title,
             'notifi_number' => $number,
             'notifi_desc' => $description,
@@ -275,21 +276,21 @@ class TenderController extends Controller
             'nims_wp_user_id' => $user_id
         ];
 
-        // Add attachment paths to the tender data and notification data
+        // Add attachment paths to the admission data and notification data
         for ($i = 1; $i <= $attachmentCount; $i++) {
             if (isset($uploadedFiles['attachment_' . $i])) {
-                $tenderData['nims_wp_tender_link' . $i] = $uploadedFiles['attachment_' . $i];
+                $admissionData['nims_wp_admission_link' . $i] = $uploadedFiles['attachment_' . $i];
                 $notificationData['notifi_docu_link' . $i] = $uploadedFiles['attachment_' . $i];
             }
         }
-       
+    //    dd($admissionData,);
         // Use transactions to ensure atomic operations
         DB::beginTransaction();
         try {
-            // Save the tender data
-            $tender = Tender::create($tenderData);
-            Log::info('Tender added: ' . $tender->nims_wp_tender_id);
-            $notificationData['type_id'] = $tender->nims_wp_tender_id;
+            // Save the admission data
+            $admission = Admission::create($admissionData);
+            Log::info('Admission added: ' . $admission->nims_admissions_id);
+            $notificationData['type_id'] = $admission->nims_admissions_id;
             // dd($notificationData);
             // Save the notification data
             $notification = Notification::create($notificationData);
@@ -300,7 +301,7 @@ class TenderController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Tender added successfully!'
+                'message' => 'Admission added successfully!'
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -318,43 +319,43 @@ class TenderController extends Controller
     public function show($id): View
      {
  
-         $tender = Tender::find($id);
+         $admission = Admission::find($id);
  
-         return view('tenders.show',compact('tender'));
+         return view('admissions.show',compact('admission'));
  
      }
 
      public function edit($id)
     {
         // dd($id);
-        $tender = Tender::find($id); 
-        // dd($tender);
+        $admission = Admission::find($id); 
+        // dd($admission);
         $additional_attachments =  [];
         $additional_attachments_number =  [];
         for($i=1; $i <= 10; $i++){
-            $imagelink = 'nims_wp_tender_link'.$i;
-            $imagelink = $tender->$imagelink;
+            $imagelink = 'nims_wp_admission_link'.$i;
+            $imagelink = $admission->$imagelink;
 
            $additional_attachments['imageLink'.$i] = $imagelink;
            
           
         }
         // dd($additional_attachments);
-        $tender['additional_attachments'] = $additional_attachments;
-        $tender['additional_attachments_number'] = $additional_attachments_number;
+        $admission['additional_attachments'] = $additional_attachments;
+        $admission['additional_attachments_number'] = $additional_attachments_number;
         // dd($additional_attachments);   
-    //    dd($tender);
-        return response()->json($tender);
-        // return view('tenders.edit', compact('tender'));
+    //    dd($admission);
+        return response()->json($admission);
+        // return view('admissions.edit', compact('admission'));
     }
 
     public function update(Request $request, $id)
     {
         // dd($id,$request->all());
-        $tender = Tender::find($id);
+        $admission = Admission::find($id);
 
-        if (!$tender) {
-            return redirect()->route('tenders.index')->with('error', 'Tender not found.');
+        if (!$admission) {
+            return redirect()->route('admissions.index')->with('error', 'Admission not found.');
         }       
 
         // Format dates
@@ -362,14 +363,15 @@ class TenderController extends Controller
         $start_date = $this->convertDateTimeFormateYmd($request->start_date);
         $h3_sd = base64_decode($request->h3);
         $end_date = $this->convertDateTimeFormateYmd_hi($request->end_date);
+        $end_date = $this->convertTime($end_date);
+        // dd($end_date);
         $h4_ed = base64_decode($request->h4);
 
 
         $publish_date = $this->convertDateTimeFormateYmd($request->publish_date);        
 
         $entry_date = $this->convertDateTimeFormateYmd_hisA();
-
-
+ 
         // $add_id = rand(10, 10000000);
 
         $archive = ($request->archive == 'on') ? 1: 0; 
@@ -384,7 +386,7 @@ class TenderController extends Controller
             'title' => [
                 'required',
                 'string',
-                'unique:nims_wp_tenders,nims_wp_tender_title,' . $id .  ',nims_wp_tender_id',
+                'unique:nims_wp_admissions,nims_admissions_title,' . $id .  ',nims_admissions_id',
                 'regex:/^(?!(?>[^.]*\.){2})[A-Za-z0-9 \.]+$/',
                 'min:3',
                 'max:50'
@@ -393,7 +395,7 @@ class TenderController extends Controller
                 'required',
                 'numeric',
                 'digits:10',
-                // 'unique:nims_wp_tenders,nims_wp_tender_number,' . $id .  ',nims_wp_tender_id'
+                // 'unique:nims_wp_admissions,nims_admissions_number,' . $id .  ',nims_admissions_id'
             ],
             'start_date' => ['required'],
             'end_date' => ['required'],
@@ -462,7 +464,7 @@ class TenderController extends Controller
         // Handle file uploads
         $uploadedFiles = [];
         $directoryDate = date("Y-m-d");
-        $path = 'public/uploads/tenders/' . $directoryDate;
+        $path = 'public/uploads/admissions/' . $directoryDate;
 
         // Ensure the directory exists
         if (!File::exists($path)) {
@@ -471,7 +473,7 @@ class TenderController extends Controller
         }
 
         // Upload main document
-        $main_doc = $tender->nims_wp_tender_doc; // default to existing main document
+        $main_doc = $admission->nims_admissions_doc; // default to existing main document
         $file = $request->file('main_doc');
         if ($file) {
             $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
@@ -489,17 +491,17 @@ class TenderController extends Controller
             }
         }
 
-        // Prepare the updated tender and notification data
-        $tenderData = [
-            'nims_maintender' => $main_num, 
-            'nims_wp_tender_archive' => $archive,  
-            'nims_wp_tender_title' => $title,
-            'nims_wp_tender_number' => $number,
-            'nims_wp_tender_description' => $description,
-            'nims_wp_tender_start_date' => $start_date,
-            'nims_wp_tender_end_date' => $end_date,
-            'nims_wp_tender_submit_date' => $publish_date,
-            'nims_wp_tender_doc' => $main_doc,
+        // Prepare the updated admission and notification data
+        $admissionData = [
+            'nims_main' => $main_num, 
+            'nims_admissions_archive' => $archive,  
+            'nims_admissions_title' => $title,
+            'nims_admissions_number' => $number,
+            'nims_admissions_desc' => $description,
+            'nims_admissions_start_date' => $start_date,
+            'nims_admissions_end_date' => $end_date,
+            'nims_admissions_submit_date' => $publish_date,
+            'nims_admissions_doc' => $main_doc,
             'entry_date' => $entry_date,
             'nims_wp_log_ip' => $client_ip,
             'nims_wp_user_id' => $user_id,
@@ -508,7 +510,7 @@ class TenderController extends Controller
         $notificationData = [
             'nims_main' => $main_num,
             'notifi_archive' => $archive,
-            'type' => 'tender',
+            'type' => 'admission',
             'notifi_title' => $title,
             'notifi_number' => $number,
             'notifi_desc' => $description,
@@ -521,34 +523,35 @@ class TenderController extends Controller
             'nims_wp_user_id' => $user_id,
         ];
 
-        // Add attachment paths to the tender data and notification data
+        // Add attachment paths to the admission data and notification data
         for ($i = 1; $i <= $attachmentCount; $i++) {
             if (isset($uploadedFiles['attachment_' . $i])) {                
-                $tenderData['nims_wp_tender_link' . $i] = $uploadedFiles['attachment_' . $i];
+                $admissionData['nims_wp_admission_link' . $i] = $uploadedFiles['attachment_' . $i];
                 $notificationData['notifi_docu_link' . $i] = $uploadedFiles['attachment_' . $i];
             }
         }
     //     $na= Notification::find(2031);
     //    dd($notificationData,$na);
+    //    dd($admissionData);
         // Use transactions to ensure atomic operations
         DB::beginTransaction();
         try {
-            // Update the tender data
-            $tender->update($tenderData);
-            Log::info('Tender updated: ' . $tender->nims_wp_tender_id);
-            // dd($tender->type_id);
+            // Update the admission data
+            $admission->update($admissionData);
+            Log::info('Admission updated: ' . $admission->nims_admissions_id);
+            // dd($admission->type_id);
             // dd($notificationData);
             // Update the notification data
-            Notification::where('type_id', $tender->nims_wp_tender_id)->update($notificationData);
-            Log::info('Notification updated for tender ID and : tender number' .$tender->nims_wp_tender_id. ' and '. $tender->nims_wp_tender_number);
+            Notification::where('type_id', $admission->nims_admissions_id)->update($notificationData);
+            Log::info('Notification updated for admission ID and : admission number' .$admission->nims_admissions_id. ' and '. $admission->nims_admissions_number);
 
             DB::commit();
             Log::info('Transaction committed successfully');
 
-            // return redirect()->route('tenders.index')->with('success', 'Tender updated successfully!');
+            // return redirect()->route('admissions.index')->with('success', 'Admission updated successfully!');
             return response()->json([
                 'status' => 'success',
-                'message' => 'Tender updated successfully!'
+                'message' => 'Admission updated successfully!'
             ]);
             
         } catch (\Exception $e) {
@@ -563,17 +566,17 @@ class TenderController extends Controller
     public function imgDeleteSingle(Request $request)
     {   
         // dd($request->all());
-        $image = 'nims_wp_tender_link'.$request->img;
-        $tender = Tender::find($request->id); 
-        if ($tender) {
+        $image = 'nims_wp_admission_link'.$request->img;
+        $admission = Admission::find($request->id); 
+        if ($admission) {
             // Get the path of the image file
-            $filePath = $tender->$image; // Adjust the attribute name according to your model
+            $filePath = $admission->$image; // Adjust the attribute name according to your model
             // Delete the file from the storage
             if (Storage::exists($filePath)) {                
                 unlink(Storage::path($filePath));
                 // Delete the image record from the database               
-                $tender->$image = null;
-                $tender->save();
+                $admission->$image = null;
+                $admission->save();
                 return response()->json(['success' => 'Image deleted successfully.']);
             }            
             return response()->json(['error' => 'Image is not deleted.']);
@@ -583,16 +586,16 @@ class TenderController extends Controller
     {   
         dd($request->all());
       
-        $tender = Tender::find($request->id); 
-        if ($tender) {
+        $admission = Admission::find($request->id); 
+        if ($admission) {
             // Get the path of the image file
-            $filePath = $tender->nims_wp_tender_doc; // Adjust the attribute name according to your model
+            $filePath = $admission->nims_admissions_doc; // Adjust the attribute name according to your model
             // Delete the file from the storage
             if (Storage::exists($filePath)) {                
                 unlink(Storage::path($filePath));
                 // Delete the image record from the database               
-                $tender->nims_wp_tender_doc = null;
-                $tender->save();
+                $admission->nims_admissions_doc = null;
+                $admission->save();
                 return response()->json(['success' => 'Attachment deleted successfully.']);
             }            
             return response()->json(['error' => 'Attachment is not deleted.']);
@@ -601,10 +604,10 @@ class TenderController extends Controller
     public function destroy($id)
     {
         // dd($id);
-       $tender = Tender::find($id)->delete();
-    //    dd($tender);
+       $admission = Admission::find($id)->delete();
+    //    dd($admission);
         return redirect()->back()
-                    ->with('success', 'Tender deleted successfully');
+                    ->with('success', 'Admission deleted successfully');
     }
     public function removeAttachment(Request $request)
     {
@@ -625,28 +628,28 @@ class TenderController extends Controller
             ],400);
             die;
             }
-        $tender = Tender::find($id); 
-        $notification = Notification::where(['notifi_number' =>$tender->nims_wp_tender_number])->first('notifi_id'); 
+        $admission = Admission::find($id); 
+        $notification = Notification::where(['notifi_number' =>$admission->nims_admissions_number])->first('notifi_id'); 
 
-        // dd($tender,$notification);
+        // dd($admission,$notification);
 
-        if ($tender) {
+        if ($admission) {
             // Get the path of the image file
 
-            $image = 'nims_wp_tender_link'.$attachment_number;
+            $image = 'nims_wp_admission_link'.$attachment_number;
             $notifi_image = 'notifi_docu_link'.$attachment_number;
           
-            $filePath = $tender->$image; // Adjust the attribute name according to your model
+            $filePath = $admission->$image; // Adjust the attribute name according to your model
             // dd($filePath);
             // Delete the file from the storage
             if (Storage::exists($filePath)) {                
                 unlink(Storage::path($filePath));
                 // Delete the image record from the database 
-                // dd($tender->$image);              
-                $tender->$image = null;
+                // dd($admission->$image);              
+                $admission->$image = null;
                 $notification->$notifi_image = null;
       
-                if($tender->save() && $notification->save()){
+                if($admission->save() && $notification->save()){
                         return response()->json([
                             'status'=>'success',
                             'message' => 'Attachment removed successfully.'
@@ -677,10 +680,10 @@ class TenderController extends Controller
     	//\Log::info($request->all());
         // dd($request->all());
         // dd($request->id);
-        $tender = Tender::find($request->id);
-        $status = ($tender->nims_wp_user_status == 1) ? 0: 1; 
-        $tender->nims_wp_user_status = $status;
-        $tender->save();
+        $admission = Admission::find($request->id);
+        $status = ($admission->nims_wp_user_status == 1) ? 0: 1; 
+        $admission->nims_wp_user_status = $status;
+        $admission->save();
         if($status)
         {
           return response()->json(['success'=>'InActivat successfully.']);         
@@ -698,7 +701,7 @@ class TenderController extends Controller
             'title' => [
                 'required',
                 'string',
-                'unique:nims_wp_tenders,nims_wp_tender_title',
+                'unique:nims_wp_admissions,nims_admissions_title',
                 'regex:/^[a-zA-Z1-9 ]+$/',
                 'min:3',
                 'max:50'
@@ -707,7 +710,7 @@ class TenderController extends Controller
                 'required',
                 'numeric',
                 'digits:10',
-                // 'unique:nims_wp_tenders,nims_wp_tender_number'
+                // 'unique:nims_wp_admissions,nims_admissions_number'
             ],
             'start_date' => ['required'],
             'end_date' => ['required',new CheckedSameDate()],
@@ -783,7 +786,7 @@ class TenderController extends Controller
         // Handle file uploads
         $uploadedFiles = [];
         $directoryDate = date("Y-m-d");
-        $path = 'public/uploads/tenders/' . $directoryDate;
+        $path = 'public/uploads/admissions/' . $directoryDate;
 
         // Ensure the directory exists
         if (!File::exists($path)) {
@@ -800,18 +803,18 @@ class TenderController extends Controller
 
        
 
-        // Create a new tender and notification data
-        $tenderData = [
+        // Create a new admission and notification data
+        $admissionData = [
             'nims_add_id' => $add_id,
-            'nims_maintender' => $main_num,
-            'nims_wp_tender_archive' => $archive,
-            'nims_wp_tender_title' => $title,
-            'nims_wp_tender_number' => $number,
-            'nims_wp_tender_description' => $description,
-            'nims_wp_tender_start_date' => $start_date,
-            'nims_wp_tender_end_date' => $end_date,
-            'nims_wp_tender_submit_date' => $publish_date,
-            'nims_wp_tender_doc' => $main_doc,
+            'nims_main' => $main_num,
+            'nims_admissions_archive' => $archive,
+            'nims_admissions_title' => $title,
+            'nims_admissions_number' => $number,
+            'nims_admissions_desc' => $description,
+            'nims_admissions_start_date' => $start_date,
+            'nims_admissions_end_date' => $end_date,
+            'nims_admissions_submit_date' => $publish_date,
+            'nims_admissions_doc' => $main_doc,
             'entry_date' => $entry_date,
             'nims_wp_log_ip' => $client_ip,
             'nims_wp_user_id' => $user_id
@@ -821,7 +824,7 @@ class TenderController extends Controller
             'nims_main_id' => $add_id,
             'nims_main' => $main_num,
             'notifi_archive' => $archive,
-            'type' => 'tender',
+            'type' => 'admission',
             'notifi_title' => $title,
             'notifi_number' => $number,
             'notifi_desc' => $description,
@@ -839,10 +842,10 @@ class TenderController extends Controller
         // Use transactions to ensure atomic operations
         DB::beginTransaction();
         try {
-            // Save the tender data
-            $tender = Tender::create($tenderData);
-            Log::info('Tender added: ' . $tender->nims_wp_tender_id);
-            $notificationData['type_id'] = $tender->nims_wp_tender_id;
+            // Save the admission data
+            $admission = Admission::create($admissionData);
+            Log::info('Admission added: ' . $admission->nims_admissions_id);
+            $notificationData['type_id'] = $admission->nims_admissions_id;
             // dd($notificationData);
             // Save the notification data
             $notification = Notification::create($notificationData);
@@ -866,37 +869,38 @@ class TenderController extends Controller
         }
     }
 
-    public function getTenderNumber()
+    public function getNumber()
     {
         
-        $nims_maintender = 1;
-        $nims_wp_tender_archive = 0;
+        $nims_main = 1;
+        $nims_admissions_archive = 0;
 
         // Perform the query using Eloquent
-        $tenders = Tender::where('nims_maintender', $nims_maintender)
-                         ->where('nims_wp_tender_archive', $nims_wp_tender_archive)
-                         ->where('nims_wp_tender_end_date', '>',  Carbon::now())
-                         ->orderBy('nims_wp_tender_number', 'DESC')
-                         ->get(['nims_wp_tender_number']);
-
-        return response()->json($tenders);
+        $admissions = Admission::where('nims_main', $nims_main)
+                         ->where('nims_admissions_archive', $nims_admissions_archive)
+                         ->where('nims_admissions_end_date', '>',  Carbon::now())
+                         ->orderBy('nims_admissions_number', 'DESC')
+                         ->get(['nims_admissions_number']);
+                        //  dd($admissions->toSql());
+dd($admissions);
+        return response()->json($admissions);
     }
 
     public function listArchive(Request $request)
     {
             if ($request->ajax()) {
-                $query = Tender::where('nims_wp_tender_archive', 1)
-                            ->orWhere('nims_wp_tender_end_date', '<',  Carbon::now())
+                $query = Admission::where('nims_admissions_archive', 1)
+                            ->orWhere('nims_admissions_end_date', '<',  Carbon::now())
                     ->select([
-                        'nims_wp_tender_id as id',
-                        'nims_wp_tender_title as title',
-                        'nims_wp_tender_number as number',
-                        'nims_wp_tender_submit_date as submit_date',
-                        'nims_wp_tender_start_date as start_date',
-                        'nims_wp_tender_end_date as end_date'
+                        'nims_admissions_id as id',
+                        'nims_admissions_title as title',
+                        'nims_admissions_number as number',
+                        'nims_admissions_submit_date as submit_date',
+                        'nims_admissions_start_date as start_date',
+                        'nims_admissions_end_date as end_date'
                     ])
-                    // ->orderBy('nims_wp_tender_number', 'ASC')
-                    // ->orderBy('nims_wp_tender_id', 'ASC')
+                    // ->orderBy('nims_admissions_number', 'ASC')
+                    // ->orderBy('nims_admissions_id', 'ASC')
                     ->latest('id','ASC');
                     
 
@@ -905,11 +909,11 @@ class TenderController extends Controller
                         if ($request->has('search.value')) {
                             $search = $request->input('search.value');
                             $query->where(function ($query) use ($search) {
-                                $query->where('nims_wp_tender_title', 'like', "%{$search}%")
-                                    ->orWhere('nims_wp_tender_number', 'like', "%{$search}%")
-                                    ->orWhere('nims_wp_tender_submit_date', 'like', "%{$search}%")
-                                    ->orWhere('nims_wp_tender_start_date', 'like', "%{$search}%")
-                                    ->orWhere('nims_wp_tender_end_date', 'like', "%{$search}%");
+                                $query->where('nims_admissions_title', 'like', "%{$search}%")
+                                    ->orWhere('nims_admissions_number', 'like', "%{$search}%")
+                                    ->orWhere('nims_admissions_submit_date', 'like', "%{$search}%")
+                                    ->orWhere('nims_admissions_start_date', 'like', "%{$search}%")
+                                    ->orWhere('nims_admissions_end_date', 'like', "%{$search}%");
                             });
                         }
                     })
@@ -931,14 +935,12 @@ class TenderController extends Controller
                         return $row->start_date ? $this->convertDateTimeFormateYmd($row->start_date) : '';  
                     })
                     ->editColumn('end_date', function($row){
-                        return $row->end_date ? date('Y-m-d h:i:s', strtotime(str_replace('/', '-', $row->end_date))) : '';  
+                        return $this->convertDateTimeSec($row->end_date) ? $row->end_date : '';  
                     })
                     ->rawColumns(['action'])
                     ->make(true);
             }
 
-            return view('tenders.list-archive');
+            return view('admissions.list-archive');
     }
 }
-
-

@@ -1,7 +1,9 @@
 <?php
 namespace App\Traits;
 
+use DateTime;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 
@@ -69,4 +71,31 @@ trait CommonTrait{
        return 0;
        
      }
+
+     public function convertTime($originalDate)
+    {
+        // $originalDate = '2050-04-30 06:00';
+        $date = Carbon::createFromFormat('Y-m-d H:i', $originalDate);
+        $date->addHours(12);
+        $formattedDate = $date->format('Y-m-d H:i');
+
+        return $formattedDate;
+    }
+
+    public function convertDateTimeSec($originalDate){
+      $formattedDate = date('Y-m-d h:i:s', strtotime(str_replace('/', '-',$originalDate)));        
+      return $formattedDate;
+    }
+
+    public function convertDateTimeFormateYmd($originalDate){
+      return date('Y-m-d', strtotime(str_replace('/', '-', $originalDate)));   
+    }
+
+    public function convertDateTimeFormateYmd_hi($originalDate){
+      return date('Y-m-d h:i', strtotime(str_replace('/', '-',$originalDate)));   
+    }
+
+    public function convertDateTimeFormateYmd_hisA($originalDate=null){
+      return date('Y-m-d h:i:s A', strtotime(str_replace('/', '-', date('d/m/Y h:i:s A'))));   
+    }
 }

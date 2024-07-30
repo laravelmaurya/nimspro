@@ -1,5 +1,5 @@
 <!-- Modal Structure -->
-<div class="modal fade" id="image-modal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+<div class="modal fade" style="top:-2%" id="image-modal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body text-center">
                 {{-- <img id="image_modal_img" src="" alt="Image" class="img-fluid"> --}}
-                <iframe id="image_modal_img" src="" frameborder="0" style="width: 100%; height: 1000px;"></iframe>
+                <iframe id="image_modal_img" src="" frameborder="0" style="width: 100%; height: 50rem;"></iframe>
             </div>
         </div>
     </div>

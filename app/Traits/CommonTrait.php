@@ -5,41 +5,33 @@ use DateTime;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 
 trait CommonTrait{
-    
-   
-    // Helper function to upload and sanitize a file
-    // private function uploadAndSanitizeFile($number, $path, $file)
-    // {
-    //     $fileName = time() . '_' . Str::slug($file->getClientOriginalName());
-    //     $file->storeAs($path, $fileName, 'public');
-    //     Log::info('File uploaded: ' . $fileName . ' to path: ' . $path);
-    //     return $fileName;
-    // }
-
-    // Helper function to sanitize input
-    // private function sanitizeInput($data)
-    // {
-    //     return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
-    // }
-        // Helper function to upload and sanitize a file
-    public function uploadAndSanitizeFile($numberData,$path,$file) {
-        
-        // dd($filename);
-         // Generate a unique file name
-        //  $fileName = time() . '_'.$numberData.'_' . Str::slug($file->getClientOriginalName());       
-       
-         $fileName = time() . '_'.$numberData.'_' .trim(str_replace(" ","_",$file->getClientOriginalName())) ;        
-
-         // Store the file in the storage/app/uploads directory
-         //  3rd parameter is local or public
+       // Helper function to upload and sanitize a file
+    public function uploadAndSanitizeFile($numberData,$path,$file,$oldFilePath = null) {
+         // Check if an old file exists and delete it
+        if($oldFilePath != null){
+          $oldFilePath = str_replace("public","",$oldFilePath);
+          $filePath = public_path('storage/' . $oldFilePath);
+          // Check if the file exists
+          if (file_exists($filePath)) {
+              unlink($filePath);
+              Log::info('File deleted: ' . $filePath);            
+          } 
+        }
+        // Generate a unique file name
+        $fileName = time() . '_'.$numberData.'_' .trim(str_replace(" ","_",$file->getClientOriginalName())) ;        
+         //  $fileName = time() . '_'.$numberData.'_' . Str::slug($file->getClientOriginalName());  
+         // Store the file in the storage/app/uploads directory and 3rd parameter is local or public
          $storage_path = $file->storeAs($path, $fileName, 'local');
-         Log::info('File uploaded: ' . $fileName . ' to path: ' . $path);
-        //  dd($storage_path);
-        return $storage_path;
+         Log::info('File uploaded: ' . $fileName . ' to path: ' . $path);       
+         return $storage_path;
     }
+
+    
     // Helper function to sanitize input
     function sanitizeInput($data) {  
         $data = trim($data);  
@@ -55,21 +47,19 @@ trait CommonTrait{
       } 
 
       function dataTamper($value,$base64EncodedValue){
-         if($value === base64_decode($base64EncodedValue)){
+         if($value === trim(base64_decode($base64EncodedValue))){
             return 1;        
         }
         return 0;
         
       }
-      function dataTamperDes($value,$matchValue){
-      
+      function dataTamperDes($value,$matchValue){      
         // echo'compare='. stripos($value,$matchValue);die;    
         $stripos = stripos($value,$matchValue);
         if($stripos ==0 && $stripos !=''){
            return 1;        
        }
-       return 0;
-       
+       return 0;       
      }
 
      public function convertTime($originalDate)
@@ -78,7 +68,6 @@ trait CommonTrait{
         $date = Carbon::createFromFormat('Y-m-d H:i', $originalDate);
         $date->addHours(12);
         $formattedDate = $date->format('Y-m-d H:i');
-
         return $formattedDate;
     }
 
@@ -91,11 +80,20 @@ trait CommonTrait{
       return date('Y-m-d', strtotime(str_replace('/', '-', $originalDate)));   
     }
 
-    public function convertDateTimeFormateYmd_hi($originalDate){
-      return date('Y-m-d h:i', strtotime(str_replace('/', '-',$originalDate)));   
-    }
+    public function convertDateTimeFormateYmd_hi($originalDate){      
+      return date('Y-m-d H:i', strtotime(str_replace('/', '-',$originalDate)));   
+      }
 
     public function convertDateTimeFormateYmd_hisA($originalDate=null){
       return date('Y-m-d h:i:s A', strtotime(str_replace('/', '-', date('d/m/Y h:i:s A'))));   
     }
+
+    function unslug($slug)
+    {
+    // Replace hyphens with spaces
+    $string = str_replace('-', ' ', $slug);
+    // Optionally, capitalize the first letter of each word
+    $string = ucwords($string);
+    return $string;
+   }
 }

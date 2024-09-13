@@ -27,8 +27,8 @@
             <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#create-modal-xl">
               Add Admission
             </button>
-            <button type="button" class="getTenderNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal">
-              Add New Corrigendum For Admission 
+            <button type="button" class="getNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-admissions-associate-modal">
+               Add Associated
             </button>
           </div>
           <div class="card-body table-responsive">
@@ -190,6 +190,7 @@ $(document).ready(function () {
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ],
         // order: [[1, 'desc']] // Initial sorting on the Title column
+
     });
 
 });

@@ -1,0 +1,18 @@
+hivt_laboratory_mst
+change datatype "gnum_dept_code" varchar(50) COLLATE "pg_catalog"."default",
+
+
+frontside-
+menu
+1 http://localhost/nimspro/pages/depw-test-view not completed, error
+2 Departments not completed, design pending
+3 HS_internal_phonenumbers1.php ka ya $sql_select_depart_name code agar jarurt pde tb 
+4 http://localhost/nimspro/pages/patient-view test krna hai data a raha h ki ni
+5 change all updated image file
+6 Download the NIMS App Scan qr code lagana hai
+7 Academic>Academic Section>Academic Section I>Students Admission>MCI Students List is meun ko krna hai 
+8 users inactive or active.
+=============================================================================================================================
+1.dashboard- card according to menu eg- active inactive and all details view as dashboard
+2.hospital name on top bar admin side.
+3. user name left corner and user type

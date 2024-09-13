@@ -1,8 +1,8 @@
-<div class="modal fade" id="create-Corrigendum-modal">
+<div class="modal fade" id="create-admissions-associate-modal">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add New Corrigendum For Admission </h4>
+                <h4 class="modal-title">Add New Admission  </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,7 +17,7 @@
                                     <!-- general form elements -->
                                     <div class="card card-primary">
                                         <div class="card-header">
-                                            <h3 class="card-title">Add New Corrigendum For Admission </h3>
+                                            <h3 class="card-title">Add New Admission  </h3>
                                         </div>
                                         <!-- /.card-header -->
                                         <!-- form start -->
@@ -101,7 +101,7 @@
                                                     <input name="h3" id="corrigendum_notes1" class="" type="hidden">
                                                     <input name="h4" id="corrigendum_datepicker_s" type="hidden">
                                                     <input name="h5" id="corrigendum_datepicker_e" type="hidden">
-                                                    <input value="{{ route("admissions.get-admission-number") }}" id="get_tender_number" type="hidden">
+                                                    <input value="{{ route("admissions.get-number") }}" id="get_number" type="hidden">
                                                 </div>
                                                 <!-- /.card body -->
                                             </div>

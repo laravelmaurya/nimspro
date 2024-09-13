@@ -20,7 +20,7 @@ class GoverningCouncilController extends Controller
         
         $validTables = [ 'research_documents',                         
                        ]; // Add all your valid table names here
-        $validColumns = [ 'guideline','general_information','working_manual','crc','crc_form','guideline_course','phd_admission_guideline',
+        $validColumns = [ 'act','guideline','general_information','working_manual','crc','crc_form','guideline_course','phd_admission_guideline',
                           'workshop','clinical_research'   
         ]; // Add all your valid column names here                       
      // dd(!in_array($column, $validColumns),!in_array($te, $validTables));
@@ -35,7 +35,11 @@ class GoverningCouncilController extends Controller
     }
         //    dd($column);
             $te = 'nims_wp_'.$te;
+            if('act'!=$column){
             $column = 'nims_'.$column.'_path';
+            }else{
+                $column = 'nims_'.$column;
+            }
             $governingCouncil = DB::table($te)->first([$column,'nims_research_id']);
 // dd($governingCouncil);
 // dd($column,$governingCouncil->$column);
@@ -72,7 +76,7 @@ class GoverningCouncilController extends Controller
 
         $validTables = [ 'research_documents',                         
                        ]; // Add all your valid table names here
-        $validColumns = [ 'guideline','general_information','working_manual','crc','crc_form','guideline_course','phd_admission_guideline',
+        $validColumns = [ 'act','guideline','general_information','working_manual','crc','crc_form','guideline_course','phd_admission_guideline',
                           'workshop','clinical_research'
         ]; // Add all your valid column names here                       
     //  dd(!in_array($column, $validColumns),!in_array($te, $validTables),!$this->dataTamper($nims_research_id, $hr));
@@ -88,9 +92,12 @@ class GoverningCouncilController extends Controller
     }
 
             //    dd($column);
-            $te = 'nims_wp_'.$te;
-            $column = 'nims_'.$column.'_path';
-            
+            $te = 'nims_wp_'.$te;         
+            if('act'!=$column){
+                $column = 'nims_'.$column.'_path';
+                }else{
+                    $column = 'nims_'.$column;
+                }
             $directoryDate = date("Y-m-d");
             $path = 'public/uploads/researches/' . $directoryDate;
 
@@ -112,7 +119,7 @@ class GoverningCouncilController extends Controller
             //   dd($serviceData);
       
 
-
+            
 
         $fileSeclect = DB::table($te)->where('nims_research_id',  $nims_research_id)->first();
         // dd($type);

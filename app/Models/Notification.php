@@ -15,6 +15,7 @@ class Notification extends Model
     protected $fillable = [
         'nims_main_id',
         'nims_main',
+        'nims_applyonline',
         'notifi_archive',
         'type', 
         'type_id',       

@@ -226,8 +226,8 @@
                 method: 'GET',
                 success: function (data) 
                 {
-                  // const myJSON1 = JSON.stringify(data);
-                  // console.log('response =' + myJSON1);
+                    const myJSON1 = JSON.stringify(data);
+                    console.log('response =' + myJSON1);
                     
                   // Log the entire data object to see its structure
                     console.log('Response data:', data);
@@ -236,18 +236,24 @@
                     $('.is-invalid').removeClass('is-invalid');
                     $('.invalid-feedback').remove();
                                       
-         
-                    // Check if the data object has the key property
-                    if (data.hasOwnProperty(id)) {
-                      console.log(id + ':', data);
-                      // console.log(id + ':', 'yes data available');
-                    } else {
-                      console.error(id + ' not found in the response data.');
+                    if('act'===id){
+                    }else{
+                        // Check if the data object has the key property
+                        if (data.hasOwnProperty(id)) {
+                          console.log(id + ':', data);
+                          // console.log(id + ':', 'yes data available');
+                        } else {
+                          console.error(id + ' not found in the response data.');
+                        }
                     }
+                   
     
-            
-                    // alert(cardtitle+" "+title);
-                    $('#modal-file-upload').modal('show');
+         
+                    if ($("#modal-file-upload").hasClass("show")) {
+                        $('#modal-file-upload').modal('hide');
+                    } 
+                    $('#modal-file-upload').modal('show');              // alert(cardtitle+" "+title);
+                
                     $('#modal-title-file-upload').text(title);
                     $('#card-title-for-file-upload').text(cardtitle);         
                     // $('#edit_only_description').text(data_id);
@@ -269,7 +275,12 @@
                     $('#edit_modals_title_fu').val(title);
                     $('#edit_modals_cardtitle_fu').val(cardtitle);
                     $('#edit_modals_modalstype_fu').val(modalstype);
-                  id = 'nims_'+id+'_path';
+                    if('act'!=id){
+                      id = 'nims_'+id+'_path';
+                    }else{
+                      id = 'nims_'+id;
+                    }
+                  
                     var attachment = data[id];
                     console.log('attachment = ' + attachment);
                 
@@ -288,38 +299,39 @@
                          if (child_file_upload_row != null){
                           child_file_upload_row.remove();
                          }
-                             $('#attachment_download').append(`
-                                                                <div class="row" id="file_download_row">                         
-                                                                      <div class="col-sm-12">
-                                                                          <div class="form-group">
-                                                                              <label for="main_doc">Download Attachment</label>                                                                                                               
-                                                                                <div class="input-group">                                                        
-                                                                                  <a href="javascript:void(0)" onclick="downloadImage('${modifiedUrl}', '${suggestFileName}')" class="form-control">Download existing attachment</a>
-                                                                                  <button type="button" class="btn btn-primary viewImageBtn" data-id="${id}" data-image-url="${modifiedUrl}">
-                                                                                  View Image
-                                                                                  </button>                                                                                                                  
-                                                                                </div>
-                                                                          </div>
-                                                                      </div>
-                                                                     
-                                                                  </div>`);
+                             $('#attachment_download').append(`<div class="row" id="file_download_row">                         
+                                                                    <div class="col-sm-12">
+                                                                        <div class="form-group">
+                                                                            <label for="main_doc">Download Attachment</label>                                                                                                               
+                                                                              <div class="input-group">                                                        
+                                                                                <a href="javascript:void(0)" onclick="downloadImage('${modifiedUrl}', '${suggestFileName}')" class="form-control">Download existing attachment</a>
+                                                                                <button type="button" class="btn btn-primary viewImageBtn" data-id="${id}" data-image-url="${modifiedUrl}">
+                                                                                View Image
+                                                                                </button>                                                                                                                  
+                                                                              </div>
+                                                                        </div>
+                                                                    </div>                                                                    
+                                                                </div>`);
                    
                     
                   }
-                  $('#attachment_upload').append(`
+                  if ($('#file_upload_row').length === 0) {
+                      $('#attachment_upload').append(`
                           <div class="row" id="file_upload_row">
-                            <div class="col-md-12">
-                            <div class="form-group" id="attachment_container_${1}">
-                                <label for="attachment">Update File:</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input name="file_to_upload" id="file_to_upload" type="file" class="custom-file-input @error('file_to_upload') is-invalid @enderror">
-                                        <label class="custom-file-label" for="file_to_upload">Choose file</label>
-                                    </div>                                                                                                                     
-                                </div>
-                            </div>
+                              <div class="col-md-12">
+                                  <div class="form-group" id="attachment_container_${1}">
+                                      <label for="attachment">Update File:</label>
+                                      <div class="input-group">
+                                          <div class="custom-file">
+                                              <input name="file_to_upload" id="file_to_upload" type="file" class="custom-file-input @error('file_to_upload') is-invalid @enderror">
+                                              <label class="custom-file-label" for="file_to_upload">Choose file</label>
+                                          </div>                                                                                                                     
+                                      </div>
+                                  </div>
+                              </div>
                           </div>
-                        </div>`);
+                      `);
+                    }
                 },
                 error: function (xhr, status, error) {          
                         $('.is-invalid').removeClass('is-invalid');
@@ -351,14 +363,14 @@
   // Submit the edit form via AJAX
   $('body').on('click', '#submitFormFileUpload', function () {
     // var id = ele.data('id');
-    var id = $('#edit_id').val();
-      var te = $('#edit_te').val();
-      var title = $('#edit_modals_title').val();
-      var cardtitle = $('#edit_modals_cardtitle').val();
+      var id = $('#edit_id_fu').val();
+      var te = $('#edit_te_fu').val();
+      var title = $('#edit_modals_title_fu').val();
+      var cardtitle = $('#edit_modals_cardtitle_fu').val();
       var modalstype = 'Edit'; // Assuming you have another data attribute for type
       // var id = $('#edit_modals_modalstype').val();
   
- alert('id = '+" "+id);
+//  alert('submitFormFileUpload for id = '+" "+id);
 
       // alert(cardtitle+" "+title);
 
@@ -591,14 +603,7 @@
                               document.querySelectorAll('.ckeditor_only_description').forEach(function(element) {
                                   CKEDITOR.replace(element, {
                                       readOnly: true , // Set CKEditor to read-only mode
-                                      height: 1000,
-                                      toolbar: [{ name: 'styles', items: ['Format'] },
-                                                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
-                                                { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'] },
-                                                { name: 'links', items: ['Link', 'Unlink'] },
-                                                { name: 'undo', items: ['Undo', 'Redo'] },
-                                                { name: 'insert', items: ['Table', 'Image'] }  // Insert table and image
-                                      ]  
+                                      height: 1000,                                    
                                   });
                               });
 
@@ -820,7 +825,7 @@
                                       displayData(data);
                             }
                               // CKEDITOR.instances.edit_only_description.setData(data_id);
-                            
+                            // alert('file-uloaded id ='+id);
                             $('#edit_id').val(id);
                             $('#edit_te').val(te);
                            
@@ -913,6 +918,31 @@ function syncEditCorrigendum(){
 
 </script>
 <script>
+  function syncEditLatest(){
+ 
+      
+      var start_date = document.getElementById("edit_start_date");
+      var datepicker_s = document.getElementById("edit_datepicker_s");
+      datepicker_s.value= Base64.encode(start_date.value); 
+
+      var end_date = document.getElementById("edit_end_date");
+      var datepicker_e = document.getElementById("edit_datepicker_e");
+      
+      datepicker_e.value= Base64.encode(end_date.value); 
+      // console.log('         '+start_date.value+'              '+datepicker_s.value);
+      // console.log('         '+end_date.value+'              '+datepicker_e.value);
+      
+      // console.log(`start_date = ${start_date.value} \n datepicker_s = ${datepicker_s.value}`);
+      // console.log(`end_date = ${end_date.value} \n datepicker_e = ${datepicker_e.value}`);
+
+
+
+    // $('form').submit();
+  }
+
+</script>
+
+<script>
   function syncEdit(){
     //     const form = document.querySelector("form");
     // const allElements = form.querySelectorAll("[name]");
@@ -1001,7 +1031,10 @@ function syncEditCorrigendum(){
 
 </script>
 <script>
-  
+  function modalCorrigendum(id){
+    alert(id)
+    $('#create-admissions-associate-modal').modal('show');
+  }
 </script>
 <script>
   var i = 1;
@@ -1342,12 +1375,12 @@ $(document).ready(function() {
 </script>
 @if ($message = session('success'))
 <script>
-  var message = <?php echo json_encode($message); ?>;
+  var message = "<?php echo json_encode($message); ?>";
   toastr.success(message)
 </script>
 @elseif ($message = session('error'))
 <script>
-  var message = <?php echo json_encode($message); ?>;
+  var message = "<?php echo json_encode($message); ?>";
   toastr.error(message)
 </script>
 @endif

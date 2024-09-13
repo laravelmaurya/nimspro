@@ -32,18 +32,8 @@ class TenderController extends Controller
 
      */
 
-    //  public function index(Request $request): View
-    //  {
-    //      $tenders = Tender::latest('nims_wp_tender_id')->paginate(5);
-    //     //  $tenders = Tender:: orderByDesc('nims_wp_tender_id')->paginate(5); // working pagination but searching not all page
-    //     //  $tenders = Tender:: orderByDesc('nims_wp_tender_id')->get();
-
-    //      return view('tenders.index',compact('tenders'));
-    //  }
-
     public function index(Request $request)
-{
-
+    {
     // dd($request->all());
     if ($request->ajax()) {
         $query = Tender::where('nims_wp_tender_archive', 0)
@@ -60,7 +50,7 @@ class TenderController extends Controller
         ->orderBy('nims_wp_tender_id', 'asc')
         ->latest('id','asc');
         // dd($query);
-//dd($query->toSql());
+        //dd($query->toSql());
         return DataTables::eloquent($query)
             ->filter(function ($query) use ($request) {
                 if ($request->has('search.value')) {
@@ -92,20 +82,17 @@ class TenderController extends Controller
                 return $row->start_date ? $this->convertDateTimeFormateYmd($row->start_date) : '';  
             })
             ->editColumn('end_date', function($row){
-                return $row->end_date ? date('Y-m-d h:i:s', strtotime(str_replace('/', '-', $row->end_date))) : '';  
+                return $row->end_date ? $this->convertDateTimeFormateYmd_hi($row->end_date) : '';  
             })
             ->rawColumns(['action'])
             ->make(true);
     }
-
     return view('tenders.index');
-}
+    }
     
 
     public function create()
     {
-        // $files = Storage::files('uploads');
-        // dd($files);
         return view('tenders.create');
     }
 
@@ -120,7 +107,7 @@ class TenderController extends Controller
                 'required',
                 'string',
                 'unique:nims_wp_tenders,nims_wp_tender_title',
-                'regex:/^[a-zA-Z1-9 ]+$/',
+                'regex:/^[A-Za-z0-9\s]+$/',
                 'min:3',
                 'max:50'
             ],
@@ -385,7 +372,7 @@ class TenderController extends Controller
                 'required',
                 'string',
                 'unique:nims_wp_tenders,nims_wp_tender_title,' . $id .  ',nims_wp_tender_id',
-                'regex:/^(?!(?>[^.]*\.){2})[A-Za-z0-9 \.]+$/',
+                'regex:/^[A-Za-z0-9\s]+$/',
                 'min:3',
                 'max:50'
             ],
@@ -474,7 +461,7 @@ class TenderController extends Controller
         $main_doc = $tender->nims_wp_tender_doc; // default to existing main document
         $file = $request->file('main_doc');
         if ($file) {
-            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file,$main_doc);
             Log::info('Main document uploaded: ' . $main_doc);
         }
 
@@ -483,8 +470,11 @@ class TenderController extends Controller
             $fileKey = 'attachment_' . $i;
             if ($request->hasFile($fileKey)) {
                 $file = $request->file($fileKey);
-                // dd($file);
-                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($request->number, $path, $file);
+   
+                $nims_wp_tender_link = 'nims_wp_tender_link'.$i;
+                $tender_link = $tender->$nims_wp_tender_link;
+                // dd($i,$file,$nims_wp_tender_link,$tender_link);
+                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($request->number, $path, $file,$tender_link);
                 Log::info('Attachment '.date("Y-m-d :h:si") . $i . ' uploaded: ' . $uploadedFiles[$fileKey]);
             }
         }
@@ -710,7 +700,7 @@ class TenderController extends Controller
                 // 'unique:nims_wp_tenders,nims_wp_tender_number'
             ],
             'start_date' => ['required'],
-            'end_date' => ['required',new CheckedSameDate()],
+            'end_date' => ['required',new CheckedSameDate(Tender::class,'nims_wp_tender_number','nims_wp_tender_end_date','Main Tender & Corrigendum')],
             'main_doc' => ['required', 'file', 'max:2048', 'mimes:jpg,jpeg,png,pdf', new NoDoubleExt()]
         ];
 
@@ -866,7 +856,7 @@ class TenderController extends Controller
         }
     }
 
-    public function getTenderNumber()
+    public function getNumber()
     {
         
         $nims_maintender = 1;
@@ -931,7 +921,7 @@ class TenderController extends Controller
                         return $row->start_date ? $this->convertDateTimeFormateYmd($row->start_date) : '';  
                     })
                     ->editColumn('end_date', function($row){
-                        return $row->end_date ? date('Y-m-d h:i:s', strtotime(str_replace('/', '-', $row->end_date))) : '';  
+                        return $row->end_date ? $this->convertDateTimeFormateYmd_hi($row->end_date) : '';  
                     })
                     ->rawColumns(['action'])
                     ->make(true);

@@ -173,14 +173,7 @@
                 </a>
               </li>
               @endcan 
-              @can('tender-create')
-              <li class="nav-item">                          
-                <a href="javacript::void(0)" class="getTenderNumber nav-link" data-toggle="modal" data-target="#create-Corrigendum-modal">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Add Corrigendum for Tender</p>
-                </a>
-              </li> 
-              @endcan
+              
               @can('tender-list')
               <li class="nav-item">
                 <a href="{{route('tenders.list-archive')}}" class="nav-link">
@@ -192,44 +185,122 @@
             </ul>
           </li>  
           @endcan                             
-          @can('tender-menu')
-          <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
+         
+          @can('permissions-menu')
+            <li class="nav-item">
+              {{-- LEVEL 1 --}}
+              <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
               <p>
-                Admissions
-                <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">6</span>
+                    Notifications
+                  <i class="right fas fa-angle-left"></i>
               </p>
-            </a>
-            <ul class="nav nav-treeview">
-              @can('tender-list')
-              <li class="nav-item">
-                <a href="{{route('admissions.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>All Admissions</p>
-                </a>
-              </li>
-              @endcan 
-              @can('tender-create')
-              <li class="nav-item">                          
-                <a href="javacript::void(0)" class="getTenderNumber nav-link" data-toggle="modal" data-target="#create-Corrigendum-modal">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Add Corrigendum for Admissions</p>
-                </a>
-              </li> 
-              @endcan
-              @can('tender-list')
-              <li class="nav-item">
-                <a href="{{route('admissions.list-archive')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>All Archive</p>
-                </a>
-              </li>
-              @endcan                             
-            </ul>
-          </li>  
-          @endcan                             
+              </a>
+              {{-- END LEVEL 1 --}}
+              {{-- LEVEL 2 --}}
+              <ul class="nav nav-treeview">                            
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                        Admissions
+                          <i class="right fas fa-angle-left"></i>
+                      </p>
+                      </a>
+                      {{-- LEVEL 3 --}}
+                      <ul class="nav nav-treeview">
+                        @can('tender-list')
+                        <li class="nav-item">
+                          <a href="{{route('admissions.index')}}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Admissions</p>
+                          </a>
+                        </li>
+                        @endcan  
+                        
+                        @can('tender-list')
+                        <li class="nav-item">
+                          <a href="{{route('admissions.list-archive')}}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Archive</p>
+                          </a>
+                        </li>
+                        @endcan                                              
+                      </ul>
+                      {{-- END LEVEL 3 --}}
+                  </li>              
+              </ul>
+              {{-- END LEVEL 2 --}}
+              {{-- LEVEL 2 --}}
+              <ul class="nav nav-treeview">                            
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                        Examination(Exit)
+                          <i class="right fas fa-angle-left"></i>
+                      </p>
+                      </a>
+                      {{-- LEVEL 3 --}}
+                      <ul class="nav nav-treeview">
+                        @can('tender-list')
+                        <li class="nav-item">
+                          <a href="{{route('examinations.index')}}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Examination(Exit)</p>
+                          </a>
+                        </li>
+                        @endcan  
+                       
+                        @can('tender-list')
+                        <li class="nav-item">
+                          <a href="{{route('examinations.list-archive')}}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Archive</p>
+                          </a>
+                        </li>
+                        @endcan                                              
+                      </ul>
+                      {{-- END LEVEL 3 --}}
+                  </li>              
+              </ul>
+              {{-- END LEVEL 2 --}}
+              {{-- LEVEL 2 --}}
+              <ul class="nav nav-treeview">                            
+                  <li class="nav-item">
+                      <a href="#" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>
+                        Recruitment
+                          <i class="right fas fa-angle-left"></i>
+                      </p>
+                      </a>
+                      {{-- LEVEL 3 --}}
+                      <ul class="nav nav-treeview">
+                        @can('tender-list')
+                        <li class="nav-item">
+                          <a href="{{route('recruitments.index')}}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Recruitment</p>
+                          </a>
+                        </li>
+                        @endcan  
+                       
+                        @can('tender-list')
+                        <li class="nav-item">
+                          <a href="{{route('recruitments.list-archive')}}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Archive</p>
+                          </a>
+                        </li>
+                        @endcan                                              
+                      </ul>
+                      {{-- END LEVEL 3 --}}
+                  </li>              
+              </ul>
+              {{-- END LEVEL 2 --}}
+          </li>
+          @endcan                           
           @can('permissions-menu')
             <li class="nav-item">
               {{-- LEVEL 1 --}}
@@ -432,9 +503,28 @@
                     @endcan                                          
                   </ul>
                   {{-- END LEVEL 3 --}}
-                  
-                  
                 </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    NIMS Act 1989
+                      <i class="right fas fa-angle-left"></i>
+                  </p>
+                  </a>
+                  {{-- LEVEL 3 --}}
+                  <ul class="nav nav-treeview">
+                  @can('permission-create')
+                  <li class="nav-item">
+                      <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document - NIMS ACT 1989" data-cardtitle="Document  - NIMS ACT 1989" data-modalstype="Show" data-te="research_documents" data-id="act">
+                      <i class="fas fa-pencil-alt nav-icon"></i>
+                      <p> View / Edit</p>
+                      </a>
+                  </li> 
+                  @endcan                                                                                                            
+                  </ul>
+                  {{-- END LEVEL 3 --}}
+              </li>
               </ul>
                {{-- END LEVEL 2 --}}
             </li>            
@@ -455,7 +545,7 @@
               <ul class="nav nav-treeview">
                 @can('permission-list')
                 <li class="nav-item">
-                  <a href="javascript:void(0);"  class="editBtn2 nav-link" data-title="Emergency Services" data-cardtitle="Emergency Services" data-modalstype="Show" data-te="emergency" data-id="hos_eme" >
+                  <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Emergency Services" data-cardtitle="Emergency Services" data-modalstype="Show" data-te="emergency" data-id="hos_eme" >
                     <i class="far fa-circle nav-icon"></i>
                     <p>Emergency Services</p>
                   </a>
@@ -1044,7 +1134,7 @@
                             <ul class="nav nav-treeview">
                             @can('permission-create')
                             <li class="nav-item">
-                                <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title-Guidelines" data-cardtitle="Document Title - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="guideline">
+                                <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="guideline">
                                 <i class="fas fa-pencil-alt nav-icon"></i>
                                 <p> View / Edit</p>
                                 </a>
@@ -1066,7 +1156,7 @@
                           <ul class="nav nav-treeview">                         
                           @can('permission-create')
                           <li class="nav-item">
-                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title - General Information" data-cardtitle="Document Title - General Information" data-modalstype="Show" data-te="research_documents" data-id="general_information">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document  - General Information" data-cardtitle="Document  - General Information" data-modalstype="Show" data-te="research_documents" data-id="general_information">
                               <i class="fas fa-pencil-alt nav-icon"></i>
                               <p> View / Edit</p>
                               </a>
@@ -1088,7 +1178,7 @@
                           <ul class="nav nav-treeview">                         
                           @can('permission-create')
                           <li class="nav-item">
-                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title - Working Manual" data-cardtitle="Document Title - Working Manual" data-modalstype="Show" data-te="research_documents" data-id="working_manual">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document  - Working Manual" data-cardtitle="Document  - Working Manual" data-modalstype="Show" data-te="research_documents" data-id="working_manual">
                               <i class="fas fa-pencil-alt nav-icon"></i>
                               <p> View / Edit</p>
                               </a>
@@ -1109,7 +1199,7 @@
                           <ul class="nav nav-treeview">                         
                           @can('permission-create')
                           <li class="nav-item">
-                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title - Clinical Research Council (CRC )" data-cardtitle="Document Title - Clinical Research Council (CRC )" data-modalstype="Show" data-te="research_documents" data-id="crc">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document  - Clinical Research Council (CRC )" data-cardtitle="Document  - Clinical Research Council (CRC )" data-modalstype="Show" data-te="research_documents" data-id="crc">
                               <i class="fas fa-pencil-alt nav-icon"></i>
                               <p> View / Edit</p>
                               </a>
@@ -1130,7 +1220,7 @@
                           <ul class="nav nav-treeview">                         
                           @can('permission-create')
                           <li class="nav-item">
-                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title - Clinical Research Council (CRC) - Form C" data-cardtitle="Document Title - Clinical Research Council (CRC) - Form C" data-modalstype="Show" data-te="research_documents" data-id="crc_form">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document  - Clinical Research Council (CRC) - Form C" data-cardtitle="Document  - Clinical Research Council (CRC) - Form C" data-modalstype="Show" data-te="research_documents" data-id="crc_form">
                               <i class="fas fa-pencil-alt nav-icon"></i>
                               <p> View / Edit</p>
                               </a>
@@ -1176,7 +1266,7 @@
                           <ul class="nav nav-treeview">
                           @can('permission-create')
                           <li class="nav-item">
-                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title-Guidelines" data-cardtitle="Document Title - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="guideline_course">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="guideline_course">
                               <i class="fas fa-pencil-alt nav-icon"></i>
                               <p> View / Edit</p>
                               </a>
@@ -1197,7 +1287,7 @@
                           <ul class="nav nav-treeview">
                           @can('permission-create')
                           <li class="nav-item">
-                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title-Guidelines" data-cardtitle="Document Title - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="phd_admission_guideline">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="phd_admission_guideline">
                               <i class="fas fa-pencil-alt nav-icon"></i>
                               <p> View / Edit</p>
                               </a>
@@ -1218,7 +1308,7 @@
                           <ul class="nav nav-treeview">
                           @can('permission-create')
                           <li class="nav-item">
-                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title-Guidelines" data-cardtitle="Document Title - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="workshop">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="workshop">
                               <i class="fas fa-pencil-alt nav-icon"></i>
                               <p> View / Edit</p>
                               </a>
@@ -1239,7 +1329,7 @@
                           <ul class="nav nav-treeview">
                           @can('permission-create')
                           <li class="nav-item">
-                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document Title-Guidelines" data-cardtitle="Document Title - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="clinical_research">
+                              <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="clinical_research">
                               <i class="fas fa-pencil-alt nav-icon"></i>
                               <p> View / Edit</p>
                               </a>
@@ -1253,6 +1343,38 @@
                         
                     </li>
                     @endcan 
+                   
+                    @can('tender-menu')
+                        <li class="nav-item has-treeview">
+                          <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-copy"></i>
+                            <p>
+                              Latest
+                              <i class="fas fa-angle-left right"></i>
+                              <span class="badge badge-info right">6</span>
+                            </p>
+                          </a>
+                          <ul class="nav nav-treeview">
+                            @can('tender-list')
+                            <li class="nav-item">
+                              <a href="{{route('latests.index')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>All Latest</p>
+                              </a>
+                            </li>
+                            @endcan 
+                            
+                            @can('tender-list')
+                            <li class="nav-item">
+                              <a href="{{route('latests.list-archive')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>All Archive</p>
+                              </a>
+                            </li>
+                            @endcan                             
+                          </ul>
+                        </li>  
+                  @endcan
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

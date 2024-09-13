@@ -27,8 +27,8 @@
             <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#create-modal-xl">
               Add Tender
             </button>
-            <button type="button" class="getTenderNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal">
-                Add New Corrigendum For Tender 
+            <button type="button" class="getNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-admissions-associate-modal">
+                 Add Associated 
             </button>
           </div>
           <div class="card-body table-responsive">

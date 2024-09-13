@@ -695,7 +695,7 @@ class AdmissionController extends Controller
     
     public function storeCorrigendum(Request $request)
     {
-
+// dd($request->all());
         // Define validation rules
         $rules = [
             'title' => [
@@ -713,7 +713,7 @@ class AdmissionController extends Controller
                 // 'unique:nims_wp_admissions,nims_admissions_number'
             ],
             'start_date' => ['required'],
-            'end_date' => ['required',new CheckedSameDate()],
+            'end_date' => ['required',new CheckedSameDate(Admission::class,'nims_admissions_number','nims_admissions_end_date','Main Admission & Corrigendum')],
             'main_doc' => ['required', 'file', 'max:2048', 'mimes:jpg,jpeg,png,pdf', new NoDoubleExt()]
         ];
 
@@ -857,7 +857,7 @@ class AdmissionController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'New Corrigendum added successfully!'
+                'message' => 'Admission Added successfully!'
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -882,7 +882,7 @@ class AdmissionController extends Controller
                          ->orderBy('nims_admissions_number', 'DESC')
                          ->get(['nims_admissions_number']);
                         //  dd($admissions->toSql());
-dd($admissions);
+// dd($admissions);
         return response()->json($admissions);
     }
 

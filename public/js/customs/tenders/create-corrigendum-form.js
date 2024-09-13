@@ -1,11 +1,11 @@
 
 $(document).ready(function () {
-    $('.getTenderNumber').click(function () {
+    $('.getNumber').click(function () {
         $('.is-invalid').removeClass('is-invalid');
         $('.invalid-feedback').remove();
         CKEDITOR.instances.corrigendum_notes.setData('');
         // $('#corrigendum_notes').val('');
-        var url  = $('#get_tender_number').val();
+        var url  = $('#get_number').val();
         url=url.trim();
         // alert(url);
         // Fetch tender numbers via AJAX
@@ -13,16 +13,16 @@ $(document).ready(function () {
             url: url,
             type: 'GET',
             success: function(data) {
-                var $tenderNumberSelect = $('#corrigendum_number');
-                $tenderNumberSelect.empty();
+                var $NumberSelect = $('#corrigendum_number');
+                $NumberSelect.empty();
                 
                 if (data.length > 0) {
-                    $tenderNumberSelect.append('<option value="" readonly>-- Select Number --</option>');
+                    $NumberSelect.append('<option value="" readonly>-- Select Number --</option>');
                     $.each(data, function(index, tender) {                        
-                        $tenderNumberSelect.append('<option value="' + tender.nims_wp_tender_number + '">' + tender.nims_wp_tender_number + '</option>');
+                        $NumberSelect.append('<option value="' + tender.nims_wp_tender_number + '">' + tender.nims_wp_tender_number + '</option>');
                     });
                 } else {
-                    $tenderNumberSelect.append('<option value="">-- No Record --</option>');
+                    $NumberSelect.append('<option value="">-- No Record --</option>');
                 }
             },
             error: function() {

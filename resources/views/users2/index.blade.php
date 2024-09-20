@@ -23,15 +23,12 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Tender List</h3>
-            @can('tenders-list-archive')
-            <a href="{{route('tenders.list-archive')}}" class="btn btn-sm btn-primary float-right Btn-as-link">All Archive</a>
-            @endcan 
-            <button type="button" class="btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-modal-xl">
+            <h3 class="card-title">Tenders</h3>
+            <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#create-modal-xl">
               Add Tender
             </button>
             <button type="button" class="getNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal">
-              Add Corrigendum
+              Add New Corrigendum For Tender 
             </button>
           </div>
           <div class="card-body table-responsive">

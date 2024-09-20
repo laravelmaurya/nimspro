@@ -47,6 +47,7 @@ trait CommonTrait{
       } 
 
       function dataTamper($value,$base64EncodedValue){
+        // echo $value.'<br>'.$base64EncodedValue.'<br>'.trim(base64_decode($base64EncodedValue));die;
          if($value === trim(base64_decode($base64EncodedValue))){
             return 1;        
         }

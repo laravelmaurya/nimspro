@@ -24,11 +24,14 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Archive List of Tenders</h3>
-            <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#create-modal-xl">
+            @can('tenders-list-archive')
+            <a href="{{route('tenders.list-archive')}}" class="btn btn-sm btn-primary float-right Btn-as-link">All Archive</a>
+            @endcan 
+            <button type="button" class="btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-modal-xl">
               Add Tender
             </button>
             <button type="button" class="getNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal">
-                Add New Corrigendum For Tender 
+                Add Corrigendum
             </button>
           </div>
           <div class="card-body table-responsive">

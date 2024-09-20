@@ -82,7 +82,7 @@ $('#editFormSubmit').click(function () {
     var url  = $('.edit_form').attr("action");
     // var url = "{{ route('tenders.store') }}";
     url=url.trim();
-    alert(url);
+    // alert(url);
     if ($('.edit_form').valid()) {
         syncEdit();
         var form = $('.edit_form')[0];

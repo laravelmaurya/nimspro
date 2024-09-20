@@ -6,16 +6,16 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>role</h1>
+            <h1>Role Management</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">role</li>
+              <li class="breadcrumb-item active">Role Management</li>
             </ol>
           </div>
         </div>
-      </div><!-- /.contaifirstr-fluid -->
+      </div><!-- /.container-fluid -->
     </section>
 
     <!-- Main content -->
@@ -24,67 +24,27 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-               <h3 class="card-title"><a href="{{route('roles.create')}}" class="btn btn-sm bg-primary"><i class="fas fa-plus"></i> Create</a></h3>
+               <h3 class="card-title">
+                  <a href="{{ route('roles.create') }}" class="btn btn-sm bg-primary">
+                     <i class="fas fa-plus"></i> Create
+                  </a>
+               </h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
-              <table id="example2" class="table table-bordered example1">
+              <table class="table table-bordered yajra-datatable">
                 <thead>
                 <tr>
                   <th>#</th>
                   <th>Status</th>                                 
                   <th>Name</th>
-                  <th>Permission</th> 
-                  <th>created_at</th>
+                  <th>Permissions</th> 
+                  <th>Created At</th>
                   <th>Action</th>
                 </tr>
                 </thead>
-                <tbody>                                  
-                @foreach($roles as $role)
-                <tr>
-                  <td>{{$role->id}}</td>
-                  <td>
-                    <input data-id="{{$role->id}}" class="toggle-class" type="checkbox" data-onstyle="success"
-                     data-offstyle="danger" data-toggle="toggle" data-size="xs" data-on="Active"
-                     data-off="InActive" {{ $role->status ? 'checked' : '' }}>
-                  </td>
-                  <td id="name">{{$role->name}}</td>                 
-                  <td>
-                    @foreach($role->permissions as $permission)         
-                              <h4><span class="badge bg-info">{{ $permission->name }}</span></h4>
-                    @endforeach                    
-                 </td>
-                                
-                  <td>{{$role->created_at}}</td>
-                  <td>
-                  <a href="{{route('roles.edit', $role->id)}}"><i class="fas fa-edit"></i></a>
-                  <form method="GET" action="{{route('roles.show', $role->id)}}">
-                      @csrf
-                      <button class="btn btn-sm bg-warning"><i class="fas fa-eye"></i></button>
-                  </form>
-                  <a href="{{route('roles.destroy', $role->id)}}" class="delete-confirm">
-                    <i class="text-danger fas fa-trash"></i>
-                  </a>
-                  <!-- <form method="POST" action="{{route('roles.destroy', $role)}}">
-                      @method('delete')
-                      @csrf
-                      <button class="btn btn-sm bg-danger"><i class="fas fa-trash"></i></button>
-                  </form> -->
-                   
-                  </td>
-                </tr>
-                @endforeach
+                <tbody>
                 </tbody>
-                <tfoot>
-                <tr>
-                  <th>#</th>
-                  <th>Status</th>
-                  <th>Name</th>
-                  <th>Permission</th> 
-                  <th>created_at</th>
-                  <th>Action</th>
-                </tr>
-                </tfoot>
               </table>
             </div>
             <!-- /.card-body -->
@@ -98,44 +58,53 @@
     <!-- /.content -->
 
 @endsection
+
 @push('scripts')
 <script>
+$(function () {
+  var table = $('.yajra-datatable').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: "{{ route('roles.index') }}",
+      columns: [
+          {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+          {data: 'status', name: 'status', orderable: false, searchable: false},
+          {data: 'name', name: 'name'},
+          {data: 'permissions', name: 'permissions', orderable: false, searchable: false},
+          {data: 'created_at', name: 'created_at'},
+          {data: 'action', name: 'action', orderable: false, searchable: false},
+      ]
+  });
+
+  $('body').on('change', '.toggle-class', function () {
+      var status = $(this).prop('checked') == true ? 1 : 0; 
+      var id = $(this).data('id'); 
+      
+      $.ajax({
+          type: "GET",
+          dataType: "json",
+          url: '{{ url("/changeStatusCategory") }}',
+          data: {'status': status, 'id': id},
+          success: function(data){
+            toastr.success(data.success);
+          }
+      });
+  });
+
   $('.delete-confirm').on('click', function (event) {
-    event.preventDefault();
-    const url = $(this).attr('href');
-    //alert(url);
-    swal({
-        title: 'Are you sure ?',
-        text: 'This record and it`s details will be permanantly deleted!',
-        icon: 'warning',
-        buttons: ["Cancel", "Yes!"],
-    }).then(function(value) {
-        if (value) {
-            window.location.href = url;
-        }
-    });
+      event.preventDefault();
+      const url = $(this).attr('href');
+      swal({
+          title: 'Are you sure?',
+          text: 'This record and it’s details will be permanently deleted!',
+          icon: 'warning',
+          buttons: ["Cancel", "Yes!"],
+      }).then(function(value) {
+          if (value) {
+              window.location.href = url;
+          }
+      });
+  });
 });
 </script>
-<script>
-$(document).ready(function(){
-    $('.toggle-class').change(function() {
-      //alert('jklllllllllll');
-        var status = $(this).prop('checked') == true ? 1 : 0; 
-        var id = $(this).data('id'); 
-         console.log(status);
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: '/changeStatusCategory',
-            data: {'status': status, 'id': id},
-            success: function(data){
-              console.log(data.success)
-                toastr.success(data.success)
-            }
-        });
-    });
-  });
-</script>
-
-
 @endpush

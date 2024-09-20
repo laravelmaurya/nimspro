@@ -73,6 +73,8 @@
     }
     .th-serial-no, .th-image,.th-status,.th-action{width:5%}
     .th-created-at,.th-published-on,.th-start-date,.th-end-date{width:9%}
+    .th-name,.th-email{width:15%}
+    /* .th-role{width:20%} */
 
     table.dataTable tbody tr:hover {
    background-color:#007bff !important;
@@ -82,7 +84,7 @@
 
    </style>
    <style>
-   .Btn-as-link {
+   /* .Btn-as-link {
         background: none;
         color: blue;
         text-decoration: none;
@@ -92,8 +94,164 @@
         font-size: 1em;
         font-family: inherit;
         margin-left:-10%;
-    }
+    } */
+
+    .btn-primary,.Btn-as-link {
+    display: inline-block;
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Text color */
+    text-align: center;
+    text-decoration: none; /* Remove underline */
+    border-radius: 3px; /* Rounded corners */
+    /* font-size: 16px; */
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.Btn-as-link:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+ 
+}
+
+.Btn-as-link:active {
+    background-color: #004085; /* Even darker blue when clicked */
+}
 </style>
+<style>
+/* Sidebar Background Color */
+@media (min-width: 992px) {
+  .sidebar-mini.sidebar-collapse .main-sidebar {
+    overflow-x: hidden;
+    background: white;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .sidebar-open .main-sidebar, .sidebar-open .main-sidebar::before {
+    margin-left: 0;
+    background-color: #fff;
+  }
+}
+
+/* Main Menu Link Styling */
+.nav-sidebar .nav-link {
+  color: #c2c7d0; /* Default light color */
+  border-radius: 4px;
+  margin: 3px 0;
+  padding: 0.5rem 1rem; /* Improved padding */
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.nav-sidebar .nav-link.active {
+  background-color: #007bff; /* Active menu background */
+  color: #fff; /* Active menu text color */
+  font-weight: bold;
+}
+
+.nav-sidebar .nav-icon {
+  color: #adb5bd; /* Icon color */
+}
+
+.nav-sidebar .nav-link:hover {
+  /* Hover effect */
+  background-color: #1e90ff; 
+  color: #1e90ff;
+}
+
+/* Submenu Link Styling */
+.nav-treeview>.nav-item>.nav-link {
+  margin-left: 10px; /* Indent submenu items */
+  /* background-color: #34495e; */
+  color: #1e90ff;
+  padding: 0.5rem 1rem; /* Padding for submenu items */
+  border-radius: 4px; /* Rounded corners */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.nav-treeview>.nav-item>.nav-link.active {
+  background-color: #2980b9;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Submenu Hover Effect */
+.nav-treeview>.nav-item>.nav-link:hover {
+  /* background-color: #1abc9c; Hover effect for submenus */
+}
+
+/* Mobile-Specific Hover Effect */
+.touch-device .nav-treeview>.nav-item>.nav-link.hover {
+  /* background-color: #1abc9c; Touch hover effect */
+}
+
+/* Smooth Hover Effect */
+.nav-treeview>.nav-item>.nav-link {
+  transition: background-color 0.3s ease;
+}
+
+/* Submenu Icon Color */
+.nav-treeview>.nav-item>.nav-link>.nav-icon {
+  color: #ffffff; /* Icon color for submenu */
+}
+
+/* Styling for Submenu of Submenu */
+.nav-treeview .nav-treeview {
+  margin-left: 10px; /* Indent for nested submenus */
+}
+
+.nav-treeview .nav-item .nav-link {
+  /* Different background for nested submenus */
+  /* background-color: #2c3e50;  */
+}
+
+.nav-treeview .nav-item .nav-link:hover {
+  background-color: #27ae60; /* Hover effect for nested submenus */
+}
+
+/* Adjustments for Sidebar Mini */
+.sidebar-mini .main-sidebar .nav-link, 
+.sidebar-mini-md .main-sidebar .nav-link, 
+.sidebar-mini-xs .main-sidebar .nav-link {
+  width: calc(250px - .6rem);
+  transition: width ease-in-out .3s;
+}
+
+/* General Styling for Sidebar Links */
+.nav-link {
+  display: block;
+  padding: 0.5rem 1rem; /* Consistent padding for all links */
+}
+
+/* Ensure All Links Have Proper Spacing */
+.nav-sidebar .nav-item {
+  margin: 0; /* Reset margin for items */
+}
+
+.nav-item a p {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.angle-margin{
+  margin-right: 4%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+ </style>
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -183,7 +341,8 @@
 <script  src="{{asset($addPublic.'js/jquery.datetimepicker.full.min.js')}}"> </script>
 <script  src="{{asset($addPublic.'plugins/jquery-validation/jquery.validate.min.js')}}"> </script>
 <script  src="{{asset($addPublic.'plugins/jquery-validation/additional-methods.min.js')}}"> </script>
-
+<!-- Bootstrap Switch -->
+<script  src="{{asset($addPublic.'plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
 
 
 <script>
@@ -193,7 +352,11 @@
   }
 });
 </script>
-
+<script>
+  $("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch('state', $(this).prop('checked'));
+    })
+</script>
 
 <script>
  
@@ -941,7 +1104,24 @@ function syncEditCorrigendum(){
   }
 
 </script>
-
+<script>
+  function syncUsers() {
+      const base64Fields = document.querySelectorAll('.toBase64'); // Select all fields with the class 'toBase64'
+  
+      base64Fields.forEach(function(field) {
+          const originalValue = field.value;  // Get the original value of the field
+          const targetFieldId = field.dataset.target;  // Get the ID of the target hidden field
+          
+          if (targetFieldId) {
+              const targetField = document.getElementById(targetFieldId);
+              if (targetField) {
+                  targetField.value = Base64.encode(originalValue); // Encode to Base64 and set the value
+                  console.log(originalValue + ' => ' + targetField.value);
+              }
+          }
+      });
+  }
+</script>
 <script>
   function syncEdit(){
     //     const form = document.querySelector("form");
@@ -1366,12 +1546,64 @@ $(document).ready(function() {
         }
      });
 </script> --}}
+<script>
+$(document).ready(function () {
+    var url = window.location;
 
+    // for single menu item
+    $('ul.nav-sidebar a').filter(function () {
+        return this.href == url;
+    }).addClass('active');
+
+    // for treeview items
+    $('ul.nav-treeview a').filter(function () {
+        return this.href == url;
+    }).parentsUntil(".nav-sidebar > .nav-treeview").addClass('menu-open').prev('a').addClass('active');
+});
+
+</script>
 <script type="text/javascript">
   $(document).ready(function(){
      $('#ui-datepicker-div').removeClass("ui-datepicker");
 
     });    
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Detect if the device is touch-enabled
+      const isTouchDevice = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+
+      if (isTouchDevice) {
+          // Add touch-device class to body for mobile-specific styles
+          document.body.classList.add('touch-device');
+
+          // Add hover effect on touch for mobile view
+          document.querySelectorAll('.nav-treeview>.nav-item>.nav-link').forEach(item => {
+              item.addEventListener('touchstart', function(event) {
+                  // Remove hover class from all items
+                  document.querySelectorAll('.nav-treeview>.nav-item>.nav-link').forEach(link => {
+                      link.classList.remove('hover');
+                  });
+
+                  // Add hover class to the current touched item
+                  this.classList.add('hover');
+
+                  // Prevent touch event from bubbling to other elements
+                  event.stopPropagation();
+              });
+          });
+
+          // Handle outside touch to remove hover state
+          document.addEventListener('touchstart', function(event) {
+              if (!event.target.closest('.nav-treeview')) {
+                  // Remove hover class when touched outside the menu
+                  document.querySelectorAll('.nav-treeview>.nav-item>.nav-link').forEach(link => {
+                      link.classList.remove('hover');
+                  });
+              }
+          });
+      }
+  });
 </script>
 @if ($message = session('success'))
 <script>

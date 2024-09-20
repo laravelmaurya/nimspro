@@ -5,9 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\Permission;
 use Illuminate\View\View;
+use App\Rules\NoDoubleExt;
+use App\Traits\CommonTrait;
+use Illuminate\Support\Str;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Rules\CheckedSameDate;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
 {
@@ -22,16 +34,47 @@ class RoleController extends Controller
 
      */
 
-     public function index(Request $request): View
-
+     public function index(Request $request)
      {
+         if ($request->ajax()) {
+             $roles = Role::with('permissions')->get();
+             return Datatables::of($roles)
+                 ->addIndexColumn()
+                 ->addColumn('status', function($row) {
+                     $checked = $row->status ? 'checked' : '';
+                     return '<input data-id="'.$row->id.'" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-size="xs" data-on="Active" data-off="InActive" '.$checked.'>';
+                 })
+                 ->addColumn('permissions', function($row) {
+                     $permissions = $row->permissions->map(function($permission) {
+                         return '<h4 class="d-inline"><span class="badge bg-info">' . $permission->name . '</span></h4>';
+                     })->implode(' ');
  
-        //  $roles = Role::latest()->paginate(5);
-         $roles = Role::with('permissions')->get();
+                     return $permissions;
+                 })
+                 ->addColumn('action', function($row){
+                     $editUrl = route('roles.edit', $row->id);
+                     $deleteUrl = route('roles.destroy', $row->id);
+                     $viewUrl = route('roles.show', $row->id);
  
-         return view('roles.index',compact('roles'));
+                     $btn = '<a href="'.$editUrl.'" class="edit"><i class="fas fa-edit"></i></a>
+                             <form method="GET" action="'.$viewUrl.'">
+                                 @csrf
+                                 <button class="btn btn-sm bg-warning"><i class="fas fa-eye"></i></button>
+                             </form>
+                             <a href="'.$deleteUrl.'" class="delete-confirm">
+                                 <i class="text-danger fas fa-trash"></i>
+                             </a>';
  
+                     return $btn;
+                 })
+                 ->rawColumns(['status', 'permissions', 'action'])
+                 ->make(true);
+         }
+ 
+         return view('roles.index');
      }
+ 
+   
 
      
     public function create()

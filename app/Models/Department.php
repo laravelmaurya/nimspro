@@ -9,4 +9,6 @@ class Department extends Model
 {
     use HasFactory;
     protected $table = 'nims_wp_department';
+    protected $primaryKey = 'nims_wp_department_id';
+    public $timestamps = false;
 }

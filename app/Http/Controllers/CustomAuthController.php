@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
+use App\Models\Tender;
+use App\Models\Admission;
+use App\Models\Permission;
+use App\Models\Examination;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +22,7 @@ class CustomAuthController extends Controller
     public function index()
     {
         $user=Auth::user();
-        // dd();
+        
         if(empty($user)){
           return view('auth.login');
        }
@@ -24,6 +32,8 @@ class CustomAuthController extends Controller
       
     public function customLogin(Request $request)
     {
+        if ($request->isMethod('post')) {
+
         $request->validate([
             'nims_wp_user_email' => 'required',
             'nims_wp_user_password' => 'required',
@@ -45,6 +55,8 @@ class CustomAuthController extends Controller
         }
   
         return back()->withErrors(['error' => 'The credentials do not matchaaa.']);
+      }
+      return redirect()->intended('login');
     }
     public function registration()
     {
@@ -78,7 +90,54 @@ class CustomAuthController extends Controller
         //  dd(Auth::check());
         if(Auth::check()){
             // dd(Auth::check());
-            return view('auth.home');
+
+            // Total counts
+            $totalPermissions = Permission::count();
+            $totalTenders = Tender::where('nims_wp_tender_archive', 0)
+            ->where('nims_wp_tender_end_date', '>', Carbon::now())->count();
+
+            $totalNotifications = Notification::count();
+            $totalAdmissions = Admission::where('nims_admissions_archive', 0)
+            ->where('nims_admissions_end_date', '>', Carbon::now())
+            ->count();
+            $totalExaminations = Examination::where('nims_examination_archive', 0)
+            ->where('nims_examination_end_date', '>', Carbon::now())->count();
+        // dd($totalPermissions,$totalTenders ,$totalNotifications,$totalAdmissions,$totalExaminations);
+    // Today's counts
+    $today = Carbon::today();
+
+            $todayPermissions = Permission::whereDate('created_at', $today)->count();
+            $todayTenders = Tender::where('nims_wp_tender_archive', 0)
+            ->where('nims_wp_tender_end_date', '>', Carbon::now())
+            ->whereDate('nims_wp_tender_submit_date', Carbon::today())
+            ->count();
+            $todayNotifications = Notification::whereDate('entry_date', $today)->count();
+            $todayAdmissions = Admission::where('nims_admissions_archive', 0)
+            ->where('nims_admissions_end_date', '>', Carbon::now())
+            ->whereDate('nims_admissions_submit_date', Carbon::today())
+            ->count();
+            $todayExaminations = Examination::where('nims_examination_archive', 0)
+            ->where('nims_examination_end_date', '>', Carbon::now())
+            ->whereDate('nims_examination_submit_date', Carbon::today())
+            ->count();
+            $totalUsers = DB::table('nims_wp_user_login')->count();
+
+            $totalUsersToday = DB::table('nims_wp_user_login')->where('nims_wp_user_created_on', '>=', $today)->count();
+            // Get total number of roles
+            $totalRoles = Role::count();
+            // Get total number of roles created today
+            $totalRolesToday = Role::where('created_at', '>=', $today)->count();
+            // dd($totalUsersToday);
+            return view('auth.home',compact('totalUsers',
+                                            'totalUsersToday',
+                                            'totalRoles',
+                                            'totalRolesToday',
+                                            'totalPermissions', 'todayPermissions', 
+                                            'totalTenders', 'todayTenders', 
+                                            'totalNotifications', 'todayNotifications', 
+                                            'totalAdmissions', 'todayAdmissions', 
+                                            'totalExaminations', 'todayExaminations'
+             ));
         }
   
         return back()->withErrors(['error' => 'You are not allowed to access.']);

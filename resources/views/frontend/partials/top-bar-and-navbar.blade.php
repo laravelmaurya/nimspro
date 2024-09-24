@@ -20,7 +20,7 @@
       <div class="row">
         <div class="col-lg-1 col-md-3 col-sm-12 text-center">  
           <a class="navbar-brand" href="{{config('app.url')}}">
-            <img src="{{ url($addPublic.'img/nims-logo.jpg') }}" alt="NIMS Logo" style="width: 90px;">
+            <img src="{{ url($addPublic.'img/nims-logo.jpg') }}" alt="NIMS Logo" style="width: 90px;" class="mt-2">
           </a>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12 text-center">  

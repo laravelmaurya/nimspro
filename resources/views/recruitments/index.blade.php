@@ -9,7 +9,7 @@
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
+          @include('partials.breadcrumb-item-home')
           <li class="breadcrumb-item active">Tenders</li>
         </ol>
       </div>

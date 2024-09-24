@@ -10,7 +10,7 @@
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          @include('partials.breadcrumb-item-home')
           <li class="breadcrumb-item active">Users</li>
         </ol>
       </div>
@@ -62,7 +62,6 @@ $addPublic = config('app.url').'public/';
 @endphp
 @include('users.create-modal')
 @include('users.edit-modal')
-@include('users2.create-Corrigendum-modal')
 @endsection
 
 @push('scripts')

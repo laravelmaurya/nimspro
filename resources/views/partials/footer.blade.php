@@ -1,14 +1,9 @@
  <!-- /.content-wrapper -->
  <footer class="main-footer">
-    <strong>Copyright &copy; <?php date_default_timezone_set('Asia/Kolkata'); ?> {{date('Y')}} <a href="route('home')"> Cricpop </a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.0.4
-    </div>
-  </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
+  <div class="text-center text-uppercase">                         
+    <a class="theme-color text-decoration-none font-weight-bolder" href="#">Copyright © 2014 NIMS All rights reserved</a> <span>|</span>
+    <a class="theme-color text-decoration-none font-weight-bolder" href="#">NIMS Disclaimer</a> <span>|</span>
+    <a class="theme-color text-decoration-none font-weight-bolder" target="_blank" href="http://www.cdac.in">Designed &amp; Developed By C-DAC - Noida</a> |
+    <a class="theme-color text-decoration-none font-weight-bolder" href="#"></a>
+  </div>
+</footer>

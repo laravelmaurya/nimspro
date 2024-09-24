@@ -24,11 +24,11 @@
               
               <!-- Dashboard Menu -->
               <li class="nav-item has-treeview menu-open">
-                <a href="#" class="nav-link">
+                <a href="{{route('dashboard')}}" class="nav-link">
                  <i class="nav-icon fas fa-tachometer-alt"></i>
                  <p>
                    Dashboard
-                   
+                   {{-- @include('partials.breadcrumb-item-home') --}}
                  </p>
                </a>
              </li>       
@@ -1229,7 +1229,6 @@
                                <p>
                                  Latest
                                  <i class="fas fa-angle-left right"></i>
-                                 <span class="badge badge-info right">6</span>
                                </p>
                              </a>
                              <ul class="nav nav-treeview">

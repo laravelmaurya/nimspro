@@ -62,6 +62,26 @@
    <?php 
 
    ?>
+   
+   <style>
+    .theme-color {
+  color: #036CC5;
+}
+
+    @media screen and (max-width: 480px) {
+      logo-text {
+        background-color: lightgreen;
+      }
+      #scrollToTopBtn{
+        margin-bottom: 65px;
+      }
+    }
+  
+  
+    .left-card, .right-card{
+      width: 50%;
+    }
+    </style>
    <style>
     .table td{
       padding: 0px;
@@ -252,25 +272,66 @@
 
 
  </style>
+<style>
+#preloader {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    background-color: #f9fafb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.loader {
+    border: 8px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 8px solid #3498db;
+    width: 60px;
+    height: 60px;
+    animation: spin 3s linear infinite; /* Increased to 3s */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
-
+    <div id="preloader">
+      <div class="loader"></div>
+    </div>
     <div class="wrapper">
+      
     @include('partials.navbar')
         <!-- Content Wrapper. Contains page content -->
+        
         <div class="content-wrapper">
         
             @include('partials.asidebar')
+      
+
             @yield('content')
+            
         </div>
         <!-- /.content-wrapper -->
         @include('partials.footer')
     </div>
+   
     <!-- ./wrapper -->
 @include('partials.image-modals')
 @include('governing-council.edit-governing-council-modal')
 @include('partials.file-upload-modals')
+<script>
+  window.addEventListener('load', function() {
+      var preloader = document.getElementById('preloader');
+      preloader.style.display = 'none';
+  });
+</script>
 <!-- jQuery -->
 <script src="{{asset($addPublic.'plugins/jquery/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->

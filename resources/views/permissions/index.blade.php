@@ -10,7 +10,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              @include('partials.breadcrumb-item-home')
               <li class="breadcrumb-item active">permission</li>
             </ol>
           </div>
@@ -24,60 +24,26 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-               <h3 class="card-title"><a href="{{route('permissions.create')}}" class="btn btn-sm bg-primary"><i class="fas fa-plus"></i> Create</a></h3>
+               <h3 class="card-title float-right">
+                {{-- <a href="{{route('permissions.create')}}" class="btn btn-sm bg-primary"><i class="fas fa-plus"></i> Create</a> --}}
+              
+                <button class="btn btn-sm btn-primary mr-1" id="permission-create-modal">
+                  Add Permission
+                </button>
+               </h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
-              <table id="example2" class="table table-bordered example1">
+              <table class="table table-bordered data-table">
                 <thead>
                 <tr>
                   <th class="th-serial-no">#</th>
-                  <th class="th-status" >Status</th>                                     
+                  {{-- <th class="th-status" >Status</th>                                      --}}
                   <th>Name</th>                 
                   <th class="th-created-at">created_at</th>
                   <th class="th-action">Action</th>
                 </tr>
-                </thead>
-                <tbody>
-                @foreach($permissions as $permission)
-                <tr>
-                  <td>{{$permission->id}}</td>
-                  <td class="text-center">
-                    <input data-id="{{$permission->id}}" class="toggle-class" type="checkbox" data-onstyle="success"
-                     data-offstyle="danger" data-toggle="toggle" data-size="xs" data-on="Active"
-                     data-off="InActive" {{ $permission->status ? 'checked' : '' }}>
-                  </td>
-                  <td id="name">{{$permission->name}}</td>                 
-                     
-                  <td>{{$permission->created_at}}</td>
-                  <td>
-                  <a href="{{route('permissions.edit', $permission)}}"><i class="fas fa-edit"></i></a>
-                  <form class="d-inline" action="{{route('permissions.show', $permission)}}">
-                      @csrf
-                      <button class="btn btn-sm bg-warning"><i class="fas fa-eye"></i></button>
-                  </form>
-                  <a href="{{route('permissions.destroy', $permission->id)}}" class="delete-confirm">
-                    <i class="text-danger fas fa-trash"></i>
-                  </a>
-                  <!-- <form clss="d-inline"  method="POST" action="{{route('permissions.destroy', $permission)}}">
-                      @method('delete')
-                      @csrf
-                      <button class="btn btn-sm bg-danger"><i class="fas fa-trash"></i></button>
-                  </form> -->
-                   
-                  </td>
-                </tr>
-                @endforeach
-                </tbody>
-                <tfoot>
-                <tr>
-                  <th>#</th>
-                  <th>Status</th>
-                  <th>Name</th>                 
-                  <th>created_at</th>
-                  <th>Action</th>
-                </tr>
-                </tfoot>
+                </thead>               
               </table>
             </div>
             <!-- /.card-body -->
@@ -90,21 +56,135 @@
     </section>
     <!-- /.content -->
 
+@php 
+$addPublic = config('app.url').'public/';
+@endphp
+@include('permissions.create-modal')
+@include('permissions.edit-modal')
+
 @endsection
 @push('scripts')
 <script>
-  $('.delete-confirm').on('click', function (event) {
+  $(document).ready(function() {
+     // Open Edit Modal and Populate Data
+    $('body').on('click', '#permission-create-modal', function() {
+      if ($("#create-modal-xl").hasClass("show")) {
+          $('#create-modal-xl').modal('hide');
+      } 
+      $('#create_form')[0].reset();
+      $('#create-modal-xl').modal('show');              
+            // Clear any previous validation error messages
+      $('.is-invalid').removeClass('is-invalid');
+      $('.invalid-feedback').remove();
+    });
+  });
+  </script>
+  <script>
+    $(document).ready(function() {
+       // Open Edit Modal and Populate Data
+      $('body').on('click', '.edit-btn', function() {
+          var id = $(this).data('id');
+          $.get("{{ url('permissions') }}" + '/' + id + '/edit', function(data) {
+              // Log for debugging
+              console.log('Received permission data:', data);
+  
+              if ($("#edit-modal-xl").hasClass("show")) {
+                $('#edit-modal-xl').modal('hide');
+              } 
+              // Open the modal
+              $('#edit-modal-xl').modal('show');
+  
+              // Clear any previous validation error messages
+              $('.is-invalid').removeClass('is-invalid');
+              $('.invalid-feedback').remove();
+  
+              // Set the form action URL dynamically
+              $('#edit_form').attr('action', "{{ url('permissions') }}" + '/' + id);  
+  
+              // Fill the form fields with the fetched data
+              $('#idtwo').val(id);
+              $('#edit_name').val(data.name);
+  
+          });
+      });
+    });
+    </script>
+<script>
+  $(function () {
+    window.table = $('.data-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('permissions.index') }}",
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+            // {data: 'status', name: 'status', orderable: false, searchable: false},
+            {data: 'name', name: 'name'},
+            {data: 'created_at', name: 'created_at'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+  
+    $('body').on('change', '.toggle-class', function () {
+        var status = $(this).prop('checked') == true ? 1 : 0; 
+        var id = $(this).data('id'); 
+        
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: '{{ url("/changeStatusCategory") }}',
+            data: {'status': status, 'id': id},
+            success: function(data){
+              toastr.success(data.success);
+            }
+        });
+    });
+  
+  });
+  </script>
+ <script>
+  $(document).on('click', '.delete-btn', function(event) {
     event.preventDefault();
-    const url = $(this).attr('href');
-    //alert(url);
-    swal({
-        title: 'Are you sure ?',
-        text: 'This record and it`s details will be permanantly deleted!',
-        icon: 'warning',
-        buttons: ["Cancel", "Yes!"],
-    }).then(function(value) {
-        if (value) {
-            window.location.href = url;
+
+    var id = $(this).data('id');
+    var deleteUrl = "{{ url('roles') }}/" + id;
+    var token = "{{ csrf_token() }}";
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This record and its details will be permanently deleted!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+        dangerMode: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: deleteUrl,
+                type: 'DELETE',
+                data: {
+                    _token: token,id:id,
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: response.message,
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        // Reload the DataTable after deletion
+                        $('.data-table').DataTable().ajax.reload();
+                    } else {
+                        Swal.fire("Error", response.message, "error");
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire("Error", "An error occurred. Please try again.", "error");
+                }
+            });
         }
     });
 });
@@ -131,4 +211,10 @@ $(document).ready(function(){
 </script>
 
 
+<script>
+  var base_url = "<?php echo url('')  ?>";
+  // var base_url = urlPublic + 'public/';
+</script>
+  <script src="{{asset($addPublic.'js/customs/permissions/create-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/permissions/edit-form.js')}}"></script>
 @endpush

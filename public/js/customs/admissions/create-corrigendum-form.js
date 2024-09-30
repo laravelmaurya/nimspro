@@ -88,7 +88,10 @@ $(document).ready(function () {
                      $('.is-invalid').removeClass('is-invalid');
                      $('.invalid-feedback').remove();
                     
-                     $('#create-Corrigendum-modal').modal('hide');
+                     if ($("#create-admissions-associate-modal").hasClass("show")) {
+                        $('#create-admissions-associate-modal').modal('hide');
+                    } 
+                    $('#create-admissions-associate-modal').modal('show');    
                      // table.DataTable().ajax.reload();
                      table.draw();
                      // Optionally, you can refresh the table or redirect the user

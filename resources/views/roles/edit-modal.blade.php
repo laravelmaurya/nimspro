@@ -31,7 +31,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label for="edit_name">Name</label>
+                                                        <label for="edit_name">Role Name</label>
                                                         <input name="name" id="edit_name" type="text" class="form-control toBase64" data-target="editnametwo" placeholder="Enter Name">
                                                         @error('name')
                                                          <strong class="text-danger">{{ $message }}</strong>
@@ -42,7 +42,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label>Permissions</label>
+                                                        <label>Permissions Assigning  Of The Role</label>
                                                         <select name="permissions[]" id="edit_permissions" class="select2" multiple="multiple" data-placeholder="Select Permissions" style="width: 100%;">
                                                             @foreach ($permissions as $permission)                   
                                                             <option value="{{ $permission->id }}">{{ $permission->name }}</option>

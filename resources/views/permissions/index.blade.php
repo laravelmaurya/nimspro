@@ -5,7 +5,7 @@
  <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
+          {{-- <div class="col-sm-6">
             <h1>permission</h1>
           </div>
           <div class="col-sm-6">
@@ -13,7 +13,7 @@
               @include('partials.breadcrumb-item-home')
               <li class="breadcrumb-item active">permission</li>
             </ol>
-          </div>
+          </div> --}}
         </div>
       </div><!-- /.contaifirstr-fluid -->
     </section>
@@ -24,13 +24,13 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-               <h3 class="card-title float-right">
-                {{-- <a href="{{route('permissions.create')}}" class="btn btn-sm bg-primary"><i class="fas fa-plus"></i> Create</a> --}}
-              
+              <div class="card-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between">
+                <h3 class="card-title mb-2 mb-md-0 mr-auto  font-weight-bold">Permission List</h3>
+                @can('permission-add')
                 <button class="btn btn-sm btn-primary mr-1" id="permission-create-modal">
                   Add Permission
                 </button>
-               </h3>
+                @endcan
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
@@ -146,7 +146,7 @@ $addPublic = config('app.url').'public/';
     event.preventDefault();
 
     var id = $(this).data('id');
-    var deleteUrl = "{{ url('roles') }}/" + id;
+    var deleteUrl = "{{ url('permissionss') }}/" + id;
     var token = "{{ csrf_token() }}";
 
     Swal.fire({

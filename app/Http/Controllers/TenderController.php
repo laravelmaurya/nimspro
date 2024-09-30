@@ -34,6 +34,7 @@ class TenderController extends Controller
 
     public function index(Request $request)
     {
+    $this->authorize('view-page', 'tender-list');
     // dd($request->all());
     if ($request->ajax()) {
         $query = Tender::where('nims_wp_tender_archive', 0)
@@ -72,8 +73,15 @@ class TenderController extends Controller
             })
             ->addIndexColumn()
             ->addColumn('action', function($row){               
-                $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
-                return $btn;
+                $editPermission = auth()->user()->can('view-page', 'tender-edit');
+
+                $buttons = '';
+                
+                if ($editPermission) {
+                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
+                }
+                
+                return $buttons;
             })
             ->editColumn('submit_date', function($row){
                 return $row->submit_date ? $this->convertDateTimeFormateYmd($row->submit_date) : '';                   
@@ -214,7 +222,7 @@ class TenderController extends Controller
         // Upload main document
         $file = $request->file('main_doc');
         if ($file) {
-            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+            $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file);
             Log::info('Main document uploaded: ' . $main_doc);
         }
 
@@ -223,7 +231,7 @@ class TenderController extends Controller
             $fileKey = 'attachment_' . $i;
             if ($request->hasFile($fileKey)) {
                 $file = $request->file($fileKey);
-                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($request->number, $path, $file);
+                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($i,$request->number, $path, $file);
                 Log::info('Attachment ' . $i . ' uploaded: ' . $uploadedFiles[$fileKey]);
             }
         }
@@ -461,7 +469,7 @@ class TenderController extends Controller
         $main_doc = $tender->nims_wp_tender_doc; // default to existing main document
         $file = $request->file('main_doc');
         if ($file) {
-            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file,$main_doc);
+            $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file,$main_doc);
             Log::info('Main document uploaded: ' . $main_doc);
         }
 
@@ -474,7 +482,7 @@ class TenderController extends Controller
                 $nims_wp_tender_link = 'nims_wp_tender_link'.$i;
                 $tender_link = $tender->$nims_wp_tender_link;
                 // dd($i,$file,$nims_wp_tender_link,$tender_link);
-                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($request->number, $path, $file,$tender_link);
+                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($i,$request->number, $path, $file,$tender_link);
                 Log::info('Attachment '.date("Y-m-d :h:si") . $i . ' uploaded: ' . $uploadedFiles[$fileKey]);
             }
         }
@@ -784,7 +792,7 @@ class TenderController extends Controller
         // Upload main document
         $file = $request->file('main_doc');
         if ($file) {
-            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+            $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file);
             Log::info('Main document uploaded: ' . $main_doc);
         }
 
@@ -874,6 +882,7 @@ class TenderController extends Controller
 
     public function listArchive(Request $request)
     {
+        $this->authorize('view-page', 'tender-list-archive');
             if ($request->ajax()) {
                 $query = Tender::where('nims_wp_tender_archive', 1)
                             ->orWhere('nims_wp_tender_end_date', '<',  Carbon::now())
@@ -911,8 +920,16 @@ class TenderController extends Controller
                     })
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
-                        $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
-                        return $btn;
+                        $editPermission = auth()->user()->can('view-page', 'tender-edit-archive');
+
+                        $buttons = '';
+                        
+                        if ($editPermission) {
+                            $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
+                        }
+                        
+                        return $buttons;
+                        
                     })
                     ->editColumn('submit_date', function($row){
                         return $row->submit_date ? $this->convertDateTimeFormateYmd($row->submit_date) : '';                   

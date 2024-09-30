@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Slider Show</h1>
+            <h1>Tender Show</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Slider Show</li>
+              <li class="breadcrumb-item active">Tender Show</li>
             </ol>
           </div>
         </div>
@@ -22,7 +22,7 @@
           <div class="col-md-12">
           <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Slider Table</h3>
+                <h3 class="card-title">Tender Table</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -30,14 +30,14 @@
                   <tbody>
                     <tr>
                       <th>Name</th>
-                      <td>{{$user->name}}</td>
+                      <td>{{$tender->name}}</td>
                       <th>Email</th>
-                      <td>{{$user->email}}</td>
+                      <td>{{$tender->email}}</td>
                     </tr>
                     <tr>
                       <th>Roles</th>
                       <td>
-                      @foreach($user->roles as $role)
+                      @foreach($tender->roles as $role)
                           <h4 class="d-inline"><span class="badge bg-info">{{ $role->name }}</span></h4>                        
                       @endforeach 
                       </td>                    

@@ -38,10 +38,12 @@ class UserController extends Controller
 
      public function index(Request $request)
      {
+        $this->authorize('view-page', 'user-list');
          if ($request->ajax()) {
              // Fetch users with their roles using eager loading
              $data = User::with('roles');
-     
+            //  dd($data);
+
              return Datatables::of($data)               
                  ->addIndexColumn()
                  ->addColumn('status', function ($row) {
@@ -50,12 +52,26 @@ class UserController extends Controller
                          data-offstyle="danger" data-toggle="toggle" data-size="xs" data-on="Active"
                          data-off="InActive" ' . $checked . '>';
                  })
+                 ->editColumn('nims_employe_code', function($row) {
+                    return Str::limit($row->nims_employe_code, 20);
+                })
                  ->editColumn('nims_wp_user_name', function($row) {
                     return Str::limit($row->nims_wp_user_name, 30);
                 })
                 ->editColumn('nims_wp_user_email', function($row) {
                     return Str::limit($row->nims_wp_user_email, 20);
                 })
+                ->editColumn('e_email', function($row) {
+                    return Str::limit($row->e_email, 20);
+                })
+                ->editColumn('nims_employe_mob_no', function($row) {
+                    return Str::limit($row->nims_employe_mob_no, 20);
+                })               
+                // ->addColumn('nims_wp_department_name', function ($row) {
+                //     $department = Department::where(['nims_wp_department_id'=>$row->nims_wp_department_name])->first('nims_wp_department_name');
+                //     $department_name = (!empty($department)) ? Str::limit($department->nims_wp_department_name, 20) : '';                
+                //     return $department_name;           
+                // })
                  ->addColumn('role', function ($row) {
                      $roles = '';
                      foreach ($row->roles as $role) {
@@ -64,14 +80,26 @@ class UserController extends Controller
                      return $roles;
                  })
                  ->addColumn('action', function ($row) {
-                     return '
-                         <a href="javascript:void(0)" data-id="' . $row->nims_wp_user_id . '" class="edit-btn"><i class="fas fa-edit"></i></a>';
+                    //  return '
+                    //      <a href="javascript:void(0)" data-id="' . $row->nims_wp_user_id . '" class="edit-btn"><i class="fas fa-edit"></i></a>';
+                         $editPermission = auth()->user()->can('view-page', 'user-edit');
+
+                        $buttons = '';
+
+                        if ($editPermission) {
+                            $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit-btn"> <i class="fas fa-edit"></i></a>';
+                        }
+
+                        return $buttons;
                  })
                  ->filter(function ($query) use ($request) {
                      if ($request->has('search.value')) {
                          $searchTerm = $request->input('search.value');
                          $query->where('nims_wp_user_name', 'like', "%{$searchTerm}%")
+                             ->orWhere('nims_employe_code', 'like', "%{$searchTerm}%")
                              ->orWhere('nims_wp_user_email', 'like', "%{$searchTerm}%")
+                             ->orWhere('e_email', 'like', "%{$searchTerm}%")
+                             ->orWhere('nims_employe_mob_no', 'like', "%{$searchTerm}%")                                          
                              ->orWhere('nims_wp_user_created_on', 'like', "%{$searchTerm}%")
                              ->orWhereHas('roles', function ($q) use ($searchTerm) {
                                  $q->where('name', 'like', "%{$searchTerm}%");
@@ -107,7 +135,7 @@ class UserController extends Controller
         'emp_code' => [
             'required',
             'string',
-            'min:3',  // Minimum length 3 characters
+            'min:10',  // Minimum length 3 characters
             'max:30', // Maximum length 30 characters
             'unique:nims_wp_user_login,nims_employe_code',
             'regex:/^[A-Za-z0-9]+$/',  // Only letters and numbers allowed (no special characters)

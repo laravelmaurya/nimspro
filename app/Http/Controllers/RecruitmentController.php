@@ -35,7 +35,7 @@ class RecruitmentController extends Controller
 
     public function index(Request $request)
       {
- 
+        $this->authorize('view-page', 'recruitment-list');
     // dd($request->all());
     if ($request->ajax()) {
         $query = Recruitment::where('nims_recruitment_archive', 0)
@@ -74,8 +74,15 @@ class RecruitmentController extends Controller
             })
             ->addIndexColumn()
             ->addColumn('action', function($row){               
-                $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
-                return $btn;
+                $editPermission = auth()->user()->can('view-page', 'recruitment-edit');
+
+                $buttons = '';
+                
+                if ($editPermission) {
+                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
+                }
+                
+                return $buttons;
             })
             ->editColumn('submit_date', function($row){
                 return $row->submit_date ? $this->convertDateTimeFormateYmd($row->submit_date) : '';                   
@@ -219,7 +226,7 @@ class RecruitmentController extends Controller
         // Upload main document
         $file = $request->file('main_doc');
         if ($file) {
-            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+            $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file);
             Log::info('Main document uploaded: ' . $main_doc);
         }
 
@@ -228,7 +235,7 @@ class RecruitmentController extends Controller
             $fileKey = 'attachment_' . $i;
             if ($request->hasFile($fileKey)) {
                 $file = $request->file($fileKey);
-                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($request->number, $path, $file);
+                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($i,$request->number, $path, $file);
                 Log::info('Attachment ' . $i . ' uploaded: ' . $uploadedFiles[$fileKey]);
             }
         }
@@ -466,7 +473,7 @@ class RecruitmentController extends Controller
         $main_doc = $recruitment->nims_recruitment_doc; // default to existing main document
         $file = $request->file('main_doc');
         if ($file) {
-            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+            $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file);
             Log::info('Main document uploaded: ' . $main_doc);
         }
 
@@ -476,7 +483,7 @@ class RecruitmentController extends Controller
             if ($request->hasFile($fileKey)) {
                 $file = $request->file($fileKey);
                 // dd($file);
-                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($request->number, $path, $file);
+                $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($i,$request->number, $path, $file);
                 Log::info('Attachment '.date("Y-m-d :h:si") . $i . ' uploaded: ' . $uploadedFiles[$fileKey]);
             }
         }
@@ -790,7 +797,7 @@ class RecruitmentController extends Controller
         // Upload main document
         $file = $request->file('main_doc');
         if ($file) {
-            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+            $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file);
             Log::info('Main document uploaded: ' . $main_doc);
         }
 
@@ -882,6 +889,7 @@ class RecruitmentController extends Controller
 
     public function listArchive(Request $request)
     {
+        $this->authorize('view-page', 'recruitment-list-archive');
             if ($request->ajax()) {
                 $query = Recruitment::where('nims_recruitment_archive', 1)
                             ->orWhere('nims_recruitment_end_date', '<',  Carbon::now())
@@ -919,8 +927,15 @@ class RecruitmentController extends Controller
                     })
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
-                        $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
-                        return $btn;
+                            $editPermission = auth()->user()->can('view-page', 'recruitment-edit-archive');
+
+                            $buttons = '';
+
+                            if ($editPermission) {
+                                $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
+                            }
+
+                            return $buttons;
                     })
                     ->editColumn('submit_date', function($row){
                         return $row->submit_date ? $this->convertDateTimeFormateYmd($row->submit_date) : '';                   

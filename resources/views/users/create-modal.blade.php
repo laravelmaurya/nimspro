@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add User</h4>
+                {{-- <h4 class="modal-title">Add User</h4> --}}
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,6 +17,9 @@
                             <div class="col-md-12">
                                 <!-- general form elements -->
                                 <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Add User</h3>
+                                    </div>
                                     <!-- form start -->
                                     <form id="create_form" class="create_form" role="form" method="POST" action="{{ route('users.store') }}" enctype="multipart/form-data">
                                         @csrf

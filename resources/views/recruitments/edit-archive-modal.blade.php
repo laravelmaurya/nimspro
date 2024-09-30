@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Recruitment Archive</h4>
+                {{-- <h4 class="modal-title">Edit Recruitment Archive</h4> --}}
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -23,13 +23,13 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="edit_title">Title <span class="text-danger">*</span></label>
+                                                        <label for="edit_title">Recruitment Title <span class="text-danger">*</span></label>
                                                         <input name="title" id="edit_title" type="text" class="form-control" placeholder="Enter Title">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="edit_number">Number <span class="text-danger">*</span></label>
+                                                        <label for="edit_number">Recruitment Number <span class="text-danger">*</span></label>
                                                         <input name="number" id="edit_number" type="text" class="form-control" placeholder="Enter Number">
                                                     </div>
                                                 </div>
@@ -96,9 +96,9 @@
                     </div>
                 </section>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="editFormSubmit" type="button" class="btn btn-primary">Submit</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm  btn-danger" data-dismiss="modal">Close</button>
+                <button id="editFormSubmit" type="button" class="btn-sm  btn  btn-primary">Submit</button>
             </div>
         </div>
     </div>

@@ -1,68 +1,35 @@
-
-$(document).ready(function () {
-    $('.getNumber').click(function () {
-        $('.is-invalid').removeClass('is-invalid');
-        $('.invalid-feedback').remove();
-        CKEDITOR.instances.corrigendum_notes.setData('');
-        // $('#corrigendum_notes').val('');
-        var url  = $('#get_number').val();
-        url=url.trim();
-        // alert(url);
-        // Fetch examination numbers via AJAX
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(data) {
-                var $NumberSelect = $('#corrigendum_number');
-                $NumberSelect.empty();
-                
-                if (data.length > 0) {
-                    $NumberSelect.append('<option value="" readonly>-- Select Number --</option>');
-                    $.each(data, function(index, examination) {                        
-                        $NumberSelect.append('<option value="' + examination.nims_examination_number + '">' + examination.nims_examination_number + '</option>');
-                    });
-                } else {
-                    $NumberSelect.append('<option value="">-- No Record --</option>');
-                }
-            },
-            error: function() {
-                alert('Failed to fetch examination numbers.');
-            }
-        });
-    });
-});
-
 $(document).ready(function () {
     // Enforce maxlength dynamically
     var titleMaxlength = 50;  
     var titleMinlength = 3;  
     var numberMaxlength = 10; 
     var numberMinlength = 10; 
-    $('#corrigendum_title').on('keypress', function(e) {
+    $('#title').on('keypress', function(e) {
          if (!$(this).attr('maxlength')) {
              $(this).attr('maxlength',titleMaxlength);
          }
+         var allowLetters = true;
+         var allowNumbers = false;
+         var allowSpaces = true;
+         preventSpecialChars(e,allowLetters, allowNumbers, allowSpaces);
      });
 
-     $('#corrigendum_number').on('keypress', function(e) {
-         if (!$(this).attr('maxlength')) {
-             $(this).attr('maxlength',numberMaxlength);
-         }
-     });
+    
 
-     $('body').on('click', '.formSubmita', function () {
+     $('body').on('click', '#formSubmit', function () {
 
 
-    var url  = $('.create_form_corrigendum').attr("action");
-    url=url.trim();
-//    alert(url);
+    var url  = $('.create_form').attr("action");
+     // var url = "{{ route('events.store') }}";
+     url=url.trim();
+     // alert(url);
      // Validate the form
-     if ($('.create_form_corrigendum').valid()) {
+     if ($('.create_form').valid()) {
 
-        syncEditCorrigendum();
-         // var formData = new FormData($('#create_form_corrigendum')[0])+description;
-         var  form = $('.create_form_corrigendum')[0];
-         var notes = CKEDITOR.instances.corrigendum_notes.getData();
+        syncUsersEvent();
+         // var formData = new FormData($('#create_form')[0])+description;
+         var  form = $('.create_form')[0];
+         var notes = CKEDITOR.instances.notes.getData();
          var formData = new FormData(form);
          formData.append('description', notes);
          console.log(formData);
@@ -82,13 +49,13 @@ $(document).ready(function () {
                      icon: "success"
                      });
                      
-                     $('.create_form_corrigendum')[0].reset();
+                     $('.create_form')[0].reset();
                      CKEDITOR.instances.notes.setData('');
 
                      $('.is-invalid').removeClass('is-invalid');
                      $('.invalid-feedback').remove();
                     
-                     $('#create-examinations-associate-modal').modal('hide');
+                     $('#create-modal-xl').modal('hide');
                      // table.DataTable().ajax.reload();
                      table.draw();
                      // Optionally, you can refresh the table or redirect the user
@@ -119,16 +86,25 @@ $(document).ready(function () {
      }
  });
 
- $('.create_form_corrigendum').validate({
+ $('.create_form').validate({
    rules: {
          title: {
              required: true,
              minlength: titleMinlength,
              maxlength: titleMaxlength
          },
-         number: {
-             required: true,
-         },
+         notify: {
+            required: true
+        },
+        dep_name: {
+            required: true  // Required validation for single-select dropdown
+        },
+        main_doc: {
+            required: function () {
+                return !$('#main_doc_download a').length;
+            },
+            extension: "jpg,jpeg,png,pdf"
+        },
          start_date: {
              required: true                
          },
@@ -142,7 +118,12 @@ $(document).ready(function () {
              minlength: "Title must be at least" +titleMinlength+ "characters long",
              maxlength: "Title cannot be more than " +titleMaxlength+ " characters long"
          },
-
+         notify: {
+            required: "Please select a notification option." // Custom error message for radio button
+        },
+        dep_name: {
+            required: "Please select a department"
+        },
          main_doc: {
              required: "Please attach a file",
              extension: "Only PDF, JPG, and PNG files are allowed"

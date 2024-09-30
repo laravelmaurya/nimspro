@@ -8,7 +8,7 @@ $(document).ready(function () {
         var url  = $('#get_number').val();
         url=url.trim();
         // alert(url);
-        // Fetch examination numbers via AJAX
+        // Fetch event numbers via AJAX
         $.ajax({
             url: url,
             type: 'GET',
@@ -18,15 +18,15 @@ $(document).ready(function () {
                 
                 if (data.length > 0) {
                     $NumberSelect.append('<option value="" readonly>-- Select Number --</option>');
-                    $.each(data, function(index, examination) {                        
-                        $NumberSelect.append('<option value="' + examination.nims_examination_number + '">' + examination.nims_examination_number + '</option>');
+                    $.each(data, function(index, event) {                        
+                        $NumberSelect.append('<option value="' + event.nims_wp_event_number + '">' + event.nims_wp_event_number + '</option>');
                     });
                 } else {
                     $NumberSelect.append('<option value="">-- No Record --</option>');
                 }
             },
             error: function() {
-                alert('Failed to fetch examination numbers.');
+                alert('Failed to fetch event numbers.');
             }
         });
     });
@@ -88,7 +88,7 @@ $(document).ready(function () {
                      $('.is-invalid').removeClass('is-invalid');
                      $('.invalid-feedback').remove();
                     
-                     $('#create-examinations-associate-modal').modal('hide');
+                     $('#create-Corrigendum-modal').modal('hide');
                      // table.DataTable().ajax.reload();
                      table.draw();
                      // Optionally, you can refresh the table or redirect the user

@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add New Examination  </h4>
+                {{-- <h4 class="modal-title">Add New Examination  </h4> --}}
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,7 +17,7 @@
                                     <!-- general form elements -->
                                     <div class="card card-primary">
                                         <div class="card-header">
-                                            <h3 class="card-title">Add New Examination  </h3>
+                                            <h3 class="card-title">Add Examination  </h3>
                                         </div>
                                         <!-- /.card-header -->
                                         <!-- form start -->
@@ -28,7 +28,7 @@
                                                     
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label>Select Number<span class="text-danger">*</span> </label>
+                                                            <label>Select Examination Number<span class="text-danger">*</span> </label>
                                                             <select name="number" id="corrigendum_number" class="form-control @error('number') is-invalid @enderror"  data-placeholder="Select a number" style="width: 100%;"></select>
                                                             @error('number')
                                                             <strong class="text-danger">{{ $message }}</strong>
@@ -44,7 +44,7 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="exampleInputEmail1">Title <span class="text-danger">*</span></label>
+                                                            <label for="exampleInputEmail1">Examination Title <span class="text-danger">*</span></label>
                                                             <input value="{{old('title')}}" name="title" id="corrigendum_title" type="text" class="form-control @error('title') is-invalid @enderror" placeholder="Enter Title">
                                                             @error('title')
                                                             <strong class="text-danger">{{ $message }}</strong>
@@ -53,7 +53,7 @@
                                                     </div>                                                    
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail1">Description</label>                                                    
+                                                    <label for="exampleInputEmail1">Examination Description</label>                                                    
                                                     <textarea rows="10" name="description" id="corrigendum_notes" class="ckeditor form-control @error('description') is-invalid @enderror"></textarea>
                                                     @error('description')
                                                     <strong class="text-danger">{{ $message }}</strong>
@@ -118,8 +118,8 @@
                    </section>
                 <!-- /.content -->
             </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
                     <button id="formSubmit" type="button" class="btn-sm btn btn-primary formSubmita"><i class="fas fa-paper-plane"></i> Submit</button>
                 </div>
             </div>

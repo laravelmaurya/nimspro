@@ -25,6 +25,7 @@ class PermissionController extends Controller
      
      public function index(Request $request)
      {
+        $this->authorize('view-page', 'permission-list');
          if ($request->ajax()) {
              // Query all permissions from the database
              $permissions = Permission::query();
@@ -46,8 +47,17 @@ class PermissionController extends Controller
      
                  // Add action buttons for edit and delete
                  ->addColumn('action', function($row) {
-                     return '
-                     <a href="javascript:void(0)" data-id="' . $row->id . '" class="edit-btn"><i class="fas fa-edit"></i></a>';
+                    // return '
+                    // <a href="javascript:void(0)" data-id="' . $row->id . '" class="edit-btn"><i class="fas fa-edit"></i></a>';
+                    $editPermission = auth()->user()->can('view-page', 'permission-edit');
+
+                    $buttons = '';
+
+                    if ($editPermission) {
+                        $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit-btn"> <i class="fas fa-edit"></i></a>';
+                    }
+
+                    return $buttons;
                     //  return '
                     //  <a href="javascript:void(0)" data-id="' . $row->id . '" class="edit-btn"><i class="fas fa-edit"></i></a>
                     //  <a href="javascript:void(0)" data-id="' . $row->id . '" class="delete-btn text-danger"><i class="fas fa-trash-alt"></i></a>';

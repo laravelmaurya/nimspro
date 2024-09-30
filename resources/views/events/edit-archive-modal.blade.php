@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                {{-- <h4 class="modal-title">Edit Examination</h4> --}}
+                {{-- <h4 class="modal-title">Edit Event Archive</h4> --}}
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -14,28 +14,28 @@
                             <div class="col-md-12">
                                 <div class="card card-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Edit Examination</h3>
+                                        <h3 class="card-title">Edit Event Archive</h3>
                                     </div>
-                                    <form id="edit_form" class="edit_form" role="form" method="POST" enctype="multipart/form-data">
+                                    <form id="edit_form" class="edit_form" role="form" method="POST"  enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="edit_title">Examination Title <span class="text-danger">*</span></label>
+                                                        <label for="edit_title">Event Title <span class="text-danger">*</span></label>
                                                         <input name="title" id="edit_title" type="text" class="form-control" placeholder="Enter Title">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="edit_number">Examination Number <span class="text-danger">*</span></label>
+                                                        <label for="edit_number">Event Number <span class="text-danger">*</span></label>
                                                         <input name="number" id="edit_number" type="text" class="form-control" placeholder="Enter Number">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="edit_notes">Examination Description</label>
+                                                <label for="edit_notes">Description</label>
                                                 <textarea rows="10" name="description" id="edit_notes" class="ckeditor form-control @error('description') is-invalid @enderror"></textarea>
                                             </div>
                                             <div class="row">
@@ -68,23 +68,16 @@
                                                         <div class="input-group">
                                                             <div class="custom-file">
                                                                 <input name="main_doc" id="edit_main_doc" type="file" class="custom-file-input @error('main_doc') is-invalid @enderror">
-                                                                <label class="custom-file-label" for="main_doc">Choose file</label>                                                                
+                                                                <label class="custom-file-label" for="main_doc">Choose file</label>
                                                             </div>
                                                             <span id="main_doc_view_image" class="d-block"></span>
                                                         </div>
                                                         <span id="main_doc_download" class="d-block"></span>
                                                     </div>
                                                 </div>
-                                            </div>                                      
-                                            <div id="additional_attachments"></div>
-
-                                            <div class="form-group">
-                                                <div class="form-check">
-                                                    <input name="archive" id="archive" class="form-check-input" type="checkbox">
-                                                    <label class="form-check-label">Click To ARCHIVE </label>
-                                                  </div>
                                             </div>
-                                            
+                                            <div id="status_active_fields"></div>
+                                            <div id="additional_attachments"></div>
                                             {{-- <button type="button" class="btn btn-secondary" id="add_attachment">Add Attachment</button> --}}
                                             <div class="edit-footer card-footer p-0 bg-white">
                                                 <input name="h" id="id" type="hidden">
@@ -93,7 +86,7 @@
                                                 <input name="h3" id="edit_notes1" class="" type="hidden">
                                                 <input name="h4" id="edit_datepicker_s" type="hidden">
                                                 <input name="h5" id="edit_datepicker_e" type="hidden">
-                                                <input  value="<?php echo route("examination.remove-attachment"); ?>" id="remove-attachment" type="hidden">
+                                                <input  value="<?php echo route("event.remove-attachment"); ?>" id="remove-attachment" type="hidden">
                                             </div>
                                         </div>
                                     </form>
@@ -105,7 +98,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
-                <button id="editFormSubmit" type="button" class="btn-sm btn btn-primary">Submit</button>
+                <button id="editFormSubmit" type="button" class="btn btn-sm btn-primary">Submit</button>
             </div>
         </div>
     </div>

@@ -63,8 +63,16 @@
                  <p>All Tender</p>
                </a>
              </li>
-             @endcan                                                
-             @can('permissions-menu')
+             @endcan
+             @can('event-list')
+             <li class="nav-item">
+               <a href="{{route('events.index')}}" class="nav-link">
+                 <i class="far fa-circle nav-icon" style="color: #007bff;"></i>
+                 <p>All Event</p>
+               </a>
+             </li>
+             @endcan                                                 
+             @can('notifications-menu')
                <li class="nav-item">
                  {{-- LEVEL 1 --}}
                  <a href="#" class="nav-link">
@@ -74,107 +82,37 @@
                      <i class="right fas fa-angle-left"></i>
                  </p>
                  </a>
-                 {{-- END LEVEL 1 --}}
-                 {{-- LEVEL 2 --}}
-                 <ul class="nav nav-treeview">                            
-                     <li class="nav-item">
-                         <a href="#" class="nav-link">
-                         <i class="far fa-circle nav-icon"></i>
-                         <p>
-                           Admissions
-                             <i class="right fas fa-angle-left"></i>
-                         </p>
-                         </a>
-                         {{-- LEVEL 3 --}}
-                         <ul class="nav nav-treeview">
-                           @can('tender-list')
-                           <li class="nav-item">
-                             <a href="{{route('admissions.index')}}" class="nav-link">
-                               <i class="far fa-circle nav-icon"></i>
-                               <p>All Admissions</p>
-                             </a>
-                           </li>
-                           @endcan  
-                           
-                           @can('tender-list')
-                           <li class="nav-item">
-                             <a href="{{route('admissions.list-archive')}}" class="nav-link">
-                               <i class="far fa-circle nav-icon"></i>
-                               <p>All Archive</p>
-                             </a>
-                           </li>
-                           @endcan                                              
-                         </ul>
-                         {{-- END LEVEL 3 --}}
-                     </li>              
+                 <ul class="nav nav-treeview">
+                      @can('admission-list')
+                      <li class="nav-item">
+                        <a href="{{route('admissions.index')}}" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>All Admissions</p>
+                        </a>
+                      </li>
+                      @endcan                                                                                 
+                 </ul>
+                 <ul class="nav nav-treeview"> 
+                  @can('examination-list')
+                  <li class="nav-item">
+                    <a href="{{route('examinations.index')}}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>All Examination(Exit)</p>
+                    </a>
+                  </li>
+                  @endcan                                                                            
                  </ul>
                  {{-- END LEVEL 2 --}}
                  {{-- LEVEL 2 --}}
-                 <ul class="nav nav-treeview">                            
-                     <li class="nav-item">
-                         <a href="#" class="nav-link">
-                         <i class="far fa-circle nav-icon"></i>
-                         <p>
-                           Examination(Exit)
-                             <i class="right fas fa-angle-left"></i>
-                         </p>
-                         </a>
-                         {{-- LEVEL 3 --}}
-                         <ul class="nav nav-treeview">
-                           @can('tender-list')
-                           <li class="nav-item">
-                             <a href="{{route('examinations.index')}}" class="nav-link">
-                               <i class="far fa-circle nav-icon"></i>
-                               <p>All Examination(Exit)</p>
-                             </a>
-                           </li>
-                           @endcan  
-                          
-                           @can('tender-list')
-                           <li class="nav-item">
-                             <a href="{{route('examinations.list-archive')}}" class="nav-link">
-                               <i class="far fa-circle nav-icon"></i>
-                               <p>All Archive</p>
-                             </a>
-                           </li>
-                           @endcan                                              
-                         </ul>
-                         {{-- END LEVEL 3 --}}
-                     </li>              
-                 </ul>
-                 {{-- END LEVEL 2 --}}
-                 {{-- LEVEL 2 --}}
-                 <ul class="nav nav-treeview">                            
-                     <li class="nav-item">
-                         <a href="#" class="nav-link">
-                         <i class="far fa-circle nav-icon"></i>
-                         <p>
-                           Recruitment
-                             <i class="right fas fa-angle-left"></i>
-                         </p>
-                         </a>
-                         {{-- LEVEL 3 --}}
-                         <ul class="nav nav-treeview">
-                           @can('tender-list')
-                           <li class="nav-item">
-                             <a href="{{route('recruitments.index')}}" class="nav-link">
-                               <i class="far fa-circle nav-icon"></i>
-                               <p>All Recruitment</p>
-                             </a>
-                           </li>
-                           @endcan  
-                          
-                           @can('tender-list')
-                           <li class="nav-item">
-                             <a href="{{route('recruitments.list-archive')}}" class="nav-link">
-                               <i class="far fa-circle nav-icon"></i>
-                               <p>All Archive</p>
-                             </a>
-                           </li>
-                           @endcan                                              
-                         </ul>
-                         {{-- END LEVEL 3 --}}
-                     </li>              
+                 <ul class="nav nav-treeview">
+                  @can('recruitment-list')
+                    <li class="nav-item">
+                      <a href="{{route('recruitments.index')}}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>All Recruitment</p>
+                      </a>
+                    </li>
+                  @endcan                                                                 
                  </ul>
                  {{-- END LEVEL 2 --}}
              </li>
@@ -201,7 +139,7 @@
                    </li>
                    @endcan   
    
-                   @can('permission-create')
+                   @can('permission-add')
                    <li class="nav-item">
                      <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Members of Executive Board" data-cardtitle="Members of Executive Board" data-modalstype="Show" data-te="aboutus" data-id="ex_board">
                        <i class="far fa-circle nav-icon"></i>
@@ -210,7 +148,7 @@
                    </li> 
                    @endcan   
    
-                   @can('permission-create')
+                   @can('permission-add')
                    <li class="nav-item">
                      <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Members of Finance Committee" data-cardtitle="Members of Finance Committee" data-modalstype="Show" data-te="aboutus" data-id="finance">
                        <i class="far fa-circle nav-icon"></i>
@@ -219,7 +157,7 @@
                    </li> 
                    @endcan
    
-                   @can('permission-create')
+                   @can('permission-add')
                    <li class="nav-item">
                      <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Members of Academic Council" data-cardtitle="Members of Academic Council" data-modalstype="Show" data-te="aboutus" data-id="acadamiccouncil">
                        <i class="far fa-circle nav-icon"></i>
@@ -240,7 +178,7 @@
                      </a>
                      {{-- LEVEL 3 --}}
                      <ul class="nav nav-treeview">
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="About Director" data-cardtitle="About Director" data-modalstype="Show" data-te="director" data-id="about">
                            <i class="far fa-circle nav-icon"></i>
@@ -248,7 +186,7 @@
                          </a>
                        </li> 
                        @endcan 
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Overview" data-cardtitle="Overview" data-modalstype="Show" data-te="director" data-id="office">
                            <i class="far fa-circle nav-icon"></i>
@@ -256,7 +194,7 @@
                          </a>
                        </li> 
                        @endcan 
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Ex-Directors" data-cardtitle="Ex-Directors" data-modalstype="Show" data-te="director" data-id="exdirector">
                            <i class="far fa-circle nav-icon"></i>
@@ -279,7 +217,7 @@
                      </a>
                      {{-- LEVEL 3 --}}
                      <ul class="nav nav-treeview">
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="About Dean" data-cardtitle="About Dean" data-modalstype="Show" data-te="dean" data-id="about">
                            <i class="far fa-circle nav-icon"></i>
@@ -287,7 +225,7 @@
                          </a>
                        </li> 
                        @endcan 
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Overview" data-cardtitle="Overview" data-modalstype="Show" data-te="dean" data-id="office">
                            <i class="far fa-circle nav-icon"></i>
@@ -295,7 +233,7 @@
                          </a>
                        </li> 
                        @endcan 
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Ex-Dean" data-cardtitle="Ex-Dean" data-modalstype="Show" data-te="dean" data-id="exdean">
                            <i class="far fa-circle nav-icon"></i>
@@ -315,7 +253,7 @@
                      </a>
                      {{-- LEVEL 3 --}}
                      <ul class="nav nav-treeview">
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="About Executive Registrar" data-cardtitle="About Executive Registrar" data-modalstype="Show" data-te="executive_registrar" data-id="about">
                            <i class="far fa-circle nav-icon"></i>
@@ -323,7 +261,7 @@
                          </a>
                        </li> 
                        @endcan 
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Overview" data-cardtitle="Overview" data-modalstype="Show" data-te="executive_registrar" data-id="office">
                            <i class="far fa-circle nav-icon"></i>
@@ -331,7 +269,7 @@
                          </a>
                        </li> 
                        @endcan 
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Ex-Executive Registrar" data-cardtitle="Ex-Executive Registrar" data-modalstype="Show" data-te="executive_registrar" data-id="ex_executive_registrar">
                            <i class="far fa-circle nav-icon"></i>
@@ -355,7 +293,7 @@
                      </a>
                      {{-- LEVEL 3 --}}
                      <ul class="nav nav-treeview">
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="About Medical Superintendent" data-cardtitle="About Medical Superintendent" data-modalstype="Show" data-te="medical_superintendent" data-id="about">
                            <i class="far fa-circle nav-icon"></i>
@@ -363,7 +301,7 @@
                          </a>
                        </li> 
                        @endcan 
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Overview" data-cardtitle="Overview" data-modalstype="Show" data-te="medical_superintendent" data-id="office">
                            <i class="far fa-circle nav-icon"></i>
@@ -371,7 +309,7 @@
                          </a>
                        </li> 
                        @endcan 
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                          <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Ex-Medical Superintendent" data-cardtitle="Ex-Medical Superintendent" data-modalstype="Show" data-te="medical_superintendent" data-id="exms">
                            <i class="far fa-circle nav-icon"></i>
@@ -392,7 +330,7 @@
                      </a>
                      {{-- LEVEL 3 --}}
                      <ul class="nav nav-treeview">
-                     @can('permission-create')
+                     @can('permission-add')
                      <li class="nav-item">
                          <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document - NIMS ACT 1989" data-cardtitle="Document  - NIMS ACT 1989" data-modalstype="Show" data-te="research_documents" data-id="act">
                          <i class="fas fa-pencil-alt nav-icon"></i>
@@ -512,7 +450,7 @@
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Academic Section I" data-cardtitle="Academic Section I" data-modalstype="Show" data-te="academicsection" data-id="academicsection1">
                                  <i class="far fa-circle nav-icon"></i>
@@ -520,7 +458,7 @@
                                  </a>
                              </li> 
                              @endcan 
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Academic Section II" data-cardtitle="Academic Section II" data-modalstype="Show" data-te="academicsection" data-id="academicsection2">
                                  <i class="far fa-circle nav-icon"></i>
@@ -556,7 +494,7 @@
                          </a>
                          {{-- LEVEL 3 --}}
                          <ul class="nav nav-treeview">
-                         @can('permission-create')
+                         @can('permission-add')
                          <li class="nav-item">
                              <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Broad Speciality MD / MS Courses (Post MBBS)" data-cardtitle="Broad Speciality MD / MS Courses (Post MBBS)" data-modalstype="Show" data-te="academic" data-id="medical_broadspeciality">
                              <i class="far fa-circle nav-icon"></i>
@@ -564,7 +502,7 @@
                              </a>
                          </li> 
                          @endcan 
-                         @can('permission-create')
+                         @can('permission-add')
                          <li class="nav-item">
                              <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Broad Speciality DNB Courses" data-cardtitle="Broad Speciality DNB Courses" data-modalstype="Show" data-te="emergency" data-id="broadspeciality_dnb">
                              <i class="far fa-circle nav-icon"></i>
@@ -572,7 +510,7 @@
                              </a>
                          </li> 
                          @endcan                                                                     
-                         @can('permission-create')
+                         @can('permission-add')
                          <li class="nav-item">
                              <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Super Speciality D.M. / M.Ch Courses" data-cardtitle="Super Speciality D.M. / M.Ch Courses" data-modalstype="Show" data-te="academic" data-id="medical_superspeciality">
                              <i class="far fa-circle nav-icon"></i>
@@ -580,7 +518,7 @@
                              </a>
                          </li> 
                          @endcan                                                                     
-                         @can('permission-create')
+                         @can('permission-add')
                          <li class="nav-item">
                              <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Super Speciality DNB Courses" data-cardtitle="Super Speciality DNB Courses" data-modalstype="Show" data-te="emergency" data-id="superspeciality_dnb">
                              <i class="far fa-circle nav-icon"></i>
@@ -588,7 +526,7 @@
                              </a>
                          </li> 
                          @endcan                                                                     
-                         @can('permission-create')
+                         @can('permission-add')
                          <li class="nav-item">
                              <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Post Graduate Diploma in Clinical Research (Part Time)" data-cardtitle="Post Graduate Diploma in Clinical Research (Part Time)" data-modalstype="Show" data-te="academic" data-id="medical_pgdiploma">
                              <i class="far fa-circle nav-icon"></i>
@@ -613,7 +551,7 @@
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Bachelor of Science (Nursing)" data-cardtitle="Bachelor of Science (Nursing)" data-modalstype="Show" data-te="academic" data-id="nursing_bsc">
                                  <i class="far fa-circle nav-icon"></i>
@@ -621,7 +559,7 @@
                                  </a>
                              </li> 
                              @endcan 
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Master of Science(Nursing)" data-cardtitle="Master of Science(Nursing)" data-modalstype="Show" data-te="academic" data-id="nursing_msc">
                                  <i class="far fa-circle nav-icon"></i>
@@ -646,7 +584,7 @@
                        </a>
                        {{-- LEVEL 3 --}}
                        <ul class="nav nav-treeview">
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                            <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Bachelor of Physiotherapy (BPT)" data-cardtitle="Bachelor of Physiotherapy (BPT)" data-modalstype="Show" data-te="academic" data-id="physiotherapy_bpt">
                            <i class="far fa-circle nav-icon"></i>
@@ -654,7 +592,7 @@
                            </a>
                        </li> 
                        @endcan 
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                            <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Master of Physiotherapy (MPT)" data-cardtitle="Master of Physiotherapy (MPT)" data-modalstype="Show" data-te="academic" data-id="physiotherapy_mpt">
                            <i class="far fa-circle nav-icon"></i>
@@ -679,7 +617,7 @@
                        </a>
                        {{-- LEVEL 3 --}}
                        <ul class="nav nav-treeview">
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                            <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Bachelor of Physiotherapy (BPT)" data-cardtitle="Bachelor of Physiotherapy (BPT)" data-modalstype="Show" data-te="academic" data-id="hospital_mhm">
                            <i class="far fa-circle nav-icon"></i>
@@ -687,7 +625,7 @@
                            </a>
                        </li> 
                        @endcan                                                                                                                                                                                    
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                            <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Bachelor of Physiotherapy (BPT)" data-cardtitle="Bachelor of Physiotherapy (BPT)" data-modalstype="Show" data-te="academic" data-id="hospital_mhm">
                            <i class="far fa-circle nav-icon"></i>
@@ -712,7 +650,7 @@
                        </a>
                        {{-- LEVEL 3 --}}
                        <ul class="nav nav-treeview">                                                                                                                                                                                                      
-                       @can('permission-create')
+                       @can('permission-add')
                        <li class="nav-item">
                            <a href="javascript:void(0);" class="editBtn2 nav-link" data-title="Post Graduate Diploma in Para Medical Courses" data-cardtitle="Post Graduate Diploma in Para Medical Courses" data-modalstype="Show" data-te="academic" data-id="paramedical_pg">
                            <i class="far fa-circle nav-icon"></i>
@@ -1010,7 +948,7 @@
                                </a>
                                {{-- LEVEL 3 --}}
                                <ul class="nav nav-treeview">
-                               @can('permission-create')
+                               @can('permission-add')
                                <li class="nav-item">
                                    <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="guideline">
                                    <i class="fas fa-pencil-alt nav-icon"></i>
@@ -1032,7 +970,7 @@
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">                         
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document  - General Information" data-cardtitle="Document  - General Information" data-modalstype="Show" data-te="research_documents" data-id="general_information">
                                  <i class="fas fa-pencil-alt nav-icon"></i>
@@ -1054,7 +992,7 @@
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">                         
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document  - Working Manual" data-cardtitle="Document  - Working Manual" data-modalstype="Show" data-te="research_documents" data-id="working_manual">
                                  <i class="fas fa-pencil-alt nav-icon"></i>
@@ -1068,14 +1006,14 @@
                            <li class="nav-item">
                              <a href="#" class="nav-link">
                              <i class="far fa-circle nav-icon"></i>
-                             <p>
-                               Clinical Research Council (CRC )   
+                             <p class="text-center text-truncate">
+                               Clinical Research Council &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (CRC )   
                                  <i class="right fas fa-angle-left"></i>
                              </p>
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">                         
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document  - Clinical Research Council (CRC )" data-cardtitle="Document  - Clinical Research Council (CRC )" data-modalstype="Show" data-te="research_documents" data-id="crc">
                                  <i class="fas fa-pencil-alt nav-icon"></i>
@@ -1089,14 +1027,14 @@
                            <li class="nav-item">
                              <a href="#" class="nav-link">
                              <i class="far fa-circle nav-icon"></i>
-                             <p>
-                               Clinical Research Council (CRC) - Form C     
+                             <p class="text-center text-truncate">
+                               Clinical Research Council &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (CRC) - Form C     
                                  <i class="right fas fa-angle-left"></i>
                              </p>
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">                         
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document  - Clinical Research Council (CRC) - Form C" data-cardtitle="Document  - Clinical Research Council (CRC) - Form C" data-modalstype="Show" data-te="research_documents" data-id="crc_form">
                                  <i class="fas fa-pencil-alt nav-icon"></i>
@@ -1107,27 +1045,27 @@
                              </ul>
                              {{-- END LEVEL 3 --}}
                            </li>
-                            @can('permission-create')
+                            @can('permission-add')
                             <li class="nav-item">
                                <a href="javascript:void(0);"  class="editBtn2 nav-link" data-title="Members of NIMS Institutional Ethics Committee (IEC-NIMS)" data-cardtitle="Members of NIMS Institutional Ethics Committee (IEC-NIMS)" data-modalstype="Show" data-te="research" data-id="IEC" >
                                <i class="far fa-circle nav-icon"></i>
-                               <p>Members of NIMS Institutional Ethics Committee (IEC-NIMS)</p>
+                               <p>Members of NIMS <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Institutional Ethics <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Committee (IEC-NIMS)</p>
                                </a>
                             </li> 
                            @endcan
-                           @can('permission-create')
+                           @can('permission-add')
                             <li class="nav-item">
                                <a href="javascript:void(0);"  class="editBtn2 nav-link" data-title="Data & Safety Monitoring Board (DSMB)" data-cardtitle="Data & Safety Monitoring Board (DSMB)" data-modalstype="Show" data-te="research" data-id="DSMB" >
                                <i class="far fa-circle nav-icon"></i>
-                               <p>Data & Safety Monitoring Board (DSMB)</p>
+                               <p>Data & Safety Monitoring &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Board (DSMB)</p>
                                </a>
                             </li> 
                            @endcan
-                           @can('permission-create')
+                           @can('permission-add')
                             <li class="nav-item">
                                <a href="javascript:void(0);"  class="editBtn2 nav-link" data-title="Ethics Sub Committee for Graduate Students (ESGS)" data-cardtitle="Ethics Sub Committee for Graduate Students (ESGS)" data-modalstype="Show" data-te="research" data-id="ESGS" >
                                <i class="far fa-circle nav-icon"></i>
-                               <p>Ethics Sub Committee for Graduate Students (ESGS)</p>
+                               <p>Ethics Sub Committee for &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Graduate Students (ESGS)</p>
                                </a>
                             </li> 
                            @endcan
@@ -1136,13 +1074,13 @@
                              <a href="#" class="nav-link">
                              <i class="far fa-circle nav-icon"></i>
                              <p>
-                               Guidelines for Course Curriculam
+                               Guidelines for <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Course Curriculam
                                  <i class="right fas fa-angle-left"></i>
                              </p>
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="guideline_course">
                                  <i class="fas fa-pencil-alt nav-icon"></i>
@@ -1157,13 +1095,13 @@
                              <a href="#" class="nav-link">
                              <i class="far fa-circle nav-icon"></i>
                              <p>
-                               Ph.D Admission Programme Guidelines
+                               Ph.D Admission <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Programme Guidelines
                                  <i class="right fas fa-angle-left"></i>
                              </p>
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="phd_admission_guideline">
                                  <i class="fas fa-pencil-alt nav-icon"></i>
@@ -1178,13 +1116,13 @@
                              <a href="#" class="nav-link">
                              <i class="far fa-circle nav-icon"></i>
                              <p>
-                               Workshop on writing for Resea- rchers and Publishing Skills 
+                               Workshop on writing for <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resea- rchers and <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Publishing Skills 
                                  <i class="right fas fa-angle-left"></i>
                              </p>
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="workshop">
                                  <i class="fas fa-pencil-alt nav-icon"></i>
@@ -1199,13 +1137,13 @@
                              <a href="#" class="nav-link">
                              <i class="far fa-circle nav-icon"></i>
                              <p>
-                               Council for Clinical Research & Education - Application Form 
+                               Council for Clinical <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Research & Education - <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Application Form 
                                  <i class="right fas fa-angle-left"></i>
                              </p>
                              </a>
                              {{-- LEVEL 3 --}}
                              <ul class="nav nav-treeview">
-                             @can('permission-create')
+                             @can('permission-add')
                              <li class="nav-item">
                                  <a href="javascript:void(0);" class="ShowModalFileUpload nav-link" data-title="Document -Guidelines" data-cardtitle="Document  - Guidelines" data-modalstype="Show" data-te="research_documents" data-id="clinical_research">
                                  <i class="fas fa-pencil-alt nav-icon"></i>

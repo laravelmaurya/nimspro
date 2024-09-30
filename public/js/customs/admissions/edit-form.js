@@ -7,9 +7,8 @@ $('body').on('click', '.removeAttachment', function () {
   var id = $('#attachment_id').val();
 
   var url  = $('#remove-attachment').val();
-  // var url = "{{ route('tenders.store') }}";
+  // var url = "{{ route('admissions.store') }}";
   url=url.trim();
-//   alert(url);
 console.log('id ='+id,'number = '+number);
     // AJAX request to remove the attachment from the database
     $.ajax({
@@ -79,9 +78,8 @@ $('#edit_number').on('keypress', function (e) {
 
 // Submit the edit form via AJAX
 $('#editFormSubmit').click(function () {
-    alert();
     var url  = $('.edit_form').attr("action");
-    // var url = "{{ route('tenders.store') }}";
+    // var url = "{{ route('admissions.store') }}";
     url=url.trim();
     if ($('.edit_form').valid()) {
         syncEdit();

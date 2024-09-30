@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\LatestController;
 use App\Http\Controllers\TenderController;
 use App\Http\Controllers\FrontendController;
@@ -99,6 +100,13 @@ Route::group(['middleware' => 'custom_auth'], function() {
     Route::post('admissions/corrigendum', [AdmissionController::class,'storeCorrigendum'])->name('admissions.stroe-corrigendum'); 
     Route::post('admission/remove-attachment', [AdmissionController::class,'removeAttachment'])->name('admission.remove-attachment'); 
     Route::resource('admissions', AdmissionController::class);  
+
+    Route::get('/events/get-number', [EventController::class, 'getNumber'])->name('events.get-number');
+    Route::get('events/list-archive', [EventController::class,'listArchive'])->name('events.list-archive'); 
+    Route::get('/events/list-archive/{id}/edit', [EventController::class, 'edit'])->name('events.list-archive.edit'); 
+    Route::post('events/corrigendum', [EventController::class,'storeCorrigendum'])->name('events.stroe-corrigendum'); 
+    Route::post('event/remove-attachment', [EventController::class,'removeAttachment'])->name('event.remove-attachment'); 
+    Route::resource('events', EventController::class);
 
     Route::get('/tenders/get-number', [TenderController::class, 'getNumber'])->name('tenders.get-number');
     Route::get('tenders/list-archive', [TenderController::class,'listArchive'])->name('tenders.list-archive'); 

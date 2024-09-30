@@ -7,7 +7,7 @@ $('body').on('click', '.removeAttachment', function () {
   var id = $('#attachment_id').val();
 
   var url  = $('#remove-attachment').val();
-  // var url = "{{ route('tenders.store') }}";
+  // var url = "{{ route('events.store') }}";
   url=url.trim();
 //   alert(url);
 console.log('id ='+id,'number = '+number);
@@ -68,20 +68,21 @@ $('#edit_title').on('keypress', function (e) {
     }
 });
 
-$('#edit_number').on('keypress', function (e) {
-    if (!$(this).attr('maxlength')) {
-        $(this).attr('maxlength', numberMaxlength);
-    }
-});
+
 
 // Add more attachments
 
 
 // Submit the edit form via AJAX
 $('#editFormSubmit').click(function () {
+    if (!$('input[name="notify"]:checked').length) {
+        alert("Please select one option.");
+        e.preventDefault(); // Prevent form submission
+    }
     var url  = $('.edit_form').attr("action");
-    // var url = "{{ route('tenders.store') }}";
+    // var url = "{{ route('events.store') }}";
     url=url.trim();
+    // alert(url);
     if ($('.edit_form').valid()) {
         syncEdit();
         var form = $('.edit_form')[0];

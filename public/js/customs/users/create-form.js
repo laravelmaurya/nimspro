@@ -131,8 +131,8 @@ $(document).ready(function () {
    rules: {
          emp_code: {
              required: true,
-             minlength: titleMinlength,
-             maxlength: titleMaxlength
+             minlength: numberMinlength,
+             maxlength: numberMaxlength
          },
          employe_surname: {
             required: true,
@@ -169,8 +169,8 @@ $(document).ready(function () {
      messages: {
         emp_code: {
              required: "Please enter a Employee Code",
-             minlength: "Title must be at least" +titleMinlength+ "characters long",
-             maxlength: "Title cannot be more than " +titleMaxlength+ " characters long",
+             minlength: "Employee Code must be at least " +numberMinlength+ " characters long",
+             maxlength: "Employee Code cannot be more than " +numberMaxlength+ " characters long",
              noSpecialChars: "Employee Code cannot contain special characters."
          },
         employe_surname: {

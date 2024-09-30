@@ -538,7 +538,7 @@ class LatestController extends Controller
         // Upload main document
         $file = $request->file('main_doc');
         if ($file) {
-            $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+            $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file);
             Log::info('Main document uploaded: ' . $main_doc);
         }
 

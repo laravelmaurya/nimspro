@@ -93,6 +93,10 @@
     }
     .th-serial-no, .th-image,.th-status,.th-action{width:5%}
     .th-created-at,.th-published-on,.th-start-date,.th-end-date{width:9%}
+    .th-name{width:10%}
+    .th-email{width:8%}
+    .th-email{width:8%}
+    .th-mobile{width:5%}
     .th-name,.th-email{width:15%}
     /* .th-role{width:20%} */
 
@@ -258,19 +262,6 @@
 .angle-margin{
   margin-right: 4%;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
  </style>
 <style>
 #preloader {
@@ -405,7 +396,6 @@
 <!-- Bootstrap Switch -->
 <script  src="{{asset($addPublic.'plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
 
-
 <script>
   $.ajaxSetup({
   headers: {
@@ -413,6 +403,11 @@
   }
 });
 </script>
+<script>
+  $( function() {
+    $( ".datepicker" ).datepicker();
+  } );
+  </script>
 <script>
   $("input[data-bootstrap-switch]").each(function(){
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
@@ -656,7 +651,15 @@
 <script>
                  
   $(document).ready(function () {
-   
+    $('body').on('click', '.editBtn', function () {
+      if ($(".modal").hasClass("show")) {
+      $('.modal').modal('hide');
+      } 
+      // $('#archive').attr('checked',false)
+      $('input[id="archive"]').prop('checked', false);
+      $('#edit-modal-xl').modal('show'); 
+   // url = url.replace(':modalstype', modalstype);
+  });
     $('body').on('click', '#btnEditData', function () {
    
       // var id = ele.data('id');
@@ -1163,26 +1166,119 @@ function syncEditCorrigendum(){
 
     // $('form').submit();
   }
+  </script>
+<script>
+  function syncUsers() {
+    const base64Fields = document.querySelectorAll('.toBase64'); // Select all fields with the class 'toBase64'
+
+    // Handle input and textarea fields with class 'toBase64'
+    base64Fields.forEach(function(field) {
+        const originalValue = field.value;  // Get the original value of the field
+        const targetFieldId = field.dataset.target;  // Get the ID of the target hidden field
+
+        if (targetFieldId) {
+            const targetField = document.getElementById(targetFieldId);
+            if (targetField) {
+                targetField.value = Base64.encode(originalValue); // Encode to Base64 and set the value
+                console.log(originalValue + ' => ' + targetField.value);
+            }
+        }
+    });
+
+}
 
 </script>
 <script>
-  function syncUsers() {
+  function syncUsersEvent() {
+    const base64Fields = document.querySelectorAll('.toBase64'); // Select all fields with the class 'toBase64'
+
+    // Handle input and textarea fields with class 'toBase64'
+    base64Fields.forEach(function(field) {
+        const originalValue = field.value;  // Get the original value of the field
+        const targetFieldId = field.dataset.target;  // Get the ID of the target hidden field
+
+        if (targetFieldId) {
+            const targetField = document.getElementById(targetFieldId);
+            if (targetField) {
+                targetField.value = Base64.encode(originalValue); // Encode to Base64 and set the value
+                console.log(`Setting value for ID: ${targetFieldId}`);
+                console.log(`${originalValue} => ${targetField.value}`);
+            } else {
+                console.log(`Target field with ID ${targetFieldId} not found.`);
+            }
+        }
+    });
+
+    // Handle radio buttons (notify field)
+    const selectedNotify = document.querySelector('input[name="notify"]:checked'); // Get the checked radio button
+    if (selectedNotify) {
+        const notifyField = document.getElementById('notify_statustwo'); // Hidden input field for notify
+        notifyField.value = Base64.encode(selectedNotify.value); // Base64 encode the selected value
+        console.log(`Setting notify value for ID: notify_statustwo`);
+        console.log(`${selectedNotify.value} => ${notifyField.value}`);
+    } else {
+        console.log('No notify option selected.');
+    }
+
+    // Handle description field (using CKEditor)
+    const descriptionValue = CKEDITOR.instances['notes'].getData(); // Get CKEditor content
+    const descriptionField = document.getElementById('notes1'); // Hidden input field for description
+    if (descriptionValue) {
+        descriptionField.value = descriptionValue; // Base64 encode the CKEditor content
+        console.log(`Setting description value for ID: notes1`);
+        console.log(`${descriptionValue} => ${descriptionField.value}`);
+    } else {
+        console.log('Description is empty.');
+    }
+  }
+</script>
+
+<script>
+  function syncUsersEventEdit() {
       const base64Fields = document.querySelectorAll('.toBase64'); // Select all fields with the class 'toBase64'
-  
+
+      // Handle input and textarea fields with class 'toBase64'
       base64Fields.forEach(function(field) {
           const originalValue = field.value;  // Get the original value of the field
           const targetFieldId = field.dataset.target;  // Get the ID of the target hidden field
-          
+
           if (targetFieldId) {
               const targetField = document.getElementById(targetFieldId);
               if (targetField) {
                   targetField.value = Base64.encode(originalValue); // Encode to Base64 and set the value
-                  console.log(originalValue + ' => ' + targetField.value);
+                  console.log(`Setting value for ID: ${targetFieldId}`);
+                  console.log(`${originalValue} => ${targetField.value}`);
+              } else {
+                  console.log(`Target field with ID ${targetFieldId} not found.`);
               }
           }
       });
+
+      // Handle radio buttons (notify field)
+      const selectedNotify = document.querySelector('input[name="edit_notify"]:checked'); // Get the checked radio button
+      if (selectedNotify) {
+          const notifyField = document.getElementById('edit_notify_statustwo'); // Hidden input field for notify
+          notifyField.value = Base64.encode(selectedNotify.value); // Base64 encode the selected value
+          console.log(`Setting notify value for ID: edit_notify_statustwo`);
+          console.log(`${selectedNotify.value} => ${notifyField.value}`);
+      } else {
+          console.log('No notify option selected.');
+      }
+
+      // Handle description field (using CKEditor)
+      const descriptionValue = CKEDITOR.instances['edit_notes'].getData(); // Get CKEditor content
+      const descriptionField = document.getElementById('edit_notes1'); // Hidden input field for description
+      if (descriptionValue) {
+          descriptionField.value = descriptionValue; // Base64 encode the CKEditor content
+          console.log(`Setting description value for ID: edit_notes1`);
+          console.log(`${descriptionValue} => ${descriptionField.value}`);
+      } else {
+          console.log('Description is empty.');
+      }
   }
+
 </script>
+
 <script>
   function syncEdit(){
     //     const form = document.querySelector("form");

@@ -5,12 +5,12 @@
   <div class="container-fluid">
     <div class="row mb-2">
       {{-- <div class="col-sm-6">
-        <h1>Tenders</h1>
+        <h1>Events</h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           @include('partials.breadcrumb-item-home')
-          <li class="breadcrumb-item active">Archive List of Tenders</li>
+          <li class="breadcrumb-item active">Events</li>
         </ol>
       </div> --}}
     </div>
@@ -23,20 +23,18 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between">
-            <h3 class="card-title mb-2 mb-md-0 mr-auto  font-weight-bold">Recruitment Archive List</h3>
-            @can('recruitment-list-archive')
-            <a href="{{route('recruitments.list-archive')}}" class="btn btn-sm btn-primary ml-0 mb-2 mb-md-0 ml-2">
-              All Archive
-            </a>
-            @endcan
-            @can('recruitment-add')
+            <h3 class="card-title mb-2 mb-md-0 mr-auto  font-weight-bold">Event List</h3>
+            @can('event-list-archive')
+            <a href="{{route('events.list-archive')}}" class="btn btn-sm btn-primary ml-0 mb-2 mb-md-0 ml-2">All Archive</a>
+            @endcan 
+            @can('event-add')
             <button type="button" class="btn btn-sm btn-primary ml-0 mb-2 mb-md-0 ml-2" data-toggle="modal" data-target="#create-modal-xl">
-              Add Recruitment
+              Add Event
             </button>
             @endcan
-            @can('recruitment-add-associated')
+            @can('event-add-corrigendum')
             <button type="button" class="getNumber btn btn-sm btn-primary ml-0 h-25 ml-2" data-toggle="modal" data-target="#create-Corrigendum-modal">
-               Add Associated
+              Add Corrigendum
             </button>
             @endcan
           </div>
@@ -45,8 +43,8 @@
               <thead>
                 <tr>
                   <th class="th-serial-no">No</th>
-                  <th>Title</th>
-                  <th>Number</th>
+                  <th>Title</th>       
+                  <th>Department</th>        
                   <th class="th-published-on">Published Date</th>
                   <th class="th-start-date">Start Date</th>
                   <th class="th-end-date">End Date</th>
@@ -65,9 +63,9 @@
 @php 
 $addPublic = config('app.url').'public/';
 @endphp
-@include('recruitments.create-modal')
-@include('recruitments.edit-archive-modal')
-@include('recruitments.create-Corrigendum-modal')
+@include('events.create-modal')
+@include('events.edit-modal')
+@include('events.create-Corrigendum-modal')
 @endsection
 
 @push('scripts')
@@ -75,28 +73,34 @@ $addPublic = config('app.url').'public/';
 <script>
 
 $(document).ready(function () {
-    // Open the edit modal and populate the form with existing data
+    // Open the edit modal and populate the form with existing data 
+    // .editBtn define in index function in controller 
     $('body').on('click', '.editBtn', function () {
         var id = $(this).data('id');
-        $.get("{{ route('recruitments.list-archive') }}" + '/' + id + '/edit', function (data) {
+        $.get("{{ route('events.index') }}" + '/' + id + '/edit', function (data) {
             const myJSON = JSON.stringify(data);
-            // alert('myJSON =' + myJSON);
-
+            console.log('myJSON =' + myJSON);
             $('.is-invalid').removeClass('is-invalid');
             $('.invalid-feedback').remove();
             $('#edit-modal-xl').modal('show');
-            $('#h').val(id);
-            $('#edit_title').val(data.nims_recruitment_title);
-            $('#edit_number').val(data.nims_recruitment_number);
-            CKEDITOR.instances.edit_notes.setData(data.nims_recruitment_desc);
-            $('#edit_publish_date').val(data.nims_recruitment_submit_date);
-            $('#edit_start_date').val(data.nims_recruitment_start_date);
-            $('#edit_end_date').val(data.nims_recruitment_end_date);
-            $('#edit_form').attr('action', "{{ url('recruitments') }}" + '/' + id);
+            $('#id').val(id);
+            $('#utwo').val(Base64.encode(id));
+            $('#edit_title').val(data.nims_wp_event_title);
 
-            if (data.nims_recruitment_doc) {
+            // console.log('nims_wp_event_description = ',data.nims_wp_event_description);
+            CKEDITOR.instances.edit_notes.setData(data.nims_wp_event_desc);
+            $('#edit_publish_date').val(data.nims_wp_event_submit_date);
+            $('#edit_start_date').val(data.nims_wp_event_start_date);
+            $('#edit_end_date').val(data.nims_wp_event_end_date);
+            $('#edit_dep_name').val(data.nims_wp_event_department).trigger('change');
+            if (data.nims_wp_notify_status) {
+            $('input[name="edit_notify"][value="' + data.nims_wp_notify_status + '"]').prop('checked', true);
+            }
+            $('#edit_form').attr('action', "{{ url('events') }}" + '/' + id);
+
+            if (data.nims_wp_event_doc) {
               $('#hidden_edit_main_doc').addClass('d-none');
-                var main_doc = data.nims_recruitment_doc;
+                var main_doc = data.nims_wp_event_doc;
                 var suggestFileName = main_doc.split("/").pop();
 
                 // Use Laravel's url() function to generate the full URL
@@ -107,36 +111,13 @@ $(document).ready(function () {
 
                 // Add "public" before "storage" in the URL
                 var modifiedUrl = attachmentUrl.replace('/storage/public', '/public/storage');
-               $('#main_doc_view_image').html(`<button type="button" class="btn btn-primary viewImageBtn" data-id="${id}" data-image-url="${modifiedUrl}">
+                $('#main_doc_view_image').html(`<button type="button" class="btn btn-primary viewImageBtn" data-id="${id}" data-image-url="${modifiedUrl}">
                                                  View Image
                                                 </button>
                                               `);
                 $('#main_doc_download').html(`<a href="javascript:void(0)" onclick="downloadImage('${modifiedUrl}','${suggestFileName}')">Download existing attachment</a>`);
             }
-
-            // Clear previous additional attachments
-            $('#additional_attachments').empty();
-
-
-            // var dt =  data.additional_attachments;
-            // console.log('type = ' + dt );
-
-            // const myJSON1 = JSON.stringify(data);
-            // console.log('additional_attachments = ' + myJSON1);
-            if(data.nims_recruitment_archive == 1){
-                $('#status_active_fields').html(`<div class="form-check">
-                    <input checked name="archive" id="archive" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="exampleCheck1">Click To ACTIVE </label>
-                  </div>`);
-            } if(data.nims_recruitment_archive == 0) {
-                $('#status_active_fields').html(`<div class="form-check">
-                    <input name="archive" id="archive"  type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="exampleCheck1">Click To Active</label>
-                  </div>`);
-            }
-            
-             // Set status checkbox
-
+           
         });
     });
 });
@@ -152,14 +133,14 @@ $(document).ready(function () {
    window.table = $('.data-table').DataTable({
         processing: false,
         serverSide: true,
-        ajax: "{{ route('recruitments.list-archive') }}",
+        ajax: "{{ route('events.index') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-            {data: 'title', name: 'nims_recruitment_title'},
-            {data: 'number', name: 'nims_recruitment_number'},
-            {data: 'submit_date', name: 'nims_recruitment_submit_date'},
-            {data: 'start_date', name: 'nims_recruitment_start_date'},
-            {data: 'end_date', name: 'nims_recruitment_end_date'},
+            {data: 'title', name: 'nims_wp_event_title'},
+            {data: 'department_name', name: 'nims_wp_department_name'},
+            {data: 'submit_date', name: 'nims_wp_event_submit_date'},
+            {data: 'start_date', name: 'nims_wp_event_start_date'},
+            {data: 'end_date', name: 'nims_wp_event_end_date'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ],
         // order: [[1, 'desc']] // Initial sorting on the Title column
@@ -167,11 +148,12 @@ $(document).ready(function () {
 
 });
 </script>
+
 <script>
   var base_url = "<?php echo url('')  ?>";
   // var base_url = urlPublic + 'public/';
 </script>
-  <script src="{{asset($addPublic.'js/customs/recruitments/create-form.js')}}"></script>
-  <script src="{{asset($addPublic.'js/customs/recruitments/edit-archive-form.js')}}"></script>
-  <script src="{{asset($addPublic.'js/customs/recruitments/create-Corrigendum-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/events/create-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/events/edit-form.js')}}"></script>
+  <script src="{{asset($addPublic.'js/customs/events/create-Corrigendum-form.js')}}"></script>
 @endpush

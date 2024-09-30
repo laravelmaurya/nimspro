@@ -5,7 +5,7 @@
 <section class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
-      <div class="col-sm-6">
+      {{-- <div class="col-sm-6">
         <h1>Users</h1>
       </div>
       <div class="col-sm-6">
@@ -13,7 +13,7 @@
           @include('partials.breadcrumb-item-home')
           <li class="breadcrumb-item active">Users</li>
         </ol>
-      </div>
+      </div> --}}
     </div>
   </div>
 </section>
@@ -23,13 +23,14 @@
   <div class="row">
     <div class="col-12">
       <div class="card">
-        <div class="card-header">
-          <h3 class="card-title float-right">
+        <div class="card-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between">
+            <h3 class="card-title mb-2 mb-md-0 mr-auto  font-weight-bold">User List</h3>
+            @can('user-add')
             <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#create-modal-xl">
               Add User
-            </button>           
-          </h3>
-        </div>
+            </button>                     
+            @endcan
+          </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive">    
           <!-- DataTable -->
@@ -38,9 +39,12 @@
               <tr>
                 <th class="th-serial-no">#</th>
                 <th class="th-status">Status</th>
+                <th class="th-role">Employee Code</th>
                 <th class="th-name">Name</th>
                 <th class="th-email">Email</th>
-                <th class="th-role">Role</th>
+                <th class="th-email">Personal Email</th>
+                <th class="th-mobile">Mobile</th>
+                <th class="th-role">Role</th>                
                 <th class="th-created-at">Created At</th>
                 <th class="th-action">Action</th>
               </tr>
@@ -107,9 +111,12 @@ $(document).ready(function () {
         columns: [
           {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
             { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'nims_employe_code', name: 'role', orderable: false, searchable: false },
             { data: 'nims_wp_user_name', name: 'nims_wp_user_name' },
             { data: 'nims_wp_user_email', name: 'nims_wp_user_email' },
-            { data: 'role', name: 'role', orderable: false, searchable: false },
+            { data: 'e_email', name: 'e_email' },
+            { data: 'nims_employe_mob_no', name: 'nims_employe_mob_no' },
+            { data: 'role', name: 'role', orderable: false, searchable: false },            
             { data: 'nims_wp_user_created_on', name: 'nims_wp_user_created_on' },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ]

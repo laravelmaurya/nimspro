@@ -3,12 +3,23 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="editUserModalLabel">Edit User</h4>
+                {{-- <h4 class="modal-title" id="editUserModalLabel">Edit User</h4> --}}
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+                <!-- Main content -->
+                <section class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- left column -->
+                            <div class="col-md-12">
+                                <!-- general form elements -->
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Edit User</h3>
+                                    </div>
                 <!-- Edit form start -->
                 <form id="edit_form" class="edit_form" role="form" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -98,6 +109,16 @@
                     <!-- /.card-body -->
                 </form>
                 <!-- /.form -->
+                  <!-- /.card -->
+                </div>
+                <!--/.col (left) -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>                    
+</section>
+<!-- /.content -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>

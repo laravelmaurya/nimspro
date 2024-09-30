@@ -27,7 +27,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            <label for="exampleInputEmail1">Name</label>
+                                                            <label for="exampleInputEmail1">Role Name</label>
                                                             <input value="{{old('name')}}" name="name" id="name" type="text" class="form-control @error('name') is-invalid @enderror toBase64" data-target="nametwo" placeholder="Enter Name">
                                                             @error('name')
                                                             <strong class="text-danger">{{ $message }}</strong>
@@ -38,7 +38,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            <label>Permissions</label>
+                                                            <label>Permissions Assigning  Of The Role</label>
                                                                 <select name="permissions[]" id="permissions" class="select2" multiple="multiple" data-placeholder="Select a Permission" style="width: 100%;">
                                                                 @foreach ($permissions as $permission)                   
                                                                 <option value="{{ $permission->id }}">{{ $permission->name }}</option>

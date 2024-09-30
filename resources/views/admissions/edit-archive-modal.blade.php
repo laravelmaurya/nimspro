@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Admission Archive</h4>
+                {{-- <h4 class="modal-title">Edit Admission Archive</h4> --}}
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -23,13 +23,13 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="edit_title">Title <span class="text-danger">*</span></label>
+                                                        <label for="edit_title">Admission Title <span class="text-danger">*</span></label>
                                                         <input name="title" id="edit_title" type="text" class="form-control" placeholder="Enter Title">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="edit_number">Number <span class="text-danger">*</span></label>
+                                                        <label for="edit_number">Admission Number <span class="text-danger">*</span></label>
                                                         <input name="number" id="edit_number" type="text" class="form-control" placeholder="Enter Number">
                                                     </div>
                                                 </div>

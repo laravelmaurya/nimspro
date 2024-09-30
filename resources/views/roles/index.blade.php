@@ -5,7 +5,7 @@
  <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
+          {{-- <div class="col-sm-6">
             <h1>Role Management</h1>
           </div>
           <div class="col-sm-6">
@@ -13,7 +13,7 @@
               @include('partials.breadcrumb-item-home')
               <li class="breadcrumb-item active">Role Management</li>
             </ol>
-          </div>
+          </div> --}}
         </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -23,12 +23,13 @@
       <div class="row">
         <div class="col-12">
           <div class="card">
-            <div class="card-header">
-               <h3 class="card-title float-right">
+            <div class="card-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between">
+              <h3 class="card-title mb-2 mb-md-0 mr-auto  font-weight-bold">Role List</h3>
+              @can('role-add')
                   <button class="btn btn-sm btn-primary mr-1" id="role-create-modal">
                     Add Role
-                  </button>
-               </h3>
+                  </button>  
+              @endcan             
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">

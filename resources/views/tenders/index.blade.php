@@ -4,7 +4,7 @@
 <section class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
-      <div class="col-sm-6">
+      {{-- <div class="col-sm-6">
         <h1>Tenders</h1>
       </div>
       <div class="col-sm-6">
@@ -12,7 +12,7 @@
           @include('partials.breadcrumb-item-home')
           <li class="breadcrumb-item active">Tenders</li>
         </ol>
-      </div>
+      </div> --}}
     </div>
   </div><!-- /.container-fluid -->
 </section>
@@ -22,17 +22,21 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Tender List</h3>
-            @can('tenders-list-archive')
-            <a href="{{route('tenders.list-archive')}}" class="btn btn-sm btn-primary float-right Btn-as-link">All Archive</a>
+          <div class="card-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between">
+            <h3 class="card-title mb-2 mb-md-0 mr-auto  font-weight-bold">Tender List</h3>
+            @can('tender-list-archive')
+            <a href="{{route('tenders.list-archive')}}" class="btn btn-sm btn-primary ml-0 mb-2 mb-md-0 ml-2">All Archive</a>
             @endcan 
-            <button type="button" class="btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-modal-xl">
+            @can('tender-add')
+            <button type="button" class="btn btn-sm btn-primary ml-0 mb-2 mb-md-0 ml-2" data-toggle="modal" data-target="#create-modal-xl">
               Add Tender
             </button>
-            <button type="button" class="getNumber btn btn-sm btn-primary float-right mr-1" data-toggle="modal" data-target="#create-Corrigendum-modal">
+            @endcan
+            @can('tender-add-corrigendum')
+            <button type="button" class="getNumber btn btn-sm btn-primary ml-0 h-25 ml-2" data-toggle="modal" data-target="#create-Corrigendum-modal">
               Add Corrigendum
             </button>
+            @endcan
           </div>
           <div class="card-body table-responsive">
             <table class="table table-bordered data-table table-hover w-100">

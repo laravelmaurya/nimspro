@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add Admission</h4>
+                {{-- <h4 class="modal-title">Add Admission</h4> --}}
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,7 +17,7 @@
                                     <!-- general form elements -->
                                     <div class="card card-primary">
                                         <div class="card-header">
-                                            <h3 class="card-title">Create Admission</h3>
+                                            <h3 class="card-title">Add Admission</h3>
                                         </div>
                                         <!-- /.card-header -->
                                         <!-- form start -->
@@ -27,7 +27,7 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="exampleInputEmail1">Title <span class="text-danger">*</span></label>
+                                                            <label for="exampleInputEmail1">Admission Title <span class="text-danger">*</span></label>
                                                             <input value="{{old('title')}}" name="title" id="title" type="text" class="form-control @error('title') is-invalid @enderror" placeholder="Enter Title">
                                                             @error('title')
                                                             <strong class="text-danger">{{ $message }}</strong>
@@ -36,7 +36,7 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="exampleInputEmail1">Number <span class="text-danger">*</span></label>
+                                                            <label for="exampleInputEmail1">Admission Number <span class="text-danger">*</span></label>
                                                             <input value="{{old('number')}}" name="number" id="number" type="text" class="form-control @error('number') is-invalid @enderror" placeholder="Enter Number">
                                                             @error('number')
                                                             <strong class="text-danger">{{ $message }}</strong>
@@ -121,9 +121,9 @@
                    </section>
                 <!-- /.content -->
             </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="formSubmit" type="button" class="btn-sm btn btn-primary formSubmit"><i class="fas fa-paper-plane"></i> Submit</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+                    <button id="formSubmit" type="button" class="btn btn-sm btn-primary formSubmit"><i class="fas fa-paper-plane"></i> Submit</button>
                 </div>
             </div>
             <!-- /.modal-content -->

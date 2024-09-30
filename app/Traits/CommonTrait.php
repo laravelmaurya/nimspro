@@ -10,9 +10,16 @@ use Illuminate\Support\Facades\Storage;
 
 
 trait CommonTrait{
+    function unique_code($limit)
+    {
+      return substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $limit);
+    }
+
+ 
        // Helper function to upload and sanitize a file
-    public function uploadAndSanitizeFile($numberData,$path,$file,$oldFilePath = null) {
+    public function uploadAndSanitizeFile($i = null,$numberData,$path,$file,$oldFilePath = null) {
          // Check if an old file exists and delete it
+        //  dd($file);
         if($oldFilePath != null){
           $oldFilePath = str_replace("public","",$oldFilePath);
           $filePath = public_path('storage/' . $oldFilePath);
@@ -22,8 +29,9 @@ trait CommonTrait{
               Log::info('File deleted: ' . $filePath);            
           } 
         }
-        // Generate a unique file name
-        $fileName = time() . '_'.$numberData.'_' .trim(str_replace(" ","_",$file->getClientOriginalName())) ;        
+
+          $fileName = time() . '_'.$this->unique_code(9).'_'.$i.'_'.$numberData.'_' .trim(str_replace(" ","_",$file->getClientOriginalName())) ;   
+   
          //  $fileName = time() . '_'.$numberData.'_' . Str::slug($file->getClientOriginalName());  
          // Store the file in the storage/app/uploads directory and 3rd parameter is local or public
          $storage_path = $file->storeAs($path, $fileName, 'local');

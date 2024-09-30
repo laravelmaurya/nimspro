@@ -37,6 +37,7 @@ class RoleController extends Controller
 
      public function index(Request $request)
      {
+      $this->authorize('view-page', 'role-list');
     if ($request->ajax()) {
         $roles = Role::with('permissions');
         // $roles = Role::with('permissions');
@@ -57,9 +58,23 @@ class RoleController extends Controller
                 return $permissions;
             })
             ->addColumn('action', function($row){
-                return '
-                <a href="javascript:void(0)" data-id="' . $row->id . '" class="edit-btn"><i class="fas fa-edit"></i></a>
-                <a href="javascript:void(0)" data-id="' . $row->id . '" class="delete-btn text-danger"><i class="fas fa-trash-alt"></i></a>';
+                // return '
+                // <a href="javascript:void(0)" data-id="' . $row->id . '" class="edit-btn"><i class="fas fa-edit"></i></a>
+                // <a href="javascript:void(0)" data-id="' . $row->id . '" class="delete-btn text-danger"><i class="fas fa-trash-alt"></i></a>';
+                $editPermission = auth()->user()->can('view-page', 'role-edit');
+                $deletePermission = auth()->user()->can('view-page', 'role-delete');
+
+                $buttons = '';
+
+                if ($editPermission) {
+                        $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit-btn"> <i class="fas fa-edit"></i></a>';
+                }
+
+                if ($deletePermission) {
+                    $buttons .= ' | <a href="javascript:void(0)" data-id="' . $row->id . '" class="delete-btn text-danger"> <i class="fas fa-trash"></i></a>';
+                }
+
+                return $buttons;
             })->filter(function ($roles) use ($request) {
                      if ($request->has('search.value')) {
                          $searchTerm = $request->input('search.value');
@@ -208,87 +223,94 @@ class RoleController extends Controller
      }
 
      public function update(Request $request, $id)
-     {
-            $rules = [
-                'name' => [
-                    'required',
-                    'string',
-                    'min:3',
-                    'max:30',
-                    'regex:/^[A-Za-z\s]+$/',
-                    'unique:roles,name,' . $id, // Ensure unique name except for the current role
-                ],
-                'permissions' => [
-                    'required',
-                ],
-            ];
+{
+    $rules = [
+        'name' => [
+            'required',
+            'string',
+            'min:3',
+            'max:30',
+            'regex:/^[A-Za-z\s]+$/',
+            'unique:roles,name,' . $id, // Ensure unique name except for the current role
+        ],
+        'permissions' => [
+            'required',
+        ],
+    ];
 
-            $messages = [
-                'name.required' => 'Role Name is required.',
-                'name.min' => 'Role Name must be at least 3 characters long.',
-                'name.max' => 'Role Name cannot exceed 30 characters.',
-                'name.regex' => 'Role Name can only contain letters and spaces.',
-                'permissions.required' => 'Please select at least one permission.',
-            ];
+    $messages = [
+        'name.required' => 'Role Name is required.',
+        'name.min' => 'Role Name must be at least 3 characters long.',
+        'name.max' => 'Role Name cannot exceed 30 characters.',
+        'name.regex' => 'Role Name can only contain letters and spaces.',
+        'permissions.required' => 'Please select at least one permission.',
+    ];
 
-            $validator = Validator::make($request->all(), $rules, $messages);
+    // Validate request
+    $validator = Validator::make($request->all(), $rules, $messages);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-            //  dd($request->all());
-            $h_id = base64_encode($request->h);
-            $name = $this->sanitizeInput($request->name);
-            $h1_name = $request->h1;
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 'error',
+            'errors' => $validator->errors()
+        ], 422);
+    }
 
-            if (!$this->dataTamper($name, $h1_name) || !$this->dataTamper($id, $h_id)) {
-                Log::error('Update Data error: ' . 'Data tampering.');
-                return response()->json([
-                    'status' => 'error',
-                    'errorTamperingValue' => true,
-                    'redirect' => route('error-page', 'errorTampering')
-                ], 400);
-            }
+    DB::beginTransaction();
 
-            $permissions = Permission::pluck('id')->toArray();
-            $sanitizedPermissions = array_values($permissions);
+    try {
+        // Find role and update its name
+        $role = Role::findOrFail($id);
+        $role->update(['name' => $request->input('name')]);
 
-            foreach ($request->permissions as $permission) {
-                if (!in_array($permission, $sanitizedPermissions)) {
-                    Log::error('Edit Data error: ' . 'Data tampering.');
-                    return response()->json([
-                        'status' => 400,
-                        'errorTamperingValue' => true,
-                        'redirect' => route('error-page', 'errorTampering')
-                    ], 400);
-                }
-            }
+        // Sync the role's permissions
+        $role->permissions()->sync($request->permissions);
 
-            DB::beginTransaction();
+        // Update the permissions for all users who have this role
+        $this->syncUserPermissionsWithRole($role);
 
-            try {
-                $role = Role::findOrFail($id);
-                $role->update(['name' => $name]);
-                $role->permissions()->sync($request->permissions);
+        DB::commit();
 
-                DB::commit();
-                Log::info('Transaction committed successfully');
-                
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Role updated successfully!'
-                ]);
-            } catch (\Exception $e) {
-                DB::rollBack();
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'An error occurred while updating the role: ' . $e->getMessage()
-                ], 500);
-            }
-     }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Role and associated users updated successfully!',
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred while updating the role: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Sync permissions of users who are assigned to the given role.
+ *
+ * @param Role $role
+ */
+private function syncUserPermissionsWithRole(Role $role)
+{
+    // Get all users who have this role
+    $users = $role->users;
+
+    foreach ($users as $user) {
+        // Get all the user's roles
+        $roles = $user->roles;
+
+        $permissions = [];
+
+        // For each role, get all its permissions
+        foreach ($roles as $userRole) {
+            $permissions = array_merge($permissions, $userRole->permissions->pluck('id')->toArray());
+        }
+
+        // Remove duplicates and sync user permissions
+        $user->permissions()->sync(array_unique($permissions));
+    }
+}
 
     
     public function destroy(Request $request,$id)

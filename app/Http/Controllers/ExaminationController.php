@@ -43,7 +43,7 @@ class ExaminationController extends Controller
 
    public function index(Request $request)
 {
-
+    $this->authorize('view-page', 'examination-list');
    // dd($request->all());
    if ($request->ajax()) {
        $query = Examination::where('nims_examination_archive', 0)
@@ -81,9 +81,17 @@ class ExaminationController extends Controller
                return Str::limit($row->number, 20);
            })
            ->addIndexColumn()
-           ->addColumn('action', function($row){               
-               $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
-               return $btn;
+           ->addColumn('action', function($row){   
+                // Check for unauthorized access
+                $editPermission = auth()->user()->can('view-page', 'examination-edit');
+            
+                $buttons = '';
+
+                if ($editPermission) {
+                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
+                }
+          
+                return $buttons;
            })
            ->editColumn('submit_date', function($row){
                return $row->submit_date ? $this->convertDateTimeFormateYmd($row->submit_date) : '';                   
@@ -101,13 +109,6 @@ class ExaminationController extends Controller
    return view('examinations.index');
 }
    
-
-   public function create()
-   {
-       // $files = Storage::files('uploads');
-       // dd($files);
-       return view('examinations.create');
-   }
 
 
    public function store(Request $request)
@@ -227,7 +228,7 @@ class ExaminationController extends Controller
        // Upload main document
        $file = $request->file('main_doc');
        if ($file) {
-           $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+           $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file);
            Log::info('Main document uploaded: ' . $main_doc);
        }
 
@@ -236,7 +237,7 @@ class ExaminationController extends Controller
            $fileKey = 'attachment_' . $i;
            if ($request->hasFile($fileKey)) {
                $file = $request->file($fileKey);
-               $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($request->number, $path, $file);
+               $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($i,$request->number, $path, $file);
                Log::info('Attachment ' . $i . ' uploaded: ' . $uploadedFiles[$fileKey]);
            }
        }
@@ -474,7 +475,7 @@ class ExaminationController extends Controller
        $main_doc = $examination->nims_examination_doc; // default to existing main document
        $file = $request->file('main_doc');
        if ($file) {
-           $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+           $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file);
            Log::info('Main document uploaded: ' . $main_doc);
        }
 
@@ -484,7 +485,7 @@ class ExaminationController extends Controller
            if ($request->hasFile($fileKey)) {
                $file = $request->file($fileKey);
                // dd($file);
-               $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($request->number, $path, $file);
+               $uploadedFiles[$fileKey] = $this->uploadAndSanitizeFile($i,$request->number, $path, $file);
                Log::info('Attachment '.date("Y-m-d :h:si") . $i . ' uploaded: ' . $uploadedFiles[$fileKey]);
            }
        }
@@ -672,7 +673,7 @@ class ExaminationController extends Controller
            ]); 
                
    }
-   public function changeStatusTender(Request $request)
+   public function changeStatusEvent(Request $request)
    {
        //\Log::info($request->all());
        // dd($request->all());
@@ -794,7 +795,7 @@ class ExaminationController extends Controller
        // Upload main document
        $file = $request->file('main_doc');
        if ($file) {
-           $main_doc = $this->uploadAndSanitizeFile($request->number, $path, $file);
+           $main_doc = $this->uploadAndSanitizeFile(14,$request->number, $path, $file);
            Log::info('Main document uploaded: ' . $main_doc);
        }
 
@@ -884,6 +885,7 @@ class ExaminationController extends Controller
 
    public function listArchive(Request $request)
    {
+    $this->authorize('view-page', 'examination-list-archive');
            if ($request->ajax()) {
                $query = Examination::where('nims_examination_archive', 1)
                            ->orWhere('nims_examination_end_date', '<',  Carbon::now())
@@ -921,8 +923,14 @@ class ExaminationController extends Controller
                    })
                    ->addIndexColumn()
                    ->addColumn('action', function($row){
-                       $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
-                       return $btn;
+                    $editPermission = auth()->user()->can('view-page', 'examination-edit-archive');
+
+                    $buttons = '';
+
+                    if ($editPermission) {
+                    $buttons .= '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit editBtn"> <i class="fas fa-edit"></i></a>';
+                    }
+                    return $buttons;                    
                    })
                    ->editColumn('submit_date', function($row){
                        return $row->submit_date ? $this->convertDateTimeFormateYmd($row->submit_date) : '';                   
